@@ -127,12 +127,11 @@ async function submitUserMessage(content: string) {
           - "[User has changed the amount of AAPL to 10]" means that the user has changed the amount of AAPL to 10 in the UI.
 
           If the user requests purchasing a stock, call \`show_stock_purchase_ui\` to show the purchase UI.
-          If the user just wants the price, call \`show_stock_price\` to show the price.
-          If you want to show trending stocks, call \`list_stocks\`.
+          If the user whats data on a specific stock, call \`show_stock_data\` to show the data.
           If you want to show events, call \`get_events\`.
           If the user wants to sell stock, or complete another impossible task, respond that you are a demo and cannot do that.
 
-          Besides that, you can also chat with users and do some calculations if needed.
+          Besides that, answer user questions and do calculations if needed.
         `,
       },
       ...aiState.get().map((info: any) => ({
@@ -143,7 +142,7 @@ async function submitUserMessage(content: string) {
     ],
     functions: [
       {
-        name: "show_stock_price",
+        name: "show_stock_data",
         description:
           "Get historical stock price data for a given stock. Use this to show the chart to the user.",
         parameters: z.object({
@@ -168,19 +167,6 @@ async function submitUserMessage(content: string) {
             .describe(
               "The **number of shares** for a stock or currency to purchase. Can be optional if the user did not specify it."
             ),
-        }),
-      },
-      {
-        name: "list_stocks",
-        description: "List three imaginary stocks that are trending.",
-        parameters: z.object({
-          stocks: z.array(
-            z.object({
-              symbol: z.string().describe("The symbol of the stock"),
-              price: z.number().describe("The price of the stock"),
-              delta: z.number().describe("The change in price of the stock"),
-            })
-          ),
         }),
       },
       {
@@ -211,31 +197,6 @@ async function submitUserMessage(content: string) {
     }
   });
 
-  completion.onFunctionCall("list_stocks", async ({ stocks }) => {
-    reply.update(
-      <BotCard>
-        <StocksSkeleton />
-      </BotCard>
-    );
-
-    await sleep(1000);
-
-    reply.done(
-      <BotCard>
-        <Stocks stocks={stocks} />
-      </BotCard>
-    );
-
-    aiState.done([
-      ...aiState.get(),
-      {
-        role: "function",
-        name: "list_stocks",
-        content: JSON.stringify(stocks),
-      },
-    ]);
-  });
-
   completion.onFunctionCall("get_events", async ({ events }) => {
     reply.update(
       <BotCard>
@@ -255,13 +216,13 @@ async function submitUserMessage(content: string) {
       ...aiState.get(),
       {
         role: "function",
-        name: "list_stocks",
+        name: "get_events",
         content: JSON.stringify(events),
       },
     ]);
   });
 
-  completion.onFunctionCall("show_stock_price", async ({ symbol }) => {
+  completion.onFunctionCall("show_stock_data", async ({ symbol }) => {
     reply.update(
       <BotCard>
         <StockSkeleton />
@@ -308,7 +269,7 @@ async function submitUserMessage(content: string) {
       ...aiState.get(),
       {
         role: "function",
-        name: "show_stock_price",
+        name: "show_stock_data",
         content: `[Price of ${symbol} = ${price}]`,
       },
     ]);
