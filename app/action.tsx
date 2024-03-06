@@ -10,7 +10,6 @@ import {
   SystemMessage,
   Stock,
   Purchase,
-  Stocks,
   Events,
 } from "@/components/llm-stocks";
 
@@ -23,7 +22,6 @@ import {
 import { z } from "zod";
 import { StockSkeleton } from "@/components/llm-stocks/stock-skeleton";
 import { EventsSkeleton } from "@/components/llm-stocks/events-skeleton";
-import { StocksSkeleton } from "@/components/llm-stocks/stocks-skeleton";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY || "",
