@@ -245,10 +245,16 @@ async function submitUserMessage(content: string) {
 
       stockData = data.historical
         .map((item: any) => ({
-          date: item.date,
+          date: formatDate(item.date),
           close: item.close,
         }))
         .reverse();
+
+      function formatDate(dateStr: string): string {
+        const dateObj = new Date(dateStr);
+        const formattedDate = `${dateObj.getMonth() + 1}/${dateObj.getDate()}/${dateObj.getFullYear().toString().substr(-2)}`;
+        return formattedDate;
+      }
 
       price = stockData[stockData.length - 1].close;
 

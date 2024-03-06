@@ -49,6 +49,15 @@ export function StockChart({ data, ticker }: StockChartProps) {
       legend: {
         display: false,
       },
+      tooltip: {
+        enabled: true,
+        callbacks: {
+          label: function (context: any) {
+            const value = context.parsed.y;
+            return `$${value}`;
+          },
+        },
+      },
     },
     maintainAspectRatio: false,
   };
