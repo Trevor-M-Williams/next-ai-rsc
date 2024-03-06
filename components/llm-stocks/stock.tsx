@@ -30,7 +30,7 @@ function MarketStatus() {
   );
 }
 
-export function Stock({ name = "DOGE", data }: { name: string; data: any }) {
+export function Stock({ name, data }: { name: string; data: any }) {
   const price = data[data.length - 1]?.close || 0;
   const delta = price - data[data.length - 2]?.close || 0;
 
