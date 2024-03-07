@@ -20,7 +20,7 @@ export function StockChart({ data, ticker }: StockChartProps) {
         borderColor: "#20f160",
         backgroundColor: "#20f16022",
         fill: true,
-        pointRadius: 2,
+        pointRadius: 10,
         pointBorderColor: "rgba(0, 0, 0, 0)",
         pointBackgroundColor: "rgba(0, 0, 0, 0)",
       },
