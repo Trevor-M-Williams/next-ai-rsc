@@ -23,7 +23,7 @@ export function StockChart({ data, ticker }: StockChartProps) {
     ],
   };
 
-  const options = {
+  const chartOptions = {
     scales: {
       x: {
         ticks: {
@@ -60,7 +60,7 @@ export function StockChart({ data, ticker }: StockChartProps) {
 
   return (
     <div className="h-60">
-      <Line data={chartData} options={options} />
+      <Line data={chartData} options={chartOptions} />
     </div>
   );
 }

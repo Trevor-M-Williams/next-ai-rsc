@@ -3,93 +3,15 @@ import "server-only";
 import { createAI, createStreamableUI, getMutableAIState } from "ai/rsc";
 import OpenAI from "openai";
 
-import {
-  spinner,
-  BotCard,
-  BotMessage,
-  SystemMessage,
-  Stock,
-} from "@/components/llm-stocks";
+import { spinner, BotCard, BotMessage, Stock } from "@/components/llm-stocks";
 import { StockSkeleton } from "@/components/llm-stocks/stock-skeleton";
 
-import {
-  runAsyncFnWithoutBlocking,
-  sleep,
-  formatNumber,
-  runOpenAICompletion,
-} from "@/lib/utils";
+import { runOpenAICompletion } from "@/lib/utils";
 import { z } from "zod";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY || "",
 });
-
-async function confirmPurchase(symbol: string, price: number, amount: number) {
-  "use server";
-
-  const aiState = getMutableAIState<typeof AI>();
-
-  const purchasing = createStreamableUI(
-    <div className="inline-flex items-start gap-1 md:items-center">
-      {spinner}
-      <p className="mb-2">
-        Purchasing {amount} ${symbol}...
-      </p>
-    </div>
-  );
-
-  const systemMessage = createStreamableUI(null);
-
-  runAsyncFnWithoutBlocking(async () => {
-    // You can update the UI at any point.
-    await sleep(1000);
-
-    purchasing.update(
-      <div className="inline-flex items-start gap-1 md:items-center">
-        {spinner}
-        <p className="mb-2">
-          Purchasing {amount} ${symbol}... working on it...
-        </p>
-      </div>
-    );
-
-    await sleep(1000);
-
-    purchasing.done(
-      <div>
-        <p className="mb-2">
-          You have successfully purchased {amount} ${symbol}. Total cost:{" "}
-          {formatNumber(amount * price)}
-        </p>
-      </div>
-    );
-
-    systemMessage.done(
-      <SystemMessage>
-        You have purchased {amount} shares of {symbol} at ${price}. Total cost ={" "}
-        {formatNumber(amount * price)}.
-      </SystemMessage>
-    );
-
-    aiState.done([
-      ...aiState.get(),
-      {
-        role: "system",
-        content: `[User has purchased ${amount} shares of ${symbol} at ${price}. Total cost = ${
-          amount * price
-        }]`,
-      },
-    ]);
-  });
-
-  return {
-    purchasingUI: purchasing.value,
-    newMessage: {
-      id: Date.now(),
-      display: systemMessage.value,
-    },
-  };
-}
 
 async function submitUserMessage(content: string) {
   "use server";
@@ -161,41 +83,15 @@ async function submitUserMessage(content: string) {
       </BotCard>
     );
 
-    const from = new Date(new Date().setMonth(new Date().getMonth() - 6))
-      .toISOString()
-      .split("T")[0];
-    const to = new Date().toISOString().split("T")[0];
+    const stockData: StockChartData[] = [
+      { date: "2021-01-01", close: 100 },
+      { date: "2021-01-02", close: 110 },
+      { date: "2021-01-03", close: 120 },
+      { date: "2021-01-04", close: 130 },
+      { date: "2021-01-05", close: 140 },
+    ];
 
-    let stockData: StockChartData[] = [];
-    let price = 0;
-    const url = `https://financialmodelingprep.com/api/v3/historical-price-full/${symbol}?apikey=${process.env.STOCK_API_KEY}&from=${from}&to=${to}`;
-
-    try {
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const data = await response.json();
-
-      stockData = data.historical
-        .map((item: StockChartData) => ({
-          date: formatDate(item.date),
-          close: item.close,
-        }))
-        .reverse();
-
-      function formatDate(dateStr: string): string {
-        const dateObj = new Date(dateStr);
-        const formattedDate = `${dateObj.getMonth() + 1}/${dateObj.getDate()}/${dateObj.getFullYear().toString().slice(2)}`;
-        return formattedDate;
-      }
-
-      price = stockData[stockData.length - 1].close;
-
-      console.log("Successfully fetched stock data for", symbol);
-    } catch (error) {
-      console.error("Error fetching historical price data:", error);
-    }
+    const price = stockData[stockData.length - 1]?.close || 0;
 
     reply.done(
       <BotCard>
@@ -236,7 +132,6 @@ const initialUIState: {
 export const AI = createAI({
   actions: {
     submitUserMessage,
-    confirmPurchase,
   },
   initialUIState,
   initialAIState,
