@@ -7,10 +7,6 @@ const exampleMessages = [
     heading: "What's the stock price of AAPL?",
     message: "What's the stock price of AAPL?",
   },
-  {
-    heading: "I'd like to buy 10 shares of MSFT",
-    message: "I'd like to buy 10 shares of MSFT",
-  },
 ];
 
 export function EmptyScreen({
