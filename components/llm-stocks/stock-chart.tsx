@@ -12,7 +12,7 @@ export function StockChart({ data, ticker }: StockChartProps) {
     datasets: [
       {
         label: `${ticker} Stock Price`,
-        data: data.map((item) => item.close),
+        data: data.map((item) => item.price),
         borderColor: "#20f160",
         backgroundColor: "#20f16022",
         fill: true,
@@ -24,6 +24,7 @@ export function StockChart({ data, ticker }: StockChartProps) {
   };
 
   const chartOptions = {
+    animation: false as false | {},
     scales: {
       x: {
         ticks: {
@@ -50,7 +51,7 @@ export function StockChart({ data, ticker }: StockChartProps) {
         callbacks: {
           label: function (context: any) {
             const value = context.parsed.y;
-            return `$${value}`;
+            return `$${value.toFixed(2)}`;
           },
         },
       },

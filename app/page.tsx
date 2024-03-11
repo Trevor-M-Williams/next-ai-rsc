@@ -19,6 +19,8 @@ import { Button } from "@/components/ui/button";
 import { ChatList } from "@/components/chat-list";
 import { EmptyScreen } from "@/components/empty-screen";
 
+import { getStockData } from "@/db/actions";
+
 export default function Page() {
   const [messages, setMessages] = useUIState<typeof AI>();
   const { submitUserMessage } = useActions<typeof AI>();

@@ -8,6 +8,7 @@ import { StockSkeleton } from "@/components/llm-stocks/stock-skeleton";
 
 import { runOpenAICompletion } from "@/lib/utils";
 import { z } from "zod";
+import { getHistoricalData } from "@/db/actions";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY || "",
@@ -83,15 +84,9 @@ async function submitUserMessage(content: string) {
       </BotCard>
     );
 
-    const stockData: StockChartData[] = [
-      { date: "2021-01-01", close: 100 },
-      { date: "2021-01-02", close: 110 },
-      { date: "2021-01-03", close: 120 },
-      { date: "2021-01-04", close: 130 },
-      { date: "2021-01-05", close: 140 },
-    ];
+    const stockData: StockChartData[] = await getHistoricalData(symbol);
 
-    const price = stockData[stockData.length - 1]?.close || 0;
+    const price = stockData[stockData.length - 1]?.price || 0;
 
     reply.done(
       <BotCard>
