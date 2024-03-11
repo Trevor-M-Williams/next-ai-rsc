@@ -6,12 +6,10 @@ import moment from "moment-timezone";
 function ChartButtons({
   chartData,
   setChartData,
-  percentChange,
   setPercentChange,
 }: {
   chartData: StockChartData[];
   setChartData: (data: StockChartData[]) => void;
-  percentChange: number;
   setPercentChange: (percentChange: number) => void;
 }) {
   const [timeframe, setTimeframe] = useState("1M");
@@ -127,7 +125,6 @@ export function Stock({
           <ChartButtons
             chartData={data}
             setChartData={setChartData}
-            percentChange={percentChange}
             setPercentChange={setPercentChange}
           />
         </div>
