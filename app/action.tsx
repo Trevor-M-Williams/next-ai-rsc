@@ -3,12 +3,15 @@ import "server-only";
 import { createAI, createStreamableUI, getMutableAIState } from "ai/rsc";
 import OpenAI from "openai";
 
-import { spinner, BotCard, BotMessage, Stock } from "@/components/llm-stocks";
-import { StockSkeleton } from "@/components/llm-stocks/stock-skeleton";
+import { BotCard, BotMessage, Stock, StockSkeleton } from "@/components/stocks";
+import { FinancialStatement } from "@/components/financials/financial-statement";
+import { spinner } from "@/components/spinner";
 
 import { runOpenAICompletion } from "@/lib/utils";
 import { z } from "zod";
+
 import { getHistoricalData } from "@/db/actions";
+import { getFinancialData } from "@/db/actions";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY || "",
@@ -44,6 +47,7 @@ async function submitUserMessage(content: string) {
           - "[Price of AAPL = 100]" means that an interface of the stock price of AAPL is shown to the user.
 
           If the user wants data on a specific stock, call \`show_stock_chart\` to show the data.
+          If the user wants company financial data, call \`get_financial_data\` to show the data.
 
           Otherwise, answer user questions and do calculations if needed.
         `,
@@ -59,6 +63,16 @@ async function submitUserMessage(content: string) {
         name: "show_stock_chart",
         description:
           "Get historical stock price data for a given stock. Use this to show the chart to the user.",
+        parameters: z.object({
+          symbol: z
+            .string()
+            .describe("The name or symbol of the stock. e.g. GOOG/AAPL/MSFT."),
+        }),
+      },
+      {
+        name: "get_financial_data",
+        description:
+          "Get the income statement for a given stock. Use this to show the income statement to the user.",
         parameters: z.object({
           symbol: z
             .string()
@@ -100,6 +114,27 @@ async function submitUserMessage(content: string) {
         role: "function",
         name: "show_stock_chart",
         content: `[Price of ${symbol} = ${price}]`,
+      },
+    ]);
+  });
+
+  completion.onFunctionCall("get_financial_data", async ({ symbol }) => {
+    reply.update(<BotCard>Loading...</BotCard>);
+
+    const data = await getFinancialData(symbol);
+
+    reply.done(
+      <BotCard>
+        <FinancialStatement data={data[0]} />
+      </BotCard>
+    );
+
+    aiState.done([
+      ...aiState.get(),
+      {
+        role: "function",
+        name: "get_financial_data",
+        content: `[Income statement of ${symbol}]`,
       },
     ]);
   });

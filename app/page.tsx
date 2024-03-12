@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { use, useEffect, useRef, useState } from "react";
 
 import { useUIState, useActions } from "ai/rsc";
-import { UserMessage } from "@/components/llm-stocks/message";
+import { UserMessage } from "@/components/stocks/message";
 
 import { type AI } from "./action";
 import { ChatScrollAnchor } from "@/lib/hooks/chat-scroll-anchor";
@@ -19,9 +19,7 @@ import { Button } from "@/components/ui/button";
 import { ChatList } from "@/components/chat-list";
 import { EmptyScreen } from "@/components/empty-screen";
 
-import { getStockData } from "@/db/actions";
-
-export default function Page() {
+export default function Home() {
   const [messages, setMessages] = useUIState<typeof AI>();
   const { submitUserMessage } = useActions<typeof AI>();
   const [inputValue, setInputValue] = useState("");

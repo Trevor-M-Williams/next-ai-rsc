@@ -11,7 +11,7 @@ export async function getHistoricalData(symbol: string) {
     });
 
     if (!stockData || !stockData.data) {
-      const fetchedData = await fetchStockApi(symbol);
+      const fetchedData = await fetchHistoricalData(symbol);
 
       const stockData = {
         name: symbol,
@@ -25,6 +25,16 @@ export async function getHistoricalData(symbol: string) {
 
     console.log(`Stock data fetched for ${symbol} - DB`);
     return stockData.data;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+}
+
+export async function getFinancialData(symbol: string) {
+  try {
+    const incomeStatement = await fetchIncomeStatement(symbol);
+    return incomeStatement;
   } catch (error) {
     console.error(error);
     return [];
@@ -45,7 +55,7 @@ export async function insertStockData(symbol: string, data: StockChartData[]) {
 
 // Utilities
 
-async function fetchStockApi(symbol: string) {
+async function fetchHistoricalData(symbol: string) {
   try {
     const url = `https://financialmodelingprep.com/api/v3/historical-price-full/${symbol}?apikey=${process.env.STOCK_API_KEY}`;
     const response = await fetch(url);
@@ -74,3 +84,23 @@ async function fetchStockApi(symbol: string) {
     return formattedDate;
   }
 }
+
+async function fetchIncomeStatement(symbol: string) {
+  const url = `https://financialmodelingprep.com/api/v3/income-statement/${symbol}?period=annual&apikey=${process.env.STOCK_API_KEY}`;
+  const response = await fetch(url);
+  const data = await response.json();
+  const incomeStatement = data.map((item: IncomeStatement) => ({
+    date: item.date,
+    revenue: item.revenue,
+    costOfRevenue: item.costOfRevenue,
+    grossProfit: item.grossProfit,
+    operatingExpense: item.operatingExpense,
+    operatingIncome: item.operatingIncome,
+    ebitda: item.ebitda,
+    netIncome: item.netIncome,
+    eps: item.eps,
+  }));
+  return incomeStatement;
+}
+
+// 383_285_000_000

@@ -14,6 +14,7 @@ export function StockChart({ data, ticker }: StockChartProps) {
         label: `${ticker} Stock Price`,
         data: data.map((item) => item.price),
         borderColor: "#20f160",
+        borderWidth: 2,
         backgroundColor: "#20f16022",
         fill: true,
         pointRadius: 10,
@@ -60,7 +61,7 @@ export function StockChart({ data, ticker }: StockChartProps) {
   };
 
   return (
-    <div className="h-60">
+    <div className="h-60 w-full">
       <Line data={chartData} options={chartOptions} />
     </div>
   );

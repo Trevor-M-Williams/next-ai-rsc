@@ -6,3 +6,10 @@ export const stocks = pgTable("stocks", {
   data: jsonb("data").$type<StockChartData[]>(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
+
+export const incomeStatements = pgTable("income_statements", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  data: jsonb("data").$type<IncomeStatement>(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
