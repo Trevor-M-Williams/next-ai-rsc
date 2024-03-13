@@ -4,20 +4,24 @@ import "chart.js/auto";
 type StockChartProps = {
   data: StockChartData[];
   ticker: string;
+  percentChange: number;
 };
 
-export function StockChart({ data, ticker }: StockChartProps) {
+export function StockChart({ data, ticker, percentChange }: StockChartProps) {
+  const borderColor = percentChange > 0 ? "#20f160" : "#ff4d4f";
+  const backgroundColor = percentChange > 0 ? "#20f16022" : "#ff4d4f22";
+
   const chartData = {
     labels: data.map((item) => item.date),
     datasets: [
       {
         label: `${ticker} Stock Price`,
         data: data.map((item) => item.price),
-        borderColor: "#20f160",
         borderWidth: 2,
-        backgroundColor: "#20f16022",
+        borderColor,
+        backgroundColor,
         fill: true,
-        pointRadius: 10,
+        pointRadius: 5,
         pointBorderColor: "rgba(0, 0, 0, 0)",
         pointBackgroundColor: "rgba(0, 0, 0, 0)",
       },

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 
 import { StockChart } from "./stock-chart";
 import moment from "moment-timezone";
+import { cn } from "@/lib/utils";
 
 function ChartButtons({
   chartData,
@@ -44,13 +45,9 @@ function ChartButtons({
         break;
     }
 
-    let newChartData = chartData.filter((item) =>
+    const newChartData = chartData.filter((item) =>
       moment(item.date).isSameOrAfter(startDate)
     );
-
-    if (newChartData.length > 500) {
-      newChartData = newChartData.filter((_, index) => index % 6 < 1);
-    }
 
     setChartData(newChartData);
 
@@ -67,7 +64,7 @@ function ChartButtons({
         <button
           key={tf}
           onClick={() => handleTimeframe(tf)}
-          className={`w-10 flex justify-center py-1 text-sm rounded hover:bg-green-400/10`}
+          className={`w-10 flex justify-center py-1 text-sm font-semibold rounded hover:bg-green-400/10`}
         >
           {tf}
         </button>
@@ -75,31 +72,11 @@ function ChartButtons({
 
       {/* underline */}
       <div
-        className="absolute bottom-0 left-0 w-6 h-px bg-green-400 transition-transform duration-300"
+        className="absolute bottom-0 left-0 w-6 h-px bg-white transition-transform duration-300"
         style={{
           transform: `translateX(calc(0.5rem + 2.5 * ${timeframes.indexOf(timeframe)}rem))`,
         }}
       />
-    </div>
-  );
-}
-
-function MarketStatus() {
-  const currentDateMoment = moment().tz("America/New_York");
-  const formattedDate = currentDateMoment.format("h:mm:ss A z");
-
-  const currentDay = currentDateMoment.day();
-  const currentHour = currentDateMoment.hour();
-  const currentMinute = currentDateMoment.minute();
-  const isOpen =
-    currentDay >= 1 &&
-    currentDay <= 5 &&
-    (currentHour > 9 || (currentHour === 9 && currentMinute >= 30)) &&
-    (currentHour < 16 || (currentHour === 16 && currentMinute === 0));
-
-  return (
-    <div className="mt-1 text-xs text-zinc-500">
-      {isOpen ? "Open" : "Closed"} {formattedDate}
     </div>
   );
 }
@@ -117,18 +94,30 @@ export function Stock({
   const [chartData, setChartData] = useState(data);
 
   return (
-    <div className="relative p-4 text-green-400 border rounded-xl bg-zinc-950 overflow-hidden">
+    <div className="relative p-4 text-zinc-300 border rounded-xl bg-zinc-950 overflow-hidden">
       <div className="flex justify-between">
         <div className="">
-          <div className="text-lg text-zinc-300">{name}</div>
-          <div className="text-3xl font-bold">${price.toFixed(2)}</div>
-          <MarketStatus />
+          <div className="flex items-center gap-2">
+            <div className="text-xl font-medium ">{name}</div>
+            {/* <div className="text-sm">Apple Inc.</div> */}
+          </div>
+
+          <div className="flex items-center gap-2">
+            <div className="text-2xl font-semibold text-white">
+              ${price.toFixed(2)}
+            </div>
+            <div
+              className={cn(
+                "text-xs",
+                percentChange > 0 ? "text-green-600" : "text-red-500"
+              )}
+            >
+              {`${percentChange > 0 ? "↑" : "↓"} ${percentChange.toFixed(2)}% `}
+            </div>
+          </div>
         </div>
 
-        <div className="flex flex-col items-end justify-between">
-          <div className="px-2 py-1 text-xs rounded-full bg-white/10">
-            {`${percentChange.toFixed(2)}% ${percentChange > 0 ? "↑" : "↓"}`}
-          </div>
+        <div className="flex items-end">
           <ChartButtons
             chartData={data}
             setChartData={setChartData}
@@ -138,7 +127,11 @@ export function Stock({
       </div>
 
       <div className="mt-4">
-        <StockChart data={chartData} ticker={name} />
+        <StockChart
+          data={chartData}
+          ticker={name}
+          percentChange={percentChange}
+        />
       </div>
     </div>
   );

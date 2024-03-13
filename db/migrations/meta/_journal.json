@@ -8,6 +8,13 @@
       "when": 1710178316278,
       "tag": "0000_conscious_nova",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1710342689845,
+      "tag": "0001_sour_vampiro",
+      "breakpoints": true
     }
   ]
 }

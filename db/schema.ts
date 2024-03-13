@@ -7,9 +7,13 @@ export const stocks = pgTable("stocks", {
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
 
-export const incomeStatements = pgTable("income_statements", {
+export const financialStatements = pgTable("financial_statements", {
   id: serial("id").primaryKey(),
   name: text("name").notNull(),
-  data: jsonb("data").$type<IncomeStatement>(),
+  balanceSheets: jsonb("balance_sheets").$type<BalanceSheet[]>(),
+  cashFlowStatements: jsonb("cash_flow_statements").$type<
+    CashFlowStatement[]
+  >(),
+  incomeStatements: jsonb("income_statements").$type<IncomeStatement[]>(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });

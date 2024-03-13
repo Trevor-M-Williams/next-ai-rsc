@@ -121,11 +121,16 @@ async function submitUserMessage(content: string) {
   completion.onFunctionCall("get_financial_data", async ({ symbol }) => {
     reply.update(<BotCard>Loading...</BotCard>);
 
-    const data = await getFinancialData(symbol);
+    const { balanceSheets, cashFlowStatements, incomeStatements } =
+      await getFinancialData(symbol);
 
     reply.done(
       <BotCard>
-        <FinancialStatement data={data[0]} />
+        <FinancialStatement
+          balanceSheets={balanceSheets}
+          cashFlowStatements={cashFlowStatements}
+          incomeStatements={incomeStatements}
+        />
       </BotCard>
     );
 

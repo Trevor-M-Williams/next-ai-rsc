@@ -1,45 +1,263 @@
 "use client";
 
-export function FinancialStatement({ data }: { data: IncomeStatement }) {
-  const year = data.date.slice(0, 4);
+import { useState } from "react";
 
-  const revenue = formatNumber(data.revenue);
-  const costOfRevenue = formatNumber(data.costOfRevenue);
-  const grossProfit = formatNumber(data.grossProfit);
-  const operatingExpenses = formatNumber(data.operatingExpenses);
-  const operatingIncome = formatNumber(data.operatingIncome);
-  const ebitda = formatNumber(data.ebitda);
-  const netIncome = formatNumber(data.netIncome);
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
-  function formatNumber(value: number) {
-    if (!value) return "N/A";
-    const number = Math.round(value / 1000000);
-    const formattedNumber = new Intl.NumberFormat("en-US").format(number);
-    return `$${formattedNumber}M`;
-  }
+import { cn } from "@/lib/utils";
+
+function formatNumber(value: number) {
+  if (!value) return "N/A";
+  const number = Math.round(value / 1000000);
+  const formattedNumber = new Intl.NumberFormat("en-US").format(number);
+  return `${formattedNumber}`;
+}
+
+type DataTableProps = {
+  data: {
+    title: string;
+    value: string;
+    change: number;
+  }[];
+};
+
+function DataTable({ data }: DataTableProps) {
+  return (
+    <div className="relative p-4 bg-muted rounded-xl">
+      <Table>
+        <TableHeader className="text-xs">
+          <TableRow>
+            <TableHead className="">2023</TableHead>
+            <TableHead className="w-32 text-right">(USD M)</TableHead>
+            <TableHead className="w-32 text-right">Y/Y CHANGE</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {data.map((item, index) => (
+            <TableRow key={index} className="text-base">
+              <TableCell className="py-4">{item.title}</TableCell>
+              <TableCell className="text-right">{item.value}</TableCell>
+              <TableCell
+                className={cn(
+                  "text-right",
+                  item.change > 0 ? "text-green-600" : "text-red-700"
+                )}
+              >
+                {item.change}%
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
+  );
+}
+
+function BalanceSheet({
+  balanceSheets,
+  year,
+}: {
+  balanceSheets: BalanceSheet[];
+  year: string;
+}) {
+  if (!balanceSheets.length) return null;
+
+  const data = balanceSheets.find((item) => item.date.includes(year));
+  if (!data) return null;
+
+  const tableData = [
+    {
+      title: "Cash & Short Term Investments",
+      value: formatNumber(data.cashAndShortTermInvestments),
+      change: 6.23,
+    },
+    {
+      title: "Total Assets",
+      value: formatNumber(data.totalAssets),
+      change: -2.45,
+    },
+    {
+      title: "Total Liabilities",
+      value: formatNumber(data.totalLiabilities),
+      change: 4.9,
+    },
+    {
+      title: "Total Equity",
+      value: formatNumber(data.totalEquity),
+      change: 6.19,
+    },
+    {
+      title: "Total Current Assets",
+      value: formatNumber(data.totalCurrentAssets),
+      change: 6.19,
+    },
+    {
+      title: "Total Current Liabilities",
+      value: formatNumber(data.totalCurrentLiabilities),
+      change: 4.9,
+    },
+  ];
+
+  return <DataTable data={tableData} />;
+}
+
+function CashFlowStatement({
+  cashFlowStatements,
+  year,
+}: {
+  cashFlowStatements: CashFlowStatement[];
+  year: string;
+}) {
+  if (!cashFlowStatements.length) return null;
+
+  const data = cashFlowStatements.find((item) => item.date.includes(year));
+  if (!data) return null;
+
+  const tableData = [
+    {
+      title: "Net Income",
+      value: formatNumber(data.netIncome),
+      change: 6.23,
+    },
+    {
+      title: "Cash from operations",
+      value: formatNumber(data.netCashProvidedByOperatingActivities),
+      change: 6.23,
+    },
+    {
+      title: "Cash from investing",
+      value: formatNumber(data.netCashUsedForInvestingActivites),
+      change: -2.45,
+    },
+    {
+      title: "Cash from financing",
+      value: formatNumber(data.netCashUsedProvidedByFinancingActivities),
+      change: 4.9,
+    },
+    {
+      title: "Net Change in Cash",
+      value: formatNumber(data.netChangeInCash),
+      change: 6.19,
+    },
+    {
+      title: "Free Cash Flow",
+      value: formatNumber(data.freeCashFlow),
+      change: 6.19,
+    },
+  ];
+
+  return <DataTable data={tableData} />;
+}
+
+function IncomeStatement({
+  incomeStatements,
+  year,
+}: {
+  incomeStatements: IncomeStatement[];
+  year: string;
+}) {
+  if (!incomeStatements.length) return null;
+
+  const data = incomeStatements.find((item) => item.date.includes(year));
+  if (!data) return null;
+
+  const tableData = [
+    {
+      title: "Revenue",
+      value: formatNumber(data.revenue),
+      change: 6.23,
+    },
+    {
+      title: "Cost of Revenue",
+      value: formatNumber(data.costOfRevenue),
+      change: -2.45,
+    },
+    {
+      title: "Gross Profit",
+      value: formatNumber(data.grossProfit),
+      change: 4.9,
+    },
+    {
+      title: "EBITDA",
+      value: formatNumber(data.ebitda),
+      change: -0.31,
+    },
+    {
+      title: "Net Income",
+      value: formatNumber(data.netIncome),
+      change: 6.19,
+    },
+    {
+      title: "EPS",
+      value: data.eps.toString(),
+      change: 4.77,
+    },
+  ];
+
+  return <DataTable data={tableData} />;
+}
+
+type FinancialStatementProps = {
+  balanceSheets: BalanceSheet[];
+  cashFlowStatements: CashFlowStatement[];
+  incomeStatements: IncomeStatement[];
+};
+
+export function FinancialStatement({
+  balanceSheets,
+  cashFlowStatements,
+  incomeStatements,
+}: FinancialStatementProps) {
+  const [year, setYear] = useState("2023");
 
   return (
-    <div className="relative p-4 bg-zinc-100 border rounded-xl overflow-hidden">
-      <div className="grid grid-cols-2">
-        <div className="font-medium text-lg">Income Statement</div>
-        <div className="font-medium text-lg">{year}</div>
-        <div>Revenue</div>
-        <div>{revenue}</div>
-        <div>Cost of Revenue</div>
-        <div>{costOfRevenue}</div>
-        <div>Gross Profit</div>
-        <div>{grossProfit}</div>
-        <div>Operating Expenses</div>
-        <div>{operatingExpenses}</div>
-        <div>Operating Income</div>
-        <div>{operatingIncome}</div>
-        <div>EBITDA</div>
-        <div>{ebitda}</div>
-        <div>Net Income</div>
-        <div>{netIncome}</div>
-        <div>EPS</div>
-        <div>{data.eps}</div>
+    <Tabs defaultValue="income-statement" className="">
+      <div className="absolute right-2">
+        <Select defaultValue="2023" onValueChange={(val) => setYear(val)}>
+          <SelectTrigger className="w-[100px]">
+            <SelectValue placeholder="Year" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="2023">2023</SelectItem>
+            <SelectItem value="2022">2022</SelectItem>
+            <SelectItem value="2021">2021</SelectItem>
+            <SelectItem value="2020">2020</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
-    </div>
+
+      <TabsList>
+        <TabsTrigger value="income-statement">Income Statement</TabsTrigger>
+        <TabsTrigger value="balance-sheet">Balance Sheet</TabsTrigger>
+        <TabsTrigger value="cash-flow">Cash Flow</TabsTrigger>
+      </TabsList>
+      <TabsContent value="income-statement">
+        <IncomeStatement incomeStatements={incomeStatements} year={year} />
+      </TabsContent>
+      <TabsContent value="balance-sheet">
+        <BalanceSheet balanceSheets={balanceSheets} year={year} />
+      </TabsContent>
+      <TabsContent value="cash-flow">
+        <CashFlowStatement
+          cashFlowStatements={cashFlowStatements}
+          year={year}
+        />
+      </TabsContent>
+    </Tabs>
   );
 }
