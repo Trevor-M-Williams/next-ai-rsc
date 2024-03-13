@@ -1,5 +1,4 @@
 "use client";
-
 import { useState } from "react";
 
 import {
@@ -223,20 +222,22 @@ export function FinancialStatement({
   cashFlowStatements,
   incomeStatements,
 }: FinancialStatementProps) {
-  const [year, setYear] = useState("2023");
+  const years = balanceSheets.map((item) => item.date.split("-")[0]);
+  const [year, setYear] = useState(years[0]);
 
   return (
     <Tabs defaultValue="income-statement" className="">
       <div className="absolute right-2">
-        <Select defaultValue="2023" onValueChange={(val) => setYear(val)}>
+        <Select defaultValue={years[0]} onValueChange={(val) => setYear(val)}>
           <SelectTrigger className="w-[100px]">
             <SelectValue placeholder="Year" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="2023">2023</SelectItem>
-            <SelectItem value="2022">2022</SelectItem>
-            <SelectItem value="2021">2021</SelectItem>
-            <SelectItem value="2020">2020</SelectItem>
+            {years.map((item, index) => (
+              <SelectItem key={index} value={item}>
+                {item}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
       </div>
