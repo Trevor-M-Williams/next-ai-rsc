@@ -33,9 +33,12 @@ export async function getHistoricalData(symbol: string) {
 
 export async function getFinancialData(symbol: string) {
   try {
-    const balanceSheets = await fetchBalanceSheets(symbol);
-    const cashFlowStatements = await fetchCashFlowStatements(symbol);
-    const incomeStatements = await fetchIncomeStatements(symbol);
+    const [balanceSheets, cashFlowStatements, incomeStatements] =
+      await Promise.all([
+        fetchBalanceSheets(symbol),
+        fetchCashFlowStatements(symbol),
+        fetchIncomeStatements(symbol),
+      ]);
 
     return { balanceSheets, cashFlowStatements, incomeStatements };
   } catch (error) {

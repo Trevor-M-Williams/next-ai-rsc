@@ -187,11 +187,6 @@ function IncomeStatement({
       change: -2.45,
     },
     {
-      title: "Gross profit",
-      value: formatNumber(data.grossProfit),
-      change: 4.9,
-    },
-    {
       title: "EBITDA",
       value: formatNumber(data.ebitda),
       change: -0.31,
@@ -199,6 +194,11 @@ function IncomeStatement({
     {
       title: "Net income",
       value: formatNumber(data.netIncome),
+      change: 6.19,
+    },
+    {
+      title: "Net profit margin",
+      value: (data.netIncomeRatio * 100).toFixed(2),
       change: 6.19,
     },
     {
