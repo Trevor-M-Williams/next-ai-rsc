@@ -82,32 +82,32 @@ function BalanceSheet({
 
   const tableData = [
     {
-      title: "Cash & Short Term Investments",
+      title: "Cash & short term investments",
       value: formatNumber(data.cashAndShortTermInvestments),
       change: 6.23,
     },
     {
-      title: "Total Assets",
+      title: "Total assets",
       value: formatNumber(data.totalAssets),
       change: -2.45,
     },
     {
-      title: "Total Liabilities",
+      title: "Total liabilities",
       value: formatNumber(data.totalLiabilities),
       change: 4.9,
     },
     {
-      title: "Total Equity",
+      title: "Total equity",
       value: formatNumber(data.totalEquity),
       change: 6.19,
     },
     {
-      title: "Total Current Assets",
+      title: "Total current assets",
       value: formatNumber(data.totalCurrentAssets),
       change: 6.19,
     },
     {
-      title: "Total Current Liabilities",
+      title: "Total current liabilities",
       value: formatNumber(data.totalCurrentLiabilities),
       change: 4.9,
     },
@@ -130,7 +130,7 @@ function CashFlowStatement({
 
   const tableData = [
     {
-      title: "Net Income",
+      title: "Net income",
       value: formatNumber(data.netIncome),
       change: 6.23,
     },
@@ -150,12 +150,12 @@ function CashFlowStatement({
       change: 4.9,
     },
     {
-      title: "Net Change in Cash",
+      title: "Net change in cash",
       value: formatNumber(data.netChangeInCash),
       change: 6.19,
     },
     {
-      title: "Free Cash Flow",
+      title: "Free cash flow",
       value: formatNumber(data.freeCashFlow),
       change: 6.19,
     },
@@ -183,12 +183,12 @@ function IncomeStatement({
       change: 6.23,
     },
     {
-      title: "Cost of Revenue",
+      title: "Cost of revenue",
       value: formatNumber(data.costOfRevenue),
       change: -2.45,
     },
     {
-      title: "Gross Profit",
+      title: "Gross profit",
       value: formatNumber(data.grossProfit),
       change: 4.9,
     },
@@ -198,12 +198,12 @@ function IncomeStatement({
       change: -0.31,
     },
     {
-      title: "Net Income",
+      title: "Net income",
       value: formatNumber(data.netIncome),
       change: 6.19,
     },
     {
-      title: "EPS",
+      title: "Earnings per share",
       value: data.eps.toString(),
       change: 4.77,
     },
