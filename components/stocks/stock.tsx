@@ -50,6 +50,7 @@ function ChartButtons({
     );
 
     setChartData(newChartData);
+    if (newChartData.length === 0) return;
 
     const startPrice = newChartData[0].price;
     const endPrice = newChartData[newChartData.length - 1].price;

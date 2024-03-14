@@ -4,10 +4,10 @@ import { createAI, createStreamableUI, getMutableAIState } from "ai/rsc";
 import OpenAI from "openai";
 
 import { BotCard, BotMessage, Stock, StockSkeleton } from "@/components/stocks";
-import { FinancialStatement } from "@/components/financials/financial-statement";
+import { FinancialStatement, FinancialSkeleton } from "@/components/financials";
 import { spinner } from "@/components/spinner";
 
-import { runOpenAICompletion } from "@/lib/utils";
+import { runOpenAICompletion, sleep } from "@/lib/utils";
 import { z } from "zod";
 
 import { getHistoricalData } from "@/db/actions";
@@ -119,7 +119,11 @@ async function submitUserMessage(content: string) {
   });
 
   completion.onFunctionCall("get_financial_data", async ({ symbol }) => {
-    reply.update(<BotCard>Loading...</BotCard>);
+    reply.update(
+      <BotCard>
+        <FinancialSkeleton />
+      </BotCard>
+    );
 
     const { balanceSheets, cashFlowStatements, incomeStatements } =
       await getFinancialData(symbol);
