@@ -20,13 +20,6 @@ import {
 
 import { cn } from "@/lib/utils";
 
-function formatNumber(value: number) {
-  if (!value) return "N/A";
-  const number = Math.round(value / 1000000);
-  const formattedNumber = new Intl.NumberFormat("en-US").format(number);
-  return `${formattedNumber}`;
-}
-
 type DataTableProps = {
   data: {
     title: string;
@@ -42,7 +35,7 @@ function DataTable({ data }: DataTableProps) {
         <TableHeader className="text-xs">
           <TableRow>
             <TableHead className="">2023</TableHead>
-            <TableHead className="w-32 text-right">(USD M)</TableHead>
+            <TableHead className="w-32 text-right">(M USD)</TableHead>
             <TableHead className="w-32 text-right">Y/Y CHANGE</TableHead>
           </TableRow>
         </TableHeader>
@@ -57,7 +50,7 @@ function DataTable({ data }: DataTableProps) {
                   item.change > 0 ? "text-green-600" : "text-red-700"
                 )}
               >
-                {item.change}%
+                {item.change > 0 ? "↑" : "↓"} {item.change}%
               </TableCell>
             </TableRow>
           ))}
@@ -83,32 +76,36 @@ function BalanceSheet({
     {
       title: "Cash & short term investments",
       value: formatNumber(data.cashAndShortTermInvestments),
-      change: 6.23,
+      change: calculateChange(
+        balanceSheets,
+        year,
+        "cashAndShortTermInvestments"
+      ),
     },
     {
       title: "Total assets",
       value: formatNumber(data.totalAssets),
-      change: -2.45,
+      change: calculateChange(balanceSheets, year, "totalAssets"),
     },
     {
       title: "Total liabilities",
       value: formatNumber(data.totalLiabilities),
-      change: 4.9,
+      change: calculateChange(balanceSheets, year, "totalLiabilities"),
     },
     {
       title: "Total equity",
       value: formatNumber(data.totalEquity),
-      change: 6.19,
+      change: calculateChange(balanceSheets, year, "totalEquity"),
     },
     {
       title: "Total current assets",
       value: formatNumber(data.totalCurrentAssets),
-      change: 6.19,
+      change: calculateChange(balanceSheets, year, "totalCurrentAssets"),
     },
     {
       title: "Total current liabilities",
       value: formatNumber(data.totalCurrentLiabilities),
-      change: 4.9,
+      change: calculateChange(balanceSheets, year, "totalCurrentLiabilities"),
     },
   ];
 
@@ -131,32 +128,44 @@ function CashFlowStatement({
     {
       title: "Net income",
       value: formatNumber(data.netIncome),
-      change: 6.23,
+      change: calculateChange(cashFlowStatements, year, "netIncome"),
     },
     {
       title: "Cash from operations",
       value: formatNumber(data.netCashProvidedByOperatingActivities),
-      change: 6.23,
+      change: calculateChange(
+        cashFlowStatements,
+        year,
+        "netCashProvidedByOperatingActivities"
+      ),
     },
     {
       title: "Cash from investing",
       value: formatNumber(data.netCashUsedForInvestingActivites),
-      change: -2.45,
+      change: calculateChange(
+        cashFlowStatements,
+        year,
+        "netCashUsedForInvestingActivites"
+      ),
     },
     {
       title: "Cash from financing",
       value: formatNumber(data.netCashUsedProvidedByFinancingActivities),
-      change: 4.9,
+      change: calculateChange(
+        cashFlowStatements,
+        year,
+        "netCashUsedProvidedByFinancingActivities"
+      ),
     },
     {
       title: "Net change in cash",
       value: formatNumber(data.netChangeInCash),
-      change: 6.19,
+      change: calculateChange(cashFlowStatements, year, "netChangeInCash"),
     },
     {
       title: "Free cash flow",
       value: formatNumber(data.freeCashFlow),
-      change: 6.19,
+      change: calculateChange(cashFlowStatements, year, "freeCashFlow"),
     },
   ];
 
@@ -179,32 +188,32 @@ function IncomeStatement({
     {
       title: "Revenue",
       value: formatNumber(data.revenue),
-      change: 6.23,
+      change: calculateChange(incomeStatements, year, "revenue"),
     },
     {
       title: "Cost of revenue",
       value: formatNumber(data.costOfRevenue),
-      change: -2.45,
+      change: calculateChange(incomeStatements, year, "costOfRevenue"),
     },
     {
       title: "EBITDA",
       value: formatNumber(data.ebitda),
-      change: -0.31,
+      change: calculateChange(incomeStatements, year, "ebitda"),
     },
     {
       title: "Net income",
       value: formatNumber(data.netIncome),
-      change: 6.19,
+      change: calculateChange(incomeStatements, year, "netIncome"),
     },
     {
       title: "Net profit margin",
       value: (data.netIncomeRatio * 100).toFixed(2),
-      change: 6.19,
+      change: calculateChange(incomeStatements, year, "netIncomeRatio"),
     },
     {
       title: "Earnings per share",
       value: data.eps.toString(),
-      change: 4.77,
+      change: calculateChange(incomeStatements, year, "eps"),
     },
   ];
 
@@ -222,7 +231,9 @@ export function FinancialStatement({
   cashFlowStatements,
   incomeStatements,
 }: FinancialStatementProps) {
-  const years = balanceSheets.map((item) => item.date.split("-")[0]);
+  let years = balanceSheets.map((item) => item.date.split("-")[0]);
+  years.pop();
+
   const [year, setYear] = useState(years[0]);
 
   return (
@@ -261,4 +272,26 @@ export function FinancialStatement({
       </TabsContent>
     </Tabs>
   );
+}
+
+// Utils
+
+function calculateChange(data: any, year: string, field: string) {
+  const currentYear = data.find((item: any) => item.date.includes(year));
+  const previousYear = data.find((item: any) =>
+    item.date.includes(parseInt(year) - 1)
+  );
+  if (!currentYear || !previousYear) return 0;
+  const percentChange =
+    ((currentYear[field] - previousYear[field]) /
+      Math.abs(previousYear[field])) *
+    100;
+  return parseFloat(percentChange.toFixed(2)) || 0;
+}
+
+function formatNumber(value: number) {
+  if (!value) return "N/A";
+  const number = Math.round(value / 1000000);
+  const formattedNumber = new Intl.NumberFormat("en-US").format(number);
+  return formattedNumber;
 }
