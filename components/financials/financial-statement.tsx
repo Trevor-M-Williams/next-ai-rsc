@@ -221,12 +221,14 @@ function IncomeStatement({
 }
 
 type FinancialStatementProps = {
+  name: string;
   balanceSheets: BalanceSheet[];
   cashFlowStatements: CashFlowStatement[];
   incomeStatements: IncomeStatement[];
 };
 
 export function FinancialStatement({
+  name,
   balanceSheets,
   cashFlowStatements,
   incomeStatements,
@@ -237,40 +239,44 @@ export function FinancialStatement({
   const [year, setYear] = useState(years[0]);
 
   return (
-    <Tabs defaultValue="income-statement" className="">
-      <div className="absolute right-2">
-        <Select defaultValue={years[0]} onValueChange={(val) => setYear(val)}>
-          <SelectTrigger className="w-[100px]">
-            <SelectValue placeholder="Year" />
-          </SelectTrigger>
-          <SelectContent>
-            {years.map((item, index) => (
-              <SelectItem key={index} value={item}>
-                {item}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
+    <div className="">
+      <div className="text-xl font-semibold ml-2 mb-2">{name}</div>
 
-      <TabsList>
-        <TabsTrigger value="income-statement">Income Statement</TabsTrigger>
-        <TabsTrigger value="balance-sheet">Balance Sheet</TabsTrigger>
-        <TabsTrigger value="cash-flow">Cash Flow</TabsTrigger>
-      </TabsList>
-      <TabsContent value="income-statement">
-        <IncomeStatement incomeStatements={incomeStatements} year={year} />
-      </TabsContent>
-      <TabsContent value="balance-sheet">
-        <BalanceSheet balanceSheets={balanceSheets} year={year} />
-      </TabsContent>
-      <TabsContent value="cash-flow">
-        <CashFlowStatement
-          cashFlowStatements={cashFlowStatements}
-          year={year}
-        />
-      </TabsContent>
-    </Tabs>
+      <Tabs defaultValue="income-statement" className="">
+        <div className="absolute right-2">
+          <Select defaultValue={years[0]} onValueChange={(val) => setYear(val)}>
+            <SelectTrigger className="w-[100px]">
+              <SelectValue placeholder="Year" />
+            </SelectTrigger>
+            <SelectContent>
+              {years.map((item, index) => (
+                <SelectItem key={index} value={item}>
+                  {item}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        <TabsList>
+          <TabsTrigger value="income-statement">Income Statement</TabsTrigger>
+          <TabsTrigger value="balance-sheet">Balance Sheet</TabsTrigger>
+          <TabsTrigger value="cash-flow">Cash Flow</TabsTrigger>
+        </TabsList>
+        <TabsContent value="income-statement">
+          <IncomeStatement incomeStatements={incomeStatements} year={year} />
+        </TabsContent>
+        <TabsContent value="balance-sheet">
+          <BalanceSheet balanceSheets={balanceSheets} year={year} />
+        </TabsContent>
+        <TabsContent value="cash-flow">
+          <CashFlowStatement
+            cashFlowStatements={cashFlowStatements}
+            year={year}
+          />
+        </TabsContent>
+      </Tabs>
+    </div>
   );
 }
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { use, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { useUIState, useActions } from "ai/rsc";
 import { UserMessage } from "@/components/stocks/message";
@@ -60,7 +60,6 @@ export default function Home() {
         ) : (
           <EmptyScreen
             submitMessage={async (message) => {
-              // Add user message UI
               setMessages((currentMessages) => [
                 ...currentMessages,
                 {
@@ -69,7 +68,6 @@ export default function Home() {
                 },
               ]);
 
-              // Submit and get response message
               const responseMessage = await submitUserMessage(message);
               setMessages((currentMessages) => [
                 ...currentMessages,

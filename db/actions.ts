@@ -2,7 +2,7 @@
 
 import { eq } from "drizzle-orm";
 import { db } from ".";
-import { stocks } from "./schema";
+import { financialStatements, stocks } from "./schema";
 
 export async function getHistoricalData(symbol: string) {
   try {
@@ -33,6 +33,15 @@ export async function getHistoricalData(symbol: string) {
 
 export async function getFinancialData(symbol: string) {
   try {
+    const financialData = await db.query.financialStatements.findFirst({
+      where: eq(financialStatements.name, symbol),
+    });
+
+    if (financialData) {
+      console.log(`Financial data fetched for ${symbol} - DB`);
+      return financialData;
+    }
+
     const [balanceSheets, cashFlowStatements, incomeStatements] =
       await Promise.all([
         fetchBalanceSheets(symbol),
@@ -40,6 +49,16 @@ export async function getFinancialData(symbol: string) {
         fetchIncomeStatements(symbol),
       ]);
 
+    const data = {
+      name: symbol,
+      balanceSheets,
+      cashFlowStatements,
+      incomeStatements,
+    };
+
+    await db.insert(financialStatements).values(data);
+
+    console.log(`Financial data fetched for ${symbol} - API`);
     return { balanceSheets, cashFlowStatements, incomeStatements };
   } catch (error) {
     console.error(error);

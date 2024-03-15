@@ -7,7 +7,7 @@ import { BotCard, BotMessage, Stock, StockSkeleton } from "@/components/stocks";
 import { FinancialStatement, FinancialSkeleton } from "@/components/financials";
 import { spinner } from "@/components/spinner";
 
-import { runOpenAICompletion, sleep } from "@/lib/utils";
+import { runOpenAICompletion } from "@/lib/utils";
 import { z } from "zod";
 
 import { getHistoricalData } from "@/db/actions";
@@ -33,8 +33,45 @@ async function submitUserMessage(content: string) {
     <BotMessage className="items-center">{spinner}</BotMessage>
   );
 
+  if (content.startsWith("stock")) {
+    const symbol = content.split(":")[1];
+
+    reply.update(
+      <BotCard>
+        <StockSkeleton />
+      </BotCard>
+    );
+
+    const stockData: StockChartData[] = await getHistoricalData(symbol);
+
+    const price = stockData[stockData.length - 1]?.price || 0;
+
+    reply.done(
+      <BotCard>
+        <Stock name={symbol} data={stockData} />
+      </BotCard>
+    );
+
+    aiState.done([
+      ...aiState.get(),
+      {
+        role: "function",
+        name: "show_stock_chart",
+        content: `[Price of ${symbol} = ${price}]`,
+      },
+    ]);
+
+    console.log(aiState.get().slice(-2));
+
+    return {
+      id: Date.now(),
+      display: reply.value,
+    };
+  }
+
   const completion = runOpenAICompletion(openai, {
-    model: "gpt-3.5-turbo",
+    // model: "gpt-3.5-turbo",
+    model: "gpt-4-0125-preview",
     stream: true,
     messages: [
       {
@@ -46,8 +83,10 @@ async function submitUserMessage(content: string) {
           Messages inside [] means that it's a UI element or a user event. For example:
           - "[Price of AAPL = 100]" means that an interface of the stock price of AAPL is shown to the user.
 
-          If the user wants data on a specific stock, call \`show_stock_chart\` to show the data.
-          If the user wants company financial data, call \`get_financial_data\` to show the data.
+          If the user wants the chart of a specific stock, call \`show_stock_chart\` to show the chart.
+          If the user wants company financial data, call \`show_financial_data\` to show the data.
+          If the user asks you a specific question about the financial data (e.g. what was the change in profit margin from 22 to 23), use the financial data in the chat history to answer the question.
+          If the financial data is not in the chat history, ask the user for the stock symbol and then call \`get_financial_data\` to get the data.
 
           Otherwise, answer user questions and do calculations if needed.
         `,
@@ -70,9 +109,9 @@ async function submitUserMessage(content: string) {
         }),
       },
       {
-        name: "get_financial_data",
+        name: "show_financial_data",
         description:
-          "Get the income statement for a given stock. Use this to show the income statement to the user.",
+          "Get the financial statements for a given stock. Use this to show the financial statements to the user.",
         parameters: z.object({
           symbol: z
             .string()
@@ -118,7 +157,7 @@ async function submitUserMessage(content: string) {
     ]);
   });
 
-  completion.onFunctionCall("get_financial_data", async ({ symbol }) => {
+  completion.onFunctionCall("show_financial_data", async ({ symbol }) => {
     reply.update(
       <BotCard>
         <FinancialSkeleton />
@@ -131,6 +170,7 @@ async function submitUserMessage(content: string) {
     reply.done(
       <BotCard>
         <FinancialStatement
+          name={symbol}
           balanceSheets={balanceSheets}
           cashFlowStatements={cashFlowStatements}
           incomeStatements={incomeStatements}
@@ -142,8 +182,12 @@ async function submitUserMessage(content: string) {
       ...aiState.get(),
       {
         role: "function",
-        name: "get_financial_data",
-        content: `[Income statement of ${symbol}]`,
+        name: "show_financial_data",
+        content: `[Financial statements for ${symbol}: 
+          Balance sheets: ${JSON.stringify(balanceSheets)}, 
+          Cash flow statements: ${JSON.stringify(cashFlowStatements)},
+          Income statements: ${JSON.stringify(incomeStatements)}
+        ]`,
       },
     ]);
   });
