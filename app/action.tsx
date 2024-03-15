@@ -33,41 +33,7 @@ async function submitUserMessage(content: string) {
     <BotMessage className="items-center">{spinner}</BotMessage>
   );
 
-  if (content.startsWith("stock")) {
-    const symbol = content.split(":")[1];
-
-    reply.update(
-      <BotCard>
-        <StockSkeleton />
-      </BotCard>
-    );
-
-    const stockData: StockChartData[] = await getHistoricalData(symbol);
-
-    const price = stockData[stockData.length - 1]?.price || 0;
-
-    reply.done(
-      <BotCard>
-        <Stock name={symbol} data={stockData} />
-      </BotCard>
-    );
-
-    aiState.done([
-      ...aiState.get(),
-      {
-        role: "function",
-        name: "show_stock_chart",
-        content: `[Price of ${symbol} = ${price}]`,
-      },
-    ]);
-
-    console.log(aiState.get().slice(-2));
-
-    return {
-      id: Date.now(),
-      display: reply.value,
-    };
-  }
+  if (content.startsWith("/")) handleCommand(content, reply, aiState);
 
   const completion = runOpenAICompletion(openai, {
     // model: "gpt-3.5-turbo",
@@ -219,3 +185,46 @@ export const AI = createAI({
   initialUIState,
   initialAIState,
 });
+
+async function handleCommand(
+  content: string,
+  reply: ReturnType<typeof createStreamableUI>,
+  aiState: ReturnType<typeof getMutableAIState>
+) {
+  const command = content.split(":")[0];
+  switch (command) {
+    case "/stocks": {
+      const symbol = content.split(":")[1];
+
+      reply.update(
+        <BotCard>
+          <StockSkeleton />
+        </BotCard>
+      );
+
+      const stockData: StockChartData[] = await getHistoricalData(symbol);
+
+      const price = stockData[stockData.length - 1]?.price || 0;
+
+      reply.done(
+        <BotCard>
+          <Stock name={symbol} data={stockData} />
+        </BotCard>
+      );
+
+      aiState.done([
+        ...aiState.get(),
+        {
+          role: "function",
+          name: "show_stock_chart",
+          content: `[Price of ${symbol} = ${price}]`,
+        },
+      ]);
+
+      return {
+        id: Date.now(),
+        display: reply.value,
+      };
+    }
+  }
+}
