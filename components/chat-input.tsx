@@ -138,6 +138,11 @@ export function ChatInput({ setMessages, submitUserMessage }: ChatInputProps) {
       return;
     }
 
+    if (event.key === "Tab" && commandsOpen) {
+      event.preventDefault();
+      setInputValue(selectedCommand + ":");
+    }
+
     // set selected command to the value of the first child of commandsRef
     await sleep(10);
     if (commandsRef.current) {
@@ -202,8 +207,6 @@ export function ChatInput({ setMessages, submitUserMessage }: ChatInputProps) {
               const value = inputValue.trim();
               setInputValue("");
               setCommandsOpen(false);
-
-              console.log(value);
 
               if (!value) return;
 

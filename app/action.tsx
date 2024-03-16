@@ -55,7 +55,7 @@ async function submitUserMessage(content: string) {
           If the user asks you a specific question about the financial data (e.g. what was the change in profit margin from 22 to 23), use the financial data in the chat history to answer the question.
           If the financial data is not in the chat history, ask the user for the stock symbol if necessary and then call \`get_financial_data\` to get the data.
 
-          Otherwise, answer user questions and do calculations as needed.
+          When doing calculations don't provide formulas, just the result.
         `,
         },
         ...aiState.get().map((info: any) => ({
@@ -158,6 +158,25 @@ async function handleCommand(
 
   const command = content.split(":")[0] || "";
   const symbol = content.split(":")[1].toUpperCase() || "";
+
+  if (!symbol) {
+    reply.done(<BotMessage>Please provide a company symbol</BotMessage>);
+
+    aiState.done([
+      ...aiState.get(),
+      {
+        role: "system",
+        content: `No symbol provided for command: ${content}`,
+      },
+    ]);
+
+    return {
+      id: Date.now(),
+      display: reply.value,
+    };
+  }
+
+  console.log("Test");
 
   switch (command) {
     case "/stock": {
