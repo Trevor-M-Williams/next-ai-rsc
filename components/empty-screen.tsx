@@ -4,11 +4,11 @@ import { IconArrowRight } from "@/components/ui/icons";
 const exampleMessages = [
   {
     heading: "What's the stock price of AAPL?",
-    message: "What's the stock price of AAPL?",
+    message: "/stock:AAPL",
   },
   {
     heading: "Show me Tesla's financials",
-    message: "Show me Tesla's financials",
+    message: "/financials:TSLA",
   },
 ];
 

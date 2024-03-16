@@ -240,7 +240,7 @@ export function FinancialStatement({
 
   return (
     <div className="">
-      <div className="text-xl font-semibold ml-2 mb-2">{name}</div>
+      <div className="text-xl font-semibold uppercase ml-2 mb-2">{name}</div>
 
       <Tabs defaultValue="income-statement" className="">
         <div className="absolute right-2">

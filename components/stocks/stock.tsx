@@ -99,7 +99,7 @@ export function Stock({
       <div className="flex justify-between">
         <div className="">
           <div className="flex items-center gap-2">
-            <div className="text-xl font-medium ">{name}</div>
+            <div className="text-xl font-medium uppercase">{name}</div>
             {/* <div className="text-sm">Apple Inc.</div> */}
           </div>
 
