@@ -33,10 +33,14 @@ function ChatCommands({
   inputValue,
   commandsRef,
   selectedCommand,
+  setInputValue,
+  inputRef,
 }: {
   inputValue: string;
   commandsRef: React.RefObject<HTMLDivElement>;
-  selectedCommand?: string;
+  selectedCommand: string;
+  setInputValue: React.Dispatch<React.SetStateAction<string>>;
+  inputRef: React.RefObject<HTMLTextAreaElement>;
 }) {
   return (
     <Command className="focus:border-none focus:outline-none">
@@ -56,7 +60,8 @@ function ChatCommands({
                   : "bg-transparent"
               )}
               onSelect={() => {
-                console.log(command.name);
+                setInputValue(command.name + ":");
+                inputRef.current?.focus();
               }}
             >
               <div className="text-lg">{command.name}</div>
@@ -192,6 +197,8 @@ export function ChatInput({ setMessages, submitUserMessage }: ChatInputProps) {
               inputValue={inputValue}
               commandsRef={commandsRef}
               selectedCommand={selectedCommand}
+              setInputValue={setInputValue}
+              inputRef={inputRef}
             />
           )}
           <form
