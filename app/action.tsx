@@ -6,6 +6,7 @@ import OpenAI from "openai";
 import { BotCard, BotMessage, Stock, StockSkeleton } from "@/components/stocks";
 import { FinancialStatement, FinancialSkeleton } from "@/components/financials";
 import { spinner } from "@/components/spinner";
+import { MarkdownLatex } from "@/components/markdown-latex";
 
 import { runOpenAICompletion } from "@/lib/utils";
 import { z } from "zod";
@@ -38,7 +39,8 @@ async function submitUserMessage(content: string) {
     return response;
   } else {
     const completion = runOpenAICompletion(openai, {
-      model: "gpt-4-0125-preview",
+      // model: "gpt-4-0125-preview",
+      model: "gpt-3.5-turbo",
       stream: true,
       messages: [
         {
@@ -53,8 +55,6 @@ async function submitUserMessage(content: string) {
 
           If the user asks you a specific question about the financial data (e.g. what was the change in profit margin from 22 to 23), use the financial data in the chat history to answer the question.
           If the financial data is not in the chat history, ask the user for the stock symbol if necessary and then call \`get_financial_data\` to get the data.
-
-          When doing calculations don't provide formulas, just the result.
         `,
         },
         ...aiState.get().map((info: any) => ({
@@ -81,7 +81,12 @@ async function submitUserMessage(content: string) {
     });
 
     completion.onTextContent((content: string, isFinal: boolean) => {
-      reply.update(<BotMessage>{content}</BotMessage>);
+      reply.update(
+        <BotMessage>
+          <MarkdownLatex content={content} />
+        </BotMessage>
+      );
+
       if (isFinal) {
         reply.done();
         aiState.done([...aiState.get(), { role: "assistant", content }]);
@@ -174,8 +179,6 @@ async function handleCommand(
       display: reply.value,
     };
   }
-
-  console.log("Test");
 
   switch (command) {
     case "/stock": {
