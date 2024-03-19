@@ -108,20 +108,46 @@ async function handleCommand(
     case "/chart": {
       reply.update(<BotCard>Loading...</BotCard>);
 
-      const chartDataPromises = symbols.map(async (symbol) => {
-        const { incomeStatements } = await getFinancialData(symbol);
+      const field = content.split(":")[2] || "revenue";
 
-        return {
-          ticker: symbol.toUpperCase(),
-          data: incomeStatements,
-        };
+      const chartDataPromises = symbols.map(async (symbol) => {
+        const { balanceSheets, cashFlowStatements, incomeStatements } =
+          await getFinancialData(symbol);
+
+        let fieldType;
+        if (field in balanceSheets[0]) fieldType = "balanceSheets";
+        if (field in cashFlowStatements[0]) fieldType = "cashFlowStatements";
+        if (field in incomeStatements[0]) fieldType = "incomeStatements";
+
+        switch (fieldType) {
+          case "balanceSheets":
+            return {
+              ticker: symbol.toUpperCase(),
+              data: balanceSheets,
+            };
+          case "cashFlowStatements":
+            return {
+              ticker: symbol.toUpperCase(),
+              data: cashFlowStatements,
+            };
+          case "incomeStatements":
+            return {
+              ticker: symbol.toUpperCase(),
+              data: incomeStatements,
+            };
+          default:
+            return { ticker: symbol.toUpperCase(), data: [] };
+        }
       });
 
       const datasets = await Promise.all(chartDataPromises);
 
       reply.done(
         <BotCard>
-          <Chart datasets={datasets} />
+          <Chart
+            datasets={datasets}
+            field={field as keyof FinancialStatement}
+          />
         </BotCard>
       );
 

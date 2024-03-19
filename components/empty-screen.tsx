@@ -10,6 +10,10 @@ const exampleMessages = [
     heading: "Show me Tesla's financials",
     message: "/financials:TSLA",
   },
+  {
+    heading: "Graph net income ratio for AAPL, MSFT, GOOG, and AMZN",
+    message: "/chart:aapl,msft,goog,amzn:netIncomeRatio",
+  },
 ];
 
 export function EmptyScreen({
