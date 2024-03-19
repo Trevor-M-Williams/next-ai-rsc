@@ -159,3 +159,14 @@ type IncomeStatement = {
   link: string;
   finalLink: string;
 };
+
+// type ChartData = BalanceSheet | IncomeStatement | CashFlowStatement
+
+type ChartData = {
+  data: IncomeStatement[];
+  ticker: string;
+};
+
+type ChartProps = {
+  datasets: ChartData[];
+};

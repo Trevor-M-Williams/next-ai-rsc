@@ -22,10 +22,13 @@ import { cn, sleep } from "@/lib/utils";
 
 const commands = [
   {
-    name: "/stock",
+    name: "/chart",
   },
   {
     name: "/financials",
+  },
+  {
+    name: "/stock",
   },
 ];
 

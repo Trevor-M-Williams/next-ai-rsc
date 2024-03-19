@@ -5,6 +5,7 @@ import OpenAI from "openai";
 
 import { BotCard, BotMessage, Stock, StockSkeleton } from "@/components/stocks";
 import { FinancialStatement, FinancialSkeleton } from "@/components/financials";
+import { Chart } from "@/components/chart";
 import { spinner } from "@/components/spinner";
 import { MarkdownLatex } from "@/components/markdown-latex";
 
@@ -84,9 +85,9 @@ async function handleCommand(
   aiState: ReturnType<typeof getMutableAIState>
 ) {
   const command = content.split(":")[0] || "";
-  const symbol = content.split(":")[1].toUpperCase() || "";
+  const symbols = content.split(":")[1].split(",");
 
-  if (!symbol) {
+  if (!symbols) {
     reply.done(<BotMessage>Please provide a company symbol</BotMessage>);
 
     aiState.done([
@@ -104,12 +105,87 @@ async function handleCommand(
   }
 
   switch (command) {
+    case "/chart": {
+      reply.update(<BotCard>Loading...</BotCard>);
+
+      const chartDataPromises = symbols.map(async (symbol) => {
+        const { incomeStatements } = await getFinancialData(symbol);
+
+        return {
+          ticker: symbol.toUpperCase(),
+          data: incomeStatements,
+        };
+      });
+
+      const datasets = await Promise.all(chartDataPromises);
+
+      reply.done(
+        <BotCard>
+          <Chart datasets={datasets} />
+        </BotCard>
+      );
+
+      aiState.done([
+        ...aiState.get().filter((info: any) => info.role !== "function"),
+        {
+          role: "assistant",
+          name: "get_financial_data",
+          content: `[Plot]`,
+        },
+      ]);
+
+      return {
+        id: Date.now(),
+        display: reply.value,
+      };
+    }
+
+    case "/financials": {
+      reply.update(
+        <BotCard>
+          <FinancialSkeleton />
+        </BotCard>
+      );
+
+      const symbol = symbols[0].toUpperCase();
+
+      const { balanceSheets, cashFlowStatements, incomeStatements } =
+        await getFinancialData(symbol);
+
+      reply.done(
+        <BotCard>
+          <FinancialStatement
+            name={symbol}
+            balanceSheets={balanceSheets}
+            cashFlowStatements={cashFlowStatements}
+            incomeStatements={incomeStatements}
+          />
+        </BotCard>
+      );
+
+      aiState.done([
+        ...aiState.get().filter((info: any) => info.role !== "function"),
+        {
+          role: "assistant",
+          name: "get_financial_data",
+          content: `[Financial statements for ${symbols}]`,
+        },
+      ]);
+
+      return {
+        id: Date.now(),
+        display: reply.value,
+      };
+    }
+
     case "/stock": {
       reply.update(
         <BotCard>
           <StockSkeleton />
         </BotCard>
       );
+
+      const symbol = symbols[0].toUpperCase();
 
       const stockData: StockChartData[] = await getHistoricalData(symbol);
       const price = stockData[stockData.length - 1]?.price || 0;
@@ -134,42 +210,7 @@ async function handleCommand(
         display: reply.value,
       };
     }
-    case "/financials": {
-      reply.update(
-        <BotCard>
-          <FinancialSkeleton />
-        </BotCard>
-      );
 
-      const { balanceSheets, cashFlowStatements, incomeStatements } =
-        await getFinancialData(symbol);
-
-      reply.done(
-        <BotCard>
-          <FinancialStatement
-            name={symbol}
-            balanceSheets={balanceSheets}
-            cashFlowStatements={cashFlowStatements}
-            incomeStatements={incomeStatements}
-          />
-        </BotCard>
-      );
-
-      aiState.done([
-        ...aiState.get().filter((info: any) => info.role !== "function"),
-        {
-          role: "assistant",
-          name: "get_financial_data",
-          content: `[Financial statements for ${symbol}
-        ]`,
-        },
-      ]);
-
-      return {
-        id: Date.now(),
-        display: reply.value,
-      };
-    }
     default: {
       reply.done(
         <BotCard>
