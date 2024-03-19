@@ -112,6 +112,7 @@ export function ChatInput({ setMessages, submitUserMessage }: ChatInputProps) {
     event: React.KeyboardEvent<HTMLTextAreaElement>
   ) {
     if (event.key === "ArrowUp" || event.key === "ArrowDown") {
+      if (!commandsOpen) return;
       event.preventDefault();
       const index = commands.findIndex(
         (command) => command.name === selectedCommand

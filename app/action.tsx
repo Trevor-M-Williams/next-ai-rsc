@@ -18,6 +18,17 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY || "",
 });
 
+const systemMessage = `\
+  You are a financial analysis bot.
+  You and the user can discuss public company financials.
+
+  Messages inside [] indicate UI elements.
+  "[Price of AAPL = 100]" means that an interface of the stock price of AAPL is shown to the user.
+  "[Financial statements for GOOG]" means that the financial statements for GOOG are shown to the user.
+
+  If the user asks a question that requires financial data (e.g. what was MSFT's change in profit margin from 22 to 23) call \`get_financial_data\` to get the data.
+`;
+
 async function submitUserMessage(content: string) {
   "use server";
 
@@ -38,100 +49,12 @@ async function submitUserMessage(content: string) {
     const response = await handleCommand(content, reply, aiState);
     return response;
   } else {
-    const completion = runOpenAICompletion(openai, {
-      // model: "gpt-4-0125-preview",
-      model: "gpt-3.5-turbo",
-      stream: true,
-      messages: [
-        {
-          role: "system",
-          content: `\
-          You are a financial analysis bot.
-          You and the user can discuss public company financials.
-
-          Messages inside [] means that it's a UI element or a user event. For example:
-          "[Price of AAPL = 100]" means that an interface of the stock price of AAPL is shown to the user.
-          "[Financial statements for AAPL: ...data]" means that the financial statements for AAPL are shown to the user.
-
-          If the user asks you a specific question about the financial data (e.g. what was the change in profit margin from 22 to 23), use the financial data in the chat history to answer the question.
-          If the financial data is not in the chat history, ask the user for the stock symbol if necessary and then call \`get_financial_data\` to get the data.
-        `,
-        },
-        ...aiState.get().map((info: any) => ({
-          role: info.role,
-          content: info.content,
-          name: info.name,
-        })),
-      ],
-      functions: [
-        {
-          name: "get_financial_data",
-          description:
-            "Get the financial statements for a given stock. e.g. AAPL/GOOG/MSFT.",
-          parameters: z.object({
-            symbol: z
-              .string()
-              .describe(
-                "The name or symbol of the stock. e.g. GOOG/AAPL/MSFT."
-              ),
-          }),
-        },
-      ],
-      temperature: 0,
-    });
-
-    completion.onTextContent((content: string, isFinal: boolean) => {
-      reply.update(
-        <BotMessage>
-          <MarkdownLatex content={content} />
-        </BotMessage>
-      );
-
-      if (isFinal) {
-        reply.done();
-        aiState.done([...aiState.get(), { role: "assistant", content }]);
-      }
-    });
-
-    completion.onFunctionCall("get_financial_data", async ({ symbol }) => {
-      const { balanceSheets, cashFlowStatements, incomeStatements } =
-        await getFinancialData(symbol);
-
-      //how to pass the data back to the model?
-
-      reply.done(
-        <BotCard>
-          <FinancialStatement
-            name={symbol}
-            balanceSheets={balanceSheets}
-            cashFlowStatements={cashFlowStatements}
-            incomeStatements={incomeStatements}
-          />
-        </BotCard>
-      );
-
-      aiState.done([
-        ...aiState.get(),
-        {
-          role: "function",
-          name: "show_financial_data",
-          content: `[Financial statements for ${symbol}: 
-          Balance sheets: ${JSON.stringify(balanceSheets)}, 
-          Cash flow statements: ${JSON.stringify(cashFlowStatements)},
-          Income statements: ${JSON.stringify(incomeStatements)}
-        ]`,
-        },
-      ]);
-    });
-
-    return {
-      id: Date.now(),
-      display: reply.value,
-    };
+    const response = await handleAIResponse(reply, aiState);
+    return response;
   }
 }
 
-// Define necessary types and create the AI.
+// --------------------- Create AI --------------------- //
 
 const initialAIState: {
   role: "user" | "assistant" | "system" | "function";
@@ -153,13 +76,13 @@ export const AI = createAI({
   initialAIState,
 });
 
+// --------------------- Handle Command --------------------- //
+
 async function handleCommand(
   content: string,
   reply: ReturnType<typeof createStreamableUI>,
   aiState: ReturnType<typeof getMutableAIState>
 ) {
-  console.log("Command:", content);
-
   const command = content.split(":")[0] || "";
   const symbol = content.split(":")[1].toUpperCase() || "";
 
@@ -167,9 +90,9 @@ async function handleCommand(
     reply.done(<BotMessage>Please provide a company symbol</BotMessage>);
 
     aiState.done([
-      ...aiState.get(),
+      ...aiState.get().filter((info: any) => info.role !== "function"),
       {
-        role: "system",
+        role: "assistant",
         content: `No symbol provided for command: ${content}`,
       },
     ]);
@@ -198,9 +121,9 @@ async function handleCommand(
       );
 
       aiState.done([
-        ...aiState.get(),
+        ...aiState.get().filter((info: any) => info.role !== "function"),
         {
-          role: "function",
+          role: "assistant",
           name: "show_stock_chart",
           content: `[Price of ${symbol} = ${price}]`,
         },
@@ -233,14 +156,11 @@ async function handleCommand(
       );
 
       aiState.done([
-        ...aiState.get(),
+        ...aiState.get().filter((info: any) => info.role !== "function"),
         {
-          role: "function",
-          name: "show_financial_data",
-          content: `[Financial statements for ${symbol}: 
-          Balance sheets: ${JSON.stringify(balanceSheets)}, 
-          Cash flow statements: ${JSON.stringify(cashFlowStatements)},
-          Income statements: ${JSON.stringify(incomeStatements)}
+          role: "assistant",
+          name: "get_financial_data",
+          content: `[Financial statements for ${symbol}
         ]`,
         },
       ]);
@@ -258,9 +178,9 @@ async function handleCommand(
       );
 
       aiState.done([
-        ...aiState.get(),
+        ...aiState.get().filter((info: any) => info.role !== "function"),
         {
-          role: "system",
+          role: "assistant",
           content: `Command not found: ${content}`,
         },
       ]);
@@ -271,4 +191,127 @@ async function handleCommand(
       };
     }
   }
+}
+
+// --------------------- Handle AI Response --------------------- //
+
+async function handleAIResponse(
+  reply: ReturnType<typeof createStreamableUI>,
+  aiState: ReturnType<typeof getMutableAIState>
+) {
+  const completion = runOpenAICompletion(openai, {
+    // model: "gpt-4-0125-preview",
+    model: "gpt-3.5-turbo",
+    stream: true,
+    messages: [
+      {
+        role: "system",
+        content: systemMessage,
+      },
+      ...aiState.get().map((info: any) => ({
+        role: info.role,
+        content: info.content,
+        name: info.name,
+      })),
+    ],
+    functions: [
+      {
+        name: "get_financial_data",
+        description:
+          "Get the financial statements for a given company. e.g. AAPL/GOOG/MSFT.",
+        parameters: z.object({
+          symbol: z
+            .string()
+            .describe("The symbol of the company. e.g. GOOG/AAPL/MSFT."),
+        }),
+      },
+      {
+        name: "show_financial_data",
+        description:
+          "Show the financial statements for a given company. e.g. AAPL/GOOG/MSFT.",
+        parameters: z.object({
+          symbol: z
+            .string()
+            .describe(
+              "The name or symbol of the company. e.g. GOOG/AAPL/MSFT."
+            ),
+          balanceSheets: z.any(),
+          cashFlowStatements: z.any(),
+          incomeStatements: z.any(),
+        }),
+      },
+    ],
+    temperature: 0,
+  });
+
+  completion.onTextContent((content: string, isFinal: boolean) => {
+    reply.update(
+      <BotMessage>
+        <MarkdownLatex content={content} />
+      </BotMessage>
+    );
+
+    if (isFinal) {
+      reply.done();
+      aiState.done([
+        ...aiState.get().filter((info: any) => info.role !== "function"),
+        { role: "assistant", content },
+      ]);
+    }
+  });
+
+  completion.onFunctionCall("get_financial_data", async ({ symbol }) => {
+    const { balanceSheets, cashFlowStatements, incomeStatements } =
+      await getFinancialData(symbol);
+
+    aiState.update([
+      ...aiState.get().filter((info: any) => info.role !== "function"),
+      {
+        role: "function",
+        name: "get_financial_data",
+        content: `
+            Financial statements for ${symbol}:
+            Balance sheets: ${JSON.stringify(balanceSheets)},
+            Cash flow statements: ${JSON.stringify(cashFlowStatements)},
+            Income statements: ${JSON.stringify(incomeStatements)}
+        `,
+      },
+    ]);
+
+    const nestedCompletion = runOpenAICompletion(openai, {
+      model: "gpt-3.5-turbo",
+      stream: true,
+      messages: [
+        {
+          role: "system",
+          content:
+            "Respond to the user's prompt using the given financial data.",
+        },
+        ...aiState.get().map((info: any) => ({
+          role: info.role,
+          content: info.content,
+          name: info.name,
+        })),
+      ],
+      temperature: 0,
+    });
+
+    nestedCompletion.onTextContent((content: string, isFinal: boolean) => {
+      reply.update(
+        <BotMessage>
+          <MarkdownLatex content={content} />
+        </BotMessage>
+      );
+
+      if (isFinal) {
+        reply.done();
+        aiState.done([...aiState.get(), { role: "assistant", content }]);
+      }
+    });
+  });
+
+  return {
+    id: Date.now(),
+    display: reply.value,
+  };
 }
