@@ -3,16 +3,20 @@ import { IconArrowRight } from "@/components/ui/icons";
 
 const exampleMessages = [
   {
-    heading: "What's the stock price of AAPL?",
+    heading: "What's Apple trading at?",
     message: "/stock:AAPL",
   },
   {
-    heading: "Show me Tesla's financials",
-    message: "/financials:TSLA",
+    heading: "Show me Google's financials",
+    message: "/financials:GOOG",
   },
   {
-    heading: "Graph net income ratio for AAPL, MSFT, GOOG, and AMZN",
-    message: "/chart:aapl,msft,goog,amzn:netIncomeRatio",
+    heading: "Graph eps for the magnificient seven",
+    message: "/chart:aapl,amzn,goog,meta,msft,nvda,tsla:eps",
+  },
+  {
+    heading: "Compare the profit margin of Apple and Google",
+    message: "Compare the profit margin of Apple and Google",
   },
 ];
 

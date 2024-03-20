@@ -71,7 +71,9 @@ export function Chart<T extends FinancialStatement>({
       <div className="h-[20rem] pt-4">
         <Line data={chartData} options={chartOptions} />
       </div>
-      <div className="pt-2 text-xs text-gray-500">*Values in M USD</div>
+      <div className="w-full flex justify-center pt-2 text-xs text-gray-500">
+        *Values in M USD
+      </div>
     </div>
   );
 }

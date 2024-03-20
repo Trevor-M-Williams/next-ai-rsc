@@ -27,7 +27,8 @@ const systemMessage = `\
   "[Price of AAPL = 100]" means that an interface of the stock price of AAPL is shown to the user.
   "[Financial statements for GOOG]" means that the financial statements for GOOG are shown to the user.
 
-  If the user asks a question that requires financial data (e.g. what was MSFT's change in profit margin from 22 to 23) call \`get_financial_data\` to get the data.
+  If the user asks a question that requires financial data call \`get_financial_data\` with the required symbols to get the data.
+  "Compare Apple and Google's profit margin" -> get_financial_data(["AAPL", "GOOG"])
 `;
 
 async function submitUserMessage(content: string) {
@@ -155,7 +156,7 @@ async function handleCommand(
         ...aiState.get().filter((info: any) => info.role !== "function"),
         {
           role: "assistant",
-          name: "get_financial_data",
+          name: "show_financial_chart",
           content: `[Plot]`,
         },
       ]);
@@ -193,7 +194,7 @@ async function handleCommand(
         ...aiState.get().filter((info: any) => info.role !== "function"),
         {
           role: "assistant",
-          name: "get_financial_data",
+          name: "show_financial_data",
           content: `[Financial statements for ${symbols}]`,
         },
       ]);
@@ -285,11 +286,13 @@ async function handleAIResponse(
       {
         name: "get_financial_data",
         description:
-          "Get the financial statements for a given company. e.g. AAPL/GOOG/MSFT.",
+          "Get the financial statements for the listed companies. e.g. AAPL/GOOG/MSFT.",
         parameters: z.object({
-          symbol: z
-            .string()
-            .describe("The symbol of the company. e.g. GOOG/AAPL/MSFT."),
+          symbols: z
+            .array(z.string())
+            .describe(
+              "An array of the symbols of the companies. e.g. ['GOOG', 'AAPL', 'MSFT']"
+            ),
         }),
       },
       {
@@ -327,21 +330,41 @@ async function handleAIResponse(
     }
   });
 
-  completion.onFunctionCall("get_financial_data", async ({ symbol }) => {
-    const { balanceSheets, cashFlowStatements, incomeStatements } =
-      await getFinancialData(symbol);
+  completion.onFunctionCall("get_financial_data", async ({ symbols }) => {
+    const financialDataForCompanies = [];
 
+    console.log(symbols);
+
+    // Loop over each symbols and fetch financial data
+    for (const symbol of symbols as string[]) {
+      const { balanceSheets, cashFlowStatements, incomeStatements } =
+        await getFinancialData(symbol);
+
+      // Store the financial data along with the company symbols
+      financialDataForCompanies.push({
+        symbol: symbol.toUpperCase(),
+        balanceSheets,
+        cashFlowStatements,
+        incomeStatements,
+      });
+    }
+
+    // Update the AI state with the collected financial data for all companies
     aiState.update([
       ...aiState.get().filter((info: any) => info.role !== "function"),
       {
         role: "function",
         name: "get_financial_data",
-        content: `
-            Financial statements for ${symbol}:
-            Balance sheets: ${JSON.stringify(balanceSheets)},
-            Cash flow statements: ${JSON.stringify(cashFlowStatements)},
-            Income statements: ${JSON.stringify(incomeStatements)}
-        `,
+        content: financialDataForCompanies
+          .map(
+            (companyData) => `
+        Financial statements for ${companyData.symbol}:
+        Balance sheets: ${JSON.stringify(companyData.balanceSheets)},
+        Cash flow statements: ${JSON.stringify(companyData.cashFlowStatements)},
+        Income statements: ${JSON.stringify(companyData.incomeStatements)}
+      `
+          )
+          .join("\n\n"), // Separate each company's data with new lines
       },
     ]);
 
