@@ -58,7 +58,7 @@ async function submitUserMessage(content: string) {
     console.log(error);
     return {
       id: Date.now(),
-      display: <BotMessage>Sorry, something went wrong</BotMessage>,
+      display: <BotMessage>Sorry, something went wrong.</BotMessage>,
     };
   }
 }
@@ -114,7 +114,7 @@ async function handleCommand(
 
   switch (command) {
     case "/chart": {
-      reply.update(<BotCard>Loading...</BotCard>);
+      // Skeleton?
 
       const field = content.split(":")[2] || "revenue";
 
@@ -175,25 +175,30 @@ async function handleCommand(
     }
 
     case "/financials": {
-      reply.update(
-        <BotCard>
-          <FinancialSkeleton />
-        </BotCard>
-      );
+      const financialDataPromises = symbols.map(async (symbol) => {
+        const { balanceSheets, cashFlowStatements, incomeStatements } =
+          await getFinancialData(symbol);
+        return {
+          ticker: symbol.toUpperCase(),
+          balanceSheets,
+          cashFlowStatements,
+          incomeStatements,
+        };
+      });
 
-      const symbol = symbols[0].toUpperCase();
-
-      const { balanceSheets, cashFlowStatements, incomeStatements } =
-        await getFinancialData(symbol);
+      const financialData = await Promise.all(financialDataPromises);
 
       reply.done(
         <BotCard>
-          <FinancialStatement
-            name={symbol}
-            balanceSheets={balanceSheets}
-            cashFlowStatements={cashFlowStatements}
-            incomeStatements={incomeStatements}
-          />
+          {financialData.map((data) => (
+            <FinancialStatement
+              key={data.ticker}
+              name={data.ticker}
+              balanceSheets={data.balanceSheets}
+              cashFlowStatements={data.cashFlowStatements}
+              incomeStatements={data.incomeStatements}
+            />
+          ))}
         </BotCard>
       );
 
@@ -213,20 +218,18 @@ async function handleCommand(
     }
 
     case "/stock": {
-      reply.update(
-        <BotCard>
-          <StockSkeleton />
-        </BotCard>
-      );
+      const stockDataPromises = symbols.map(async (symbol) => {
+        const data = await getHistoricalData(symbol);
+        return { ticker: symbol.toUpperCase(), data };
+      });
 
-      const symbol = symbols[0].toUpperCase();
-
-      const stockData: StockChartData[] = await getHistoricalData(symbol);
-      const price = stockData[stockData.length - 1]?.price || 0;
+      const stockData = await Promise.all(stockDataPromises);
 
       reply.done(
         <BotCard>
-          <Stock name={symbol} data={stockData} />
+          {stockData.map((stock) => (
+            <Stock key={stock.ticker} name={stock.ticker} data={stock.data} />
+          ))}
         </BotCard>
       );
 
@@ -235,7 +238,7 @@ async function handleCommand(
         {
           role: "assistant",
           name: "show_stock_chart",
-          content: `[Price of ${symbol} = ${price}]`,
+          content: `[Show stock chart for ${symbols}]`,
         },
       ]);
 
