@@ -33,26 +33,33 @@ const systemMessage = `\
 
 async function submitUserMessage(content: string) {
   "use server";
+  try {
+    const aiState = getMutableAIState<typeof AI>();
+    aiState.update([
+      ...aiState.get(),
+      {
+        role: "user",
+        content,
+      },
+    ]);
 
-  const aiState = getMutableAIState<typeof AI>();
-  aiState.update([
-    ...aiState.get(),
-    {
-      role: "user",
-      content,
-    },
-  ]);
+    const reply = createStreamableUI(
+      <BotMessage className="items-center">{spinner}</BotMessage>
+    );
 
-  const reply = createStreamableUI(
-    <BotMessage className="items-center">{spinner}</BotMessage>
-  );
-
-  if (content.startsWith("/")) {
-    const response = await handleCommand(content, reply, aiState);
-    return response;
-  } else {
-    const response = await handleAIResponse(reply, aiState);
-    return response;
+    if (content.startsWith("/")) {
+      const response = await handleCommand(content, reply, aiState);
+      return response;
+    } else {
+      const response = await handleAIResponse(reply, aiState);
+      return response;
+    }
+  } catch (error) {
+    console.log(error);
+    return {
+      id: Date.now(),
+      display: <BotMessage>Sorry, something went wrong</BotMessage>,
+    };
   }
 }
 
