@@ -1,52 +1,48 @@
+import { eq } from "drizzle-orm";
 import { db } from ".";
-import { stocks } from "./schema";
+import { symbols } from "./schema";
 
-const main = async () => {
+main();
+
+async function main() {
+  const AAPL = await db.query.symbols.findFirst({
+    where: eq(symbols.symbol, "AAPL"),
+  });
+
+  console.log(AAPL);
+}
+
+async function seedSymbols() {
   try {
     console.log("Seeding database");
 
-    await db.delete(stocks);
+    await db.delete(symbols);
 
-    const stockData = [
-      {
-        name: "AAPL",
-        data: [
-          { price: 100, date: "2021-01-01" },
-          { price: 110, date: "2021-01-02" },
-          { price: 120, date: "2021-01-03" },
-          { price: 130, date: "2021-01-04" },
-          { price: 140, date: "2021-01-05" },
-        ],
-      },
-      {
-        name: "GOOG",
-        data: [
-          { price: 200, date: "2021-01-01" },
-          { price: 210, date: "2021-01-02" },
-          { price: 220, date: "2021-01-03" },
-          { price: 230, date: "2021-01-04" },
-          { price: 240, date: "2021-01-05" },
-        ],
-      },
-      {
-        name: "MSFT",
-        data: [
-          { price: 300, date: "2021-01-01" },
-          { price: 310, date: "2021-01-02" },
-          { price: 320, date: "2021-01-03" },
-          { price: 330, date: "2021-01-04" },
-          { price: 340, date: "2021-01-05" },
-        ],
-      },
-    ];
+    // Get symbols from API
+    const url = `https://financialmodelingprep.com/api/v3/stock/list?apikey=${process.env.STOCK_API_KEY}`;
+    const response = await fetch(url);
+    const data = await response.json();
 
-    await db.insert(stocks).values(stockData);
+    // Split data into chunks of 100
+    const dataChunks = chunkArray(data, 100);
+
+    // Insert each chunk into the database
+    for (const chunk of dataChunks) {
+      await db.insert(symbols).values(chunk);
+    }
 
     console.log("Seeded database");
   } catch (error) {
     console.error(error);
     throw new Error("Failed to seed database");
   }
-};
+}
 
-main();
+// Function to split data into chunks of a specific size
+function chunkArray(array: [], chunkSize: number) {
+  const chunks = [];
+  for (let i = 0; i < array.length; i += chunkSize) {
+    chunks.push(array.slice(i, i + chunkSize));
+  }
+  return chunks;
+}

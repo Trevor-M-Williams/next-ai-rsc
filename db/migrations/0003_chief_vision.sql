@@ -1,0 +1,1 @@
+ALTER TABLE "symbols" ADD COLUMN "type" text NOT NULL;

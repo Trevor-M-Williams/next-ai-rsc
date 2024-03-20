@@ -221,6 +221,7 @@ function IncomeStatement({
 }
 
 type FinancialStatementProps = {
+  symbol: string;
   name: string;
   balanceSheets: BalanceSheet[];
   cashFlowStatements: CashFlowStatement[];
@@ -228,6 +229,7 @@ type FinancialStatementProps = {
 };
 
 export function FinancialStatement({
+  symbol,
   name,
   balanceSheets,
   cashFlowStatements,
@@ -240,7 +242,14 @@ export function FinancialStatement({
 
   return (
     <div className="">
-      <div className="text-xl font-semibold uppercase ml-2 mb-2">{name}</div>
+      <div className="flex items-center gap-2 ml-2 mb-2">
+        <div className="text-xl font-semibold">{symbol}</div>
+        {name && (
+          <div className="text-xl">
+            {"-"} {name}
+          </div>
+        )}
+      </div>
 
       <Tabs defaultValue="income-statement" className="">
         <div className="absolute right-2">

@@ -2,7 +2,24 @@
 
 import { eq } from "drizzle-orm";
 import { db } from ".";
-import { financialStatements, stocks } from "./schema";
+import { financialStatements, stocks, symbols } from "./schema";
+
+export async function getCompanyName(symbol: string) {
+  try {
+    const data = await db.query.symbols.findFirst({
+      where: eq(symbols.symbol, symbol.toUpperCase()),
+    });
+
+    if (data) {
+      return data.name;
+    }
+
+    return "";
+  } catch (error) {
+    console.error(error);
+    return "";
+  }
+}
 
 export async function getHistoricalData(symbol: string) {
   try {

@@ -15,6 +15,34 @@
       "when": 1710342689845,
       "tag": "0001_sour_vampiro",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1710953714258,
+      "tag": "0002_faithful_jimmy_woo",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1710954214521,
+      "tag": "0003_chief_vision",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1710954947668,
+      "tag": "0004_majestic_random",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1710954982309,
+      "tag": "0005_grey_rhino",
+      "breakpoints": true
     }
   ]
 }

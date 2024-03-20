@@ -83,9 +83,11 @@ function ChartButtons({
 }
 
 export function Stock({
+  symbol,
   name,
   data,
 }: {
+  symbol: string;
   name: string;
   data: StockChartData[];
 }) {
@@ -95,11 +97,16 @@ export function Stock({
   const [chartData, setChartData] = useState(data);
 
   return (
-    <div className="relative p-4 text-zinc-300 border rounded-xl bg-zinc-950 overflow-hidden">
+    <div className="relative p-4 text-white border rounded-xl bg-zinc-950 overflow-hidden">
       <div className="flex justify-between">
         <div className="">
           <div className="flex items-center gap-2">
-            <div className="text-xl font-medium uppercase">{name}</div>
+            <div className="text-2xl font-semibold">{symbol}</div>
+            {name && (
+              <div className="text-lg">
+                {"-"} {name}
+              </div>
+            )}
           </div>
 
           <div className="flex items-center gap-2">
@@ -129,7 +136,7 @@ export function Stock({
       <div className="mt-4">
         <StockChart
           data={chartData}
-          ticker={name}
+          ticker={symbol}
           percentChange={percentChange}
         />
       </div>

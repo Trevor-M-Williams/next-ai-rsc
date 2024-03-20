@@ -12,7 +12,7 @@ import { MarkdownLatex } from "@/components/markdown-latex";
 import { runOpenAICompletion } from "@/lib/utils";
 import { z } from "zod";
 
-import { getHistoricalData } from "@/db/actions";
+import { getCompanyName, getHistoricalData } from "@/db/actions";
 import { getFinancialData } from "@/db/actions";
 
 const openai = new OpenAI({
@@ -114,8 +114,6 @@ async function handleCommand(
 
   switch (command) {
     case "/chart": {
-      // Skeleton?
-
       const field = content.split(":")[2] || "revenue";
 
       const chartDataPromises = symbols.map(async (symbol) => {
@@ -178,8 +176,10 @@ async function handleCommand(
       const financialDataPromises = symbols.map(async (symbol) => {
         const { balanceSheets, cashFlowStatements, incomeStatements } =
           await getFinancialData(symbol);
+        const name = await getCompanyName(symbol);
         return {
-          ticker: symbol.toUpperCase(),
+          symbol: symbol.toUpperCase(),
+          name,
           balanceSheets,
           cashFlowStatements,
           incomeStatements,
@@ -192,8 +192,9 @@ async function handleCommand(
         <BotCard>
           {financialData.map((data) => (
             <FinancialStatement
-              key={data.ticker}
-              name={data.ticker}
+              key={data.symbol}
+              name={data.name || ""}
+              symbol={data.symbol}
               balanceSheets={data.balanceSheets}
               cashFlowStatements={data.cashFlowStatements}
               incomeStatements={data.incomeStatements}
@@ -220,7 +221,8 @@ async function handleCommand(
     case "/stock": {
       const stockDataPromises = symbols.map(async (symbol) => {
         const data = await getHistoricalData(symbol);
-        return { ticker: symbol.toUpperCase(), data };
+        const name = await getCompanyName(symbol);
+        return { symbol: symbol.toUpperCase(), name, data };
       });
 
       const stockData = await Promise.all(stockDataPromises);
@@ -228,7 +230,12 @@ async function handleCommand(
       reply.done(
         <BotCard>
           {stockData.map((stock) => (
-            <Stock key={stock.ticker} name={stock.ticker} data={stock.data} />
+            <Stock
+              key={stock.symbol}
+              symbol={stock.symbol}
+              name={stock.name || ""}
+              data={stock.data}
+            />
           ))}
         </BotCard>
       );
