@@ -27,8 +27,13 @@ const systemMessage = `\
   "[Price of AAPL = 100]" means that an interface of the stock price of AAPL is shown to the user.
   "[Financial statements for GOOG]" means that the financial statements for GOOG are shown to the user.
 
+  If the user wants to see company financials, call \`show_financial_data\` with the required symbols to get and display the data.
+  "Show me the financials for Microsoft and Meta" -> show_financial_data(["MSFT", "META"])
+
   If the user asks a question that requires financial data call \`get_financial_data\` with the required symbols to get the data.
   "Compare Apple and Google's profit margin" -> get_financial_data(["AAPL", "GOOG"])
+
+
 `;
 
 async function submitUserMessage(content: string) {
@@ -302,8 +307,7 @@ async function handleAIResponse(
     functions: [
       {
         name: "get_financial_data",
-        description:
-          "Get the financial statements for the listed companies. e.g. AAPL/GOOG/MSFT.",
+        description: "Get the financial statements for the listed companies.",
         parameters: z.object({
           symbols: z
             .array(z.string())
@@ -314,17 +318,13 @@ async function handleAIResponse(
       },
       {
         name: "show_financial_data",
-        description:
-          "Show the financial statements for a given company. e.g. AAPL/GOOG/MSFT.",
+        description: "Show the financial statements for a given company.",
         parameters: z.object({
-          symbol: z
-            .string()
+          symbols: z
+            .array(z.string())
             .describe(
-              "The name or symbol of the company. e.g. GOOG/AAPL/MSFT."
+              "An array of the symbols of the companies. e.g. ['GOOG', 'AAPL', 'MSFT']"
             ),
-          balanceSheets: z.any(),
-          cashFlowStatements: z.any(),
-          incomeStatements: z.any(),
         }),
       },
     ],
@@ -347,75 +347,118 @@ async function handleAIResponse(
     }
   });
 
-  completion.onFunctionCall("get_financial_data", async ({ symbols }) => {
-    const financialDataForCompanies = [];
+  completion.onFunctionCall(
+    "get_financial_data",
+    async ({ symbols }: { symbols: string[] }) => {
+      console.log("Function call: Get Financial Data");
+      const financialDataForCompanies = [];
 
-    console.log(symbols);
+      for (const symbol of symbols) {
+        const { balanceSheets, cashFlowStatements, incomeStatements } =
+          await getFinancialData(symbol);
 
-    // Loop over each symbols and fetch financial data
-    for (const symbol of symbols as string[]) {
-      const { balanceSheets, cashFlowStatements, incomeStatements } =
-        await getFinancialData(symbol);
+        financialDataForCompanies.push({
+          symbol: symbol.toUpperCase(),
+          balanceSheets,
+          cashFlowStatements,
+          incomeStatements,
+        });
+      }
 
-      // Store the financial data along with the company symbols
-      financialDataForCompanies.push({
-        symbol: symbol.toUpperCase(),
-        balanceSheets,
-        cashFlowStatements,
-        incomeStatements,
-      });
-    }
-
-    // Update the AI state with the collected financial data for all companies
-    aiState.update([
-      ...aiState.get().filter((info: any) => info.role !== "function"),
-      {
-        role: "function",
-        name: "get_financial_data",
-        content: financialDataForCompanies
-          .map(
-            (companyData) => `
+      aiState.update([
+        ...aiState.get().filter((info: any) => info.role !== "function"),
+        {
+          role: "function",
+          name: "get_financial_data",
+          content: financialDataForCompanies
+            .map(
+              (companyData) => `
         Financial statements for ${companyData.symbol}:
         Balance sheets: ${JSON.stringify(companyData.balanceSheets)},
         Cash flow statements: ${JSON.stringify(companyData.cashFlowStatements)},
         Income statements: ${JSON.stringify(companyData.incomeStatements)}
       `
-          )
-          .join("\n\n"), // Separate each company's data with new lines
-      },
-    ]);
-
-    const nestedCompletion = runOpenAICompletion(openai, {
-      model: "gpt-3.5-turbo",
-      stream: true,
-      messages: [
-        {
-          role: "system",
-          content:
-            "Respond to the user's prompt using the given financial data.",
+            )
+            .join("\n\n"),
         },
-        ...aiState.get().map((info: any) => ({
-          role: info.role,
-          content: info.content,
-          name: info.name,
-        })),
-      ],
-      temperature: 0,
-    });
+      ]);
 
-    nestedCompletion.onTextContent((content: string, isFinal: boolean) => {
-      reply.update(
-        <BotMessage>
-          <MarkdownLatex content={content} />
-        </BotMessage>
+      const nestedCompletion = runOpenAICompletion(openai, {
+        model: "gpt-3.5-turbo",
+        stream: true,
+        messages: [
+          {
+            role: "system",
+            content:
+              "Respond to the user's prompt using the given financial data.",
+          },
+          ...aiState.get().map((info: any) => ({
+            role: info.role,
+            content: info.content,
+            name: info.name,
+          })),
+        ],
+        temperature: 0,
+      });
+
+      nestedCompletion.onTextContent((content: string, isFinal: boolean) => {
+        reply.update(
+          <BotMessage>
+            <MarkdownLatex content={content} />
+          </BotMessage>
+        );
+
+        if (isFinal) {
+          reply.done();
+          aiState.done([...aiState.get(), { role: "assistant", content }]);
+        }
+      });
+    }
+  );
+
+  completion.onFunctionCall(
+    "show_financial_data",
+    async ({ symbols }: { symbols: string[] }) => {
+      const financialDataPromises = symbols.map(async (symbol) => {
+        const { balanceSheets, cashFlowStatements, incomeStatements } =
+          await getFinancialData(symbol);
+        const name = await getCompanyName(symbol);
+        return {
+          symbol: symbol.toUpperCase(),
+          name,
+          balanceSheets,
+          cashFlowStatements,
+          incomeStatements,
+        };
+      });
+
+      const financialData = await Promise.all(financialDataPromises);
+
+      reply.done(
+        <BotCard>
+          {financialData.map((data) => (
+            <FinancialStatement
+              key={data.symbol}
+              name={data.name || ""}
+              symbol={data.symbol}
+              balanceSheets={data.balanceSheets}
+              cashFlowStatements={data.cashFlowStatements}
+              incomeStatements={data.incomeStatements}
+            />
+          ))}
+        </BotCard>
       );
 
-      if (isFinal) {
-        reply.done();
-        aiState.done([...aiState.get(), { role: "assistant", content }]);
-      }
-    });
-  });
+      aiState.done([
+        ...aiState.get().filter((info: any) => info.role !== "function"),
+        {
+          role: "assistant",
+          name: "show_financial_data",
+          content: `[Financial statements for ${symbols}]`,
+        },
+      ]);
+    }
+  );
 
   return {
     id: Date.now(),
