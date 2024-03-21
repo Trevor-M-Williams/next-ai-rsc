@@ -98,17 +98,17 @@ export function Stock({
 
   return (
     <div className="relative p-4 text-white border rounded-xl bg-zinc-950 overflow-hidden">
-      <div className="flex justify-between">
-        <div className="">
-          <div className="flex items-center gap-2">
-            <div className="text-2xl font-semibold">{symbol}</div>
-            {name && (
-              <div className="text-lg">
-                {"-"} {name}
-              </div>
-            )}
-          </div>
+      <div className="">
+        <div className="flex items-center gap-2">
+          <div className="text-2xl font-semibold">{symbol}</div>
+          {name && (
+            <div className="text-lg">
+              {"-"} {name}
+            </div>
+          )}
+        </div>
 
+        <div className="flex justify-between">
           <div className="flex items-center gap-2">
             <div className="text-2xl font-semibold text-white">
               ${price.toFixed(2)}
@@ -122,9 +122,7 @@ export function Stock({
               {`${percentChange > 0 ? "↑" : "↓"} ${percentChange.toFixed(2)}% `}
             </div>
           </div>
-        </div>
 
-        <div className="flex items-end">
           <ChartButtons
             chartData={data}
             setChartData={setChartData}
