@@ -33,7 +33,112 @@ const systemMessage = `\
   If the user asks a question that requires financial data call \`get_financial_data\` with the required symbols to get the data.
   "Compare Apple and Google's profit margin" -> get_financial_data(["AAPL", "GOOG"])
 
-
+  If the user wants to see a chart, call \`show_financial_chart\` with the required symbols and field to plot.
+  "Plot revenue for Apple and Google" -> show_financial_chart(["AAPL", "GOOG"], "revenue")
+  
+  The field should be one of the following:
+  cashAndCashEquivalents,
+  shortTermInvestments,
+  cashAndShortTermInvestments,
+  netReceivables,
+  inventory,
+  otherCurrentAssets,
+  totalCurrentAssets,
+  propertyPlantEquipmentNet,
+  goodwill,
+  intangibleAssets,
+  goodwillAndIntangibleAssets,
+  longTermInvestments,
+  taxAssets,
+  otherNonCurrentAssets,
+  totalNonCurrentAssets,
+  otherAssets,
+  totalAssets,
+  accountPayables,
+  shortTermDebt,
+  taxPayables,
+  deferredRevenue,
+  otherCurrentLiabilities,
+  totalCurrentLiabilities,
+  longTermDebt,
+  deferredRevenueNonCurrent,
+  deferredTaxLiabilitiesNonCurrent,
+  otherNonCurrentLiabilities,
+  totalNonCurrentLiabilities,
+  otherLiabilities,
+  capitalLeaseObligations,
+  totalLiabilities,
+  preferredStock,
+  commonStock,
+  retainedEarnings,
+  accumulatedOtherComprehensiveIncomeLoss,
+  othertotalStockholdersEquity,
+  totalStockholdersEquity,
+  totalEquity,
+  totalLiabilitiesAndStockholdersEquity,
+  minorityInterest,
+  totalLiabilitiesAndTotalEquity,
+  totalInvestments,
+  totalDebt,
+  netDebt,
+  netIncome,
+  depreciationAndAmortization,
+  deferredIncomeTax,
+  stockBasedCompensation,
+  changeInWorkingCapital,
+  accountsReceivables,
+  inventory,
+  accountsPayables,
+  otherWorkingCapital,
+  otherNonCashItems,
+  netCashProvidedByOperatingActivities,
+  investmentsInPropertyPlantAndEquipment,
+  acquisitionsNet,
+  purchasesOfInvestments,
+  salesMaturitiesOfInvestments,
+  otherInvestingActivites,
+  netCashUsedForInvestingActivites,
+  debtRepayment,
+  commonStockIssued,
+  commonStockRepurchased,
+  dividendsPaid,
+  otherFinancingActivites,
+  netCashUsedProvidedByFinancingActivities,
+  effectOfForexChangesOnCash,
+  netChangeInCash,
+  cashAtEndOfPeriod,
+  cashAtBeginningOfPeriod,
+  operatingCashFlow,
+  capitalExpenditure,
+  freeCashFlow,
+  revenue,
+  costOfRevenue,
+  grossProfit,
+  grossProfitRatio,
+  researchAndDevelopmentExpenses,
+  generalAndAdministrativeExpenses,
+  sellingAndMarketingExpenses,
+  sellingGeneralAndAdministrativeExpenses,
+  otherExpenses,
+  operatingExpenses,
+  costAndExpenses,
+  interestIncome,
+  interestExpense,
+  depreciationAndAmortization,
+  ebitda,
+  ebitdaratio,
+  operatingIncome,
+  operatingIncomeRatio,
+  totalOtherIncomeExpensesNet,
+  incomeBeforeTax,
+  incomeBeforeTaxRatio,
+  incomeTaxExpense,
+  netIncome,
+  netIncomeRatio,
+  eps,
+  epsdiluted,
+  weightedAverageShsOut,
+  weightedAverageShsOutDil,
 `;
 
 async function submitUserMessage(content: string) {
@@ -317,6 +422,18 @@ async function handleAIResponse(
         }),
       },
       {
+        name: "show_financial_chart",
+        description: "Show the financial statements for a given company.",
+        parameters: z.object({
+          symbols: z
+            .array(z.string())
+            .describe(
+              "An array of the symbols of the companies. e.g. ['GOOG', 'AAPL', 'MSFT']"
+            ),
+          field: z.string().optional().describe("The field to plot."),
+        }),
+      },
+      {
         name: "show_financial_data",
         description: "Show the financial statements for a given company.",
         parameters: z.object({
@@ -350,7 +467,7 @@ async function handleAIResponse(
   completion.onFunctionCall(
     "get_financial_data",
     async ({ symbols }: { symbols: string[] }) => {
-      console.log("Function call: Get Financial Data");
+      console.log("Function call: Get Financial Data", symbols);
       const financialDataForCompanies = [];
 
       for (const symbol of symbols) {
@@ -417,8 +534,69 @@ async function handleAIResponse(
   );
 
   completion.onFunctionCall(
+    "show_financial_chart",
+    async ({ symbols, field }: { symbols: string[]; field: string }) => {
+      console.log("Function call: Show Financial Chart", symbols, field);
+
+      if (!field) field = "revenue";
+
+      const chartDataPromises = symbols.map(async (symbol) => {
+        const { balanceSheets, cashFlowStatements, incomeStatements } =
+          await getFinancialData(symbol);
+
+        let fieldType;
+        if (field in balanceSheets[0]) fieldType = "balanceSheets";
+        if (field in cashFlowStatements[0]) fieldType = "cashFlowStatements";
+        if (field in incomeStatements[0]) fieldType = "incomeStatements";
+
+        switch (fieldType) {
+          case "balanceSheets":
+            return {
+              ticker: symbol.toUpperCase(),
+              data: balanceSheets,
+            };
+          case "cashFlowStatements":
+            return {
+              ticker: symbol.toUpperCase(),
+              data: cashFlowStatements,
+            };
+          case "incomeStatements":
+            return {
+              ticker: symbol.toUpperCase(),
+              data: incomeStatements,
+            };
+          default:
+            return { ticker: symbol.toUpperCase(), data: [] };
+        }
+      });
+
+      const datasets = await Promise.all(chartDataPromises);
+
+      reply.done(
+        <BotCard>
+          <Chart
+            datasets={datasets}
+            field={field as keyof FinancialStatement}
+          />
+        </BotCard>
+      );
+
+      aiState.done([
+        ...aiState.get().filter((info: any) => info.role !== "function"),
+        {
+          role: "assistant",
+          name: "show_financial_chart",
+          content: `[Plot]`,
+        },
+      ]);
+    }
+  );
+
+  completion.onFunctionCall(
     "show_financial_data",
     async ({ symbols }: { symbols: string[] }) => {
+      console.log("Function call: Show Financial Data", symbols);
+
       const financialDataPromises = symbols.map(async (symbol) => {
         const { balanceSheets, cashFlowStatements, incomeStatements } =
           await getFinancialData(symbol);
