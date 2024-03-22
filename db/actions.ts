@@ -24,7 +24,7 @@ export async function getCompanyName(symbol: string) {
 export async function getHistoricalData(symbol: string) {
   try {
     const stockData = await db.query.stocks.findFirst({
-      where: eq(stocks.name, symbol),
+      where: eq(stocks.name, symbol.toUpperCase()),
     });
 
     if (!stockData || !stockData.data) {
@@ -40,18 +40,40 @@ export async function getHistoricalData(symbol: string) {
       return fetchedData;
     }
 
+    const updatedAt = stockData?.updatedAt;
+    const dataIsStale = calculateIsStale(updatedAt);
+
+    if (dataIsStale) {
+      const fetchedData = await fetchHistoricalData(symbol);
+      await db
+        .update(stocks)
+        .set({ data: fetchedData, updatedAt: new Date() })
+        .where(eq(stocks.name, symbol.toUpperCase()));
+      console.log(`Stock data fetched for ${symbol} - API`);
+      return fetchedData;
+    }
+
     console.log(`Stock data fetched for ${symbol} - DB`);
     return stockData.data;
   } catch (error) {
     console.error(error);
     return [];
   }
+
+  function calculateIsStale(updatedAt: Date | undefined): boolean {
+    if (!updatedAt) return true;
+
+    const updatedAtDate = new Date(updatedAt);
+    const currentDate = new Date();
+
+    return updatedAtDate.toDateString() !== currentDate.toDateString();
+  }
 }
 
 export async function getFinancialData(symbol: string) {
   try {
     const financialData = await db.query.financialStatements.findFirst({
-      where: eq(financialStatements.name, symbol),
+      where: eq(financialStatements.name, symbol.toUpperCase()),
     });
 
     if (financialData) {
@@ -86,7 +108,7 @@ export async function getFinancialData(symbol: string) {
 export async function insertStockData(symbol: string, data: StockChartData[]) {
   try {
     const stockData = {
-      name: symbol,
+      name: symbol.toUpperCase(),
       data,
     };
     await db.insert(stocks).values(stockData);
