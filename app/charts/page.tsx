@@ -75,8 +75,13 @@ export default function ChartBuilder() {
   }, [selectedCompanies]);
 
   return (
-    <div className="relative h-full w-full max-w-3xl mx-auto mt-20">
-      <div className="absolute w-full flex gap-8 z-10">
+    <div className="relative w-full max-w-3xl mx-auto pt-[15vh]">
+      <Chart
+        datasets={datasets}
+        field={selectedField as keyof FinancialStatement}
+      />
+
+      <div className=" w-full flex gap-8 mt-8">
         <Command
           onFocus={() => setCompanyCommandsOpen(true)}
           onBlur={() => setCompanyCommandsOpen(false)}
@@ -110,23 +115,21 @@ export default function ChartBuilder() {
             <CommandEmpty>No results found.</CommandEmpty>
             <CommandGroup heading="Fields">
               {fields.map((field) => (
-                <CommandItem key={field} onSelect={updateFields}>
-                  {field}
+                <CommandItem
+                  key={field}
+                  onSelect={() => updateFields(field)}
+                  className="w-full flex justify-between"
+                >
+                  <div>{field}</div>
+                  {selectedField === field && (
+                    <CheckIcon fontSize={"small"} className={"text-blue-500"} />
+                  )}
                 </CommandItem>
               ))}
             </CommandGroup>
           </CommandList>
         </Command>
       </div>
-
-      {datasets.length > 0 && (
-        <div className="mt-20">
-          <Chart
-            datasets={datasets}
-            field={selectedField as keyof FinancialStatement}
-          />
-        </div>
-      )}
     </div>
   );
 }
