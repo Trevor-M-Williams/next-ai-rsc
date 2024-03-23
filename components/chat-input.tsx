@@ -134,7 +134,7 @@ export function ChatInput({ setMessages, submitUserMessage }: ChatInputProps) {
       return;
     }
 
-    if (event.key === "Enter") {
+    if (event.key === "Enter" || event.key === "Return") {
       if (commandsOpen) {
         setCommandsOpen(false);
         event.preventDefault();
