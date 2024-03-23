@@ -17,7 +17,7 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/components/ui/command";
+} from "@/components/ui/chat-command";
 import { cn, sleep } from "@/lib/utils";
 
 const commands = [
@@ -114,6 +114,8 @@ export function ChatInput({ setMessages, submitUserMessage }: ChatInputProps) {
   async function handleKeyDown(
     event: React.KeyboardEvent<HTMLTextAreaElement>
   ) {
+    console.log(event.key);
+
     if (event.key === "ArrowUp" || event.key === "ArrowDown") {
       if (!commandsOpen) return;
       event.preventDefault();

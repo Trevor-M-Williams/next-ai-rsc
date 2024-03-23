@@ -81,6 +81,7 @@ const systemMessage = `\
   totalInvestments,
   totalDebt,
   netDebt,
+  ---------------------
   netIncome,
   depreciationAndAmortization,
   deferredIncomeTax,
@@ -111,6 +112,7 @@ const systemMessage = `\
   operatingCashFlow,
   capitalExpenditure,
   freeCashFlow,
+  ---------------------
   revenue,
   costOfRevenue,
   grossProfit,

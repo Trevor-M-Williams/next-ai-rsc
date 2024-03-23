@@ -161,3 +161,13 @@ type IncomeStatement = {
 };
 
 type FinancialStatement = IncomeStatement | CashFlowStatement | BalanceSheet;
+
+type ChartDataset<T extends FinancialStatement> = {
+  data: T[];
+  ticker: string;
+};
+
+type ChartProps<T extends FinancialStatement> = {
+  datasets: ChartDataset<T>[];
+  field: keyof T;
+};

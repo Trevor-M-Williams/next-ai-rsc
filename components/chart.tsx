@@ -3,14 +3,6 @@
 import { Line } from "react-chartjs-2";
 import "chart.js/auto";
 
-type ChartProps<T extends FinancialStatement> = {
-  datasets: Array<{
-    data: T[];
-    ticker: string;
-  }>;
-  field: keyof T;
-};
-
 export function Chart<T extends FinancialStatement>({
   datasets,
   field,
@@ -79,8 +71,8 @@ export function Chart<T extends FinancialStatement>({
 }
 
 function formatNumber(value: number) {
-  if (value < 10000000) return value.toFixed(2);
   if (value === 0) return "0";
+  if (Math.abs(value) < 10000000) return value.toFixed(2);
   if (!value) return "N/A";
   const number = Math.round(value / 1000000);
   const formattedNumber = new Intl.NumberFormat("en-US").format(number);
