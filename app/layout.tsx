@@ -7,6 +7,7 @@ import "./globals.css";
 
 import { AI } from "./action";
 import { Providers } from "@/components/providers";
+import Link from "next/link";
 
 const meta = {
   title: "AI RSC Demo",
@@ -61,10 +62,13 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <div className="flex flex-col min-h-screen">
-              <main className="flex flex-col flex-1 bg-muted/50 dark:bg-background">
-                {children}
-              </main>
+            <div className="flex flex-col min-h-screen bg-muted/50 dark:bg-background">
+              <header className="flex justify-end gap-6 p-4 text-xl">
+                <Link href="/">Chat</Link>
+                <Link href="/charts">Charts</Link>
+              </header>
+
+              <main className="flex flex-col flex-1">{children}</main>
             </div>
           </Providers>
         </AI>
