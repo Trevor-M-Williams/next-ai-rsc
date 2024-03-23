@@ -7,12 +7,31 @@ export function Chart<T extends FinancialStatement>({
   datasets,
   field,
 }: ChartProps<T>) {
+  if (!datasets || datasets.length === 0) return null;
+
+  const value = datasets[0].data[0][field];
+  const valuesInMillions =
+    (typeof value === "number" && Math.abs(value) > 10000000) || false;
+
+  const colors = [
+    "#FF6633",
+    "#00B3E6",
+    "#FFB399",
+    "#FF33FF",
+    "#FFFF99",
+    "#00B3E6",
+    "#FF99E6",
+    "#CCFF1A",
+  ];
+
   const chartData = {
     labels: datasets[0].data.map((item) => item.date.slice(0, 4)).reverse(),
     datasets: datasets.map((dataset) => ({
       label: dataset.ticker,
       data: dataset.data.map((item) => item[field]).reverse(),
       borderWidth: 2,
+      borderColor: colors[datasets.indexOf(dataset)],
+      backgroundColor: colors[datasets.indexOf(dataset) % colors.length] + "33",
     })),
   };
 
@@ -63,9 +82,11 @@ export function Chart<T extends FinancialStatement>({
       <div className="h-[20rem] pt-4">
         <Line data={chartData} options={chartOptions} />
       </div>
-      <div className="w-full flex justify-center pt-2 text-xs text-gray-500">
-        *Values in M USD
-      </div>
+      {valuesInMillions && (
+        <div className="w-full flex justify-center pt-2 text-xs text-gray-500">
+          *Values in M USD
+        </div>
+      )}
     </div>
   );
 }
