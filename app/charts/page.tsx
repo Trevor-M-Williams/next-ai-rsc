@@ -20,20 +20,22 @@ export default function ChartBuilder() {
   const companies = ["AAPL", "AMZN", "GOOGL", "META", "MSFT", "NVDA", "TSLA"];
 
   const fields = [
-    "revenue",
-    "costOfRevenue",
-    "grossProfit",
-    "grossProfitRatio",
-    "sellingGeneralAndAdministrativeExpenses",
-    "operatingExpenses",
-    "ebitda",
-    "ebitdaratio",
-    "operatingIncome",
-    "operatingIncomeRatio",
-    "netIncome",
-    "netIncomeRatio",
-    "eps",
-    "weightedAverageShsOut",
+    { name: "costOfRevenue", label: "Cost Of Revenue" },
+    { name: "ebitda", label: "Ebitda" },
+    { name: "ebitdaratio", label: "Ebitda Ratio" },
+    { name: "eps", label: "Eps" },
+    { name: "grossProfit", label: "Gross Profit" },
+    { name: "grossProfitRatio", label: "Gross Profit Ratio" },
+    { name: "netIncome", label: "Net Income" },
+    { name: "netIncomeRatio", label: "Net Income Ratio" },
+    { name: "operatingExpenses", label: "Operating Expenses" },
+    { name: "operatingIncome", label: "Operating Income" },
+    { name: "operatingIncomeRatio", label: "Operating Income Ratio" },
+    { name: "revenue", label: "Revenue" },
+    {
+      name: "sellingGeneralAndAdministrativeExpenses",
+      label: "SG&A Expenses",
+    },
   ];
 
   const [datasets, setDatasets] = useState<any[]>([]);
@@ -116,12 +118,12 @@ export default function ChartBuilder() {
             <CommandGroup heading="Fields">
               {fields.map((field) => (
                 <CommandItem
-                  key={field}
-                  onSelect={() => updateFields(field)}
+                  key={field.name}
+                  onSelect={() => updateFields(field.name)}
                   className="w-full flex justify-between"
                 >
-                  <div>{field}</div>
-                  {selectedField === field && (
+                  <div>{field.label}</div>
+                  {selectedField === field.name && (
                     <CheckIcon fontSize={"small"} className={"text-blue-500"} />
                   )}
                 </CommandItem>

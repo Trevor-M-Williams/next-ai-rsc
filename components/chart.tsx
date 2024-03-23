@@ -12,14 +12,14 @@ export function Chart<T extends FinancialStatement>({
     (typeof value === "number" && Math.abs(value) > 10000000) || false;
 
   const colors = [
-    "#E6194B", // Red
-    "#3CB44B", // Green
-    "#FFE119", // Yellow
     "#4363D8", // Blue
+    "#3CB44B", // Green
+    "#46F0F0", // Cyan
+    "#E6194B", // Red
     "#F58231", // Orange
     "#911EB4", // Purple
-    "#46F0F0", // Cyan
     "#F032E6", // Magenta
+    "#FFE119", // Yellow
   ];
 
   const chartData = {
