@@ -17,7 +17,7 @@ import {
 import CheckIcon from "@mui/icons-material/Check";
 
 export default function ChartBuilder() {
-  const companies = ["AAPL", "AMZN", "GOOGL", "META", "MSFT", "NVDA", "TSLA"];
+  const companies = ["AAPL", "AMZN", "GOOG", "META", "MSFT", "NVDA", "TSLA"];
 
   const fields = [
     { name: "costOfRevenue", label: "Cost Of Revenue" },

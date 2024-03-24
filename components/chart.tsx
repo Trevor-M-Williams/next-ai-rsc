@@ -16,8 +16,8 @@ export function Chart<T extends FinancialStatement>({
     "#3CB44B", // Green
     "#46F0F0", // Cyan
     "#E6194B", // Red
-    "#F58231", // Orange
     "#911EB4", // Purple
+    "#F58231", // Orange
     "#F032E6", // Magenta
     "#FFE119", // Yellow
   ];
