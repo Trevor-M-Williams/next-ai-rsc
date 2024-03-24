@@ -77,7 +77,7 @@ export default function ChartBuilder() {
   }, [selectedCompanies]);
 
   return (
-    <div className="relative w-full max-w-3xl mx-auto pt-[15vh]">
+    <div className="relative w-full max-w-3xl mx-auto pt-8">
       <Chart
         datasets={datasets}
         field={selectedField as keyof FinancialStatement}
