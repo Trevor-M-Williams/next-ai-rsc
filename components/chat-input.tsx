@@ -1,16 +1,9 @@
 import { ReactNode, useRef, useState } from "react";
 
 import { UserMessage } from "@/components/stocks/message";
+import { CommandDialog } from "@/components/command-dialog";
 
-import Textarea from "react-textarea-autosize";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { IconArrowElbow, IconPlus } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
-
 import {
   Command,
   CommandGroup,
@@ -18,6 +11,15 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/chat-command";
+import { IconArrowElbow, IconPlus } from "@/components/ui/icons";
+import Textarea from "react-textarea-autosize";
+
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+
 import { cn, isMobile, sleep } from "@/lib/utils";
 
 const commands = [
@@ -187,6 +189,8 @@ export function ChatInput({ setMessages, submitUserMessage }: ChatInputProps) {
             onSubmit={async (e: any) => {
               e.preventDefault();
 
+              console.log("submit");
+
               // Blur focus on mobile
               const mobileUser = isMobile();
               if (mobileUser) {
@@ -222,23 +226,7 @@ export function ChatInput({ setMessages, submitUserMessage }: ChatInputProps) {
             }}
           >
             <div className="relative flex flex-col w-full px-8 max-h-60 grow bg-background sm:rounded-md sm:border sm:px-12">
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    className="absolute left-0 w-8 h-8 p-0 rounded-full top-4 bg-background sm:left-4"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      window.location.reload();
-                    }}
-                  >
-                    <IconPlus />
-                    <span className="sr-only">New Chat</span>
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>New Chat</TooltipContent>
-              </Tooltip>
+              <CommandDialog formRef={formRef} setInputValue={setInputValue} />
 
               <Textarea
                 ref={inputRef}
