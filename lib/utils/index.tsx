@@ -133,6 +133,19 @@ export const formatNumber = (value: number) =>
     currency: "USD",
   }).format(value);
 
+export const isMobile = () => {
+  const userAgentString =
+    /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+      navigator.userAgent
+    );
+  const deviceWidth = window.innerWidth <= 1024;
+  const touchEvents =
+    "ontouchstart" in window ||
+    navigator.maxTouchPoints > 0 ||
+    navigator.msMaxTouchPoints > 0;
+  return userAgentString || deviceWidth || touchEvents;
+};
+
 export const runAsyncFnWithoutBlocking = (
   fn: (...args: any) => Promise<any>
 ) => {

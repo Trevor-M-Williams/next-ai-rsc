@@ -18,7 +18,7 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/chat-command";
-import { cn, sleep } from "@/lib/utils";
+import { cn, isMobile, sleep } from "@/lib/utils";
 
 const commands = [
   {
@@ -188,7 +188,8 @@ export function ChatInput({ setMessages, submitUserMessage }: ChatInputProps) {
               e.preventDefault();
 
               // Blur focus on mobile
-              if (window.innerWidth < 600) {
+              const mobileUser = isMobile();
+              if (mobileUser) {
                 e.target["message"]?.blur();
               }
 
