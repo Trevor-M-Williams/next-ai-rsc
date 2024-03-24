@@ -189,8 +189,6 @@ export function ChatInput({ setMessages, submitUserMessage }: ChatInputProps) {
             onSubmit={async (e: any) => {
               e.preventDefault();
 
-              console.log("submit");
-
               // Blur focus on mobile
               const mobileUser = isMobile();
               if (mobileUser) {

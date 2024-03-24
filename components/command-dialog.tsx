@@ -1,3 +1,6 @@
+import { useState } from "react";
+
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -6,13 +9,12 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { IconPlus } from "@/components/ui/icons";
-import { Button } from "@/components/ui/button";
 
 import ChartIcon from "@mui/icons-material/BarChart";
 import FinancialsIcon from "@mui/icons-material/AttachMoney";
 import StockIcon from "@mui/icons-material/ShowChart";
+
 import { sleep } from "@/lib/utils";
-import { useState } from "react";
 
 const commands = [
   {
