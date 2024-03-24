@@ -139,10 +139,7 @@ export const isMobile = () => {
       navigator.userAgent
     );
   const deviceWidth = window.innerWidth <= 1024;
-  const touchEvents =
-    "ontouchstart" in window ||
-    navigator.maxTouchPoints > 0 ||
-    navigator.msMaxTouchPoints > 0;
+  const touchEvents = "ontouchstart" in window || navigator.maxTouchPoints > 0;
   return userAgentString || deviceWidth || touchEvents;
 };
 
