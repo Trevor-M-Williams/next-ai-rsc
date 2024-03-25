@@ -79,7 +79,7 @@ export function DynamicChart() {
 
   return (
     <div className="relative w-full max-w-3xl mx-auto">
-      <div className="relative min-h-10 w-full flex gap-8 mb-4">
+      <div className="relative min-h-10 w-full flex gap-8 mb-2">
         <Command
           onFocus={() => setCompanyCommandsOpen(true)}
           onBlur={() => setCompanyCommandsOpen(false)}
