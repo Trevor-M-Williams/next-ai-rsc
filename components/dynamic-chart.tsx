@@ -17,7 +17,18 @@ import {
 import CheckIcon from "@mui/icons-material/Check";
 
 export function DynamicChart() {
-  const companies = ["AAPL", "AMZN", "GOOG", "META", "MSFT", "NVDA", "TSLA"];
+  const companies = [
+    "AAPL",
+    "AMZN",
+    "GOOG",
+    "META",
+    "MSFT",
+    "NVDA",
+    "TSLA",
+    "TAP",
+    "STZ",
+    "BUD",
+  ];
 
   const fields = [
     { name: "costOfRevenue", label: "Cost Of Revenue" },
