@@ -10,6 +10,7 @@ import { ChatScrollAnchor } from "@/lib/hooks/chat-scroll-anchor";
 import { ChatList } from "@/components/chat-list";
 import { EmptyScreen } from "@/components/empty-screen";
 import { ChatInput } from "@/components/chat-input";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export default function Home() {
   const [messages, setMessages] = useUIState<typeof AI>();
@@ -41,7 +42,7 @@ export default function Home() {
   }, [inputRef]);
 
   return (
-    <div>
+    <ScrollArea className="h-screen">
       <div className="pb-[200px] pt-4 md:pt-10">
         {messages.length ? (
           <>
@@ -72,6 +73,6 @@ export default function Home() {
         setMessages={setMessages}
         submitUserMessage={submitUserMessage}
       />
-    </div>
+    </ScrollArea>
   );
 }
