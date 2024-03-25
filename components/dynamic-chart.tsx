@@ -78,14 +78,14 @@ export function DynamicChart() {
   }, [selectedCompanies]);
 
   return (
-    <div className="relative w-full max-w-3xl mx-auto">
+    <div>
       <div className="relative min-h-10 w-full flex gap-8 mb-2">
         <Command
           onFocus={() => setCompanyCommandsOpen(true)}
           onBlur={() => setCompanyCommandsOpen(false)}
           className="absolute z-10 h-auto min-h-10 w-[48%]"
         >
-          <CommandInput placeholder="Type a company symbol (e.g. AAPL)" />
+          <CommandInput placeholder="Ticker" />
           <CommandList className={companyCommandsOpen ? "" : "hidden"}>
             <CommandEmpty>No results found.</CommandEmpty>
             <CommandGroup heading="Companies">
@@ -110,7 +110,7 @@ export function DynamicChart() {
           onBlur={() => setFieldCommandsOpen(false)}
           className="absolute z-10 right-0 h-auto min-h-10 w-[48%]"
         >
-          <CommandInput placeholder="Type a field name (e.g. revenue)" />
+          <CommandInput placeholder="Field" />
           <CommandList className={fieldCommandsOpen ? "" : "hidden"}>
             <CommandEmpty>No results found.</CommandEmpty>
             <CommandGroup heading="Fields">

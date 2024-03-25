@@ -63,11 +63,6 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             <div className="flex flex-col min-h-screen bg-muted/50 dark:bg-background">
-              <header className="flex justify-end gap-6 p-4 text-xl">
-                <Link href="/">Chat</Link>
-                <Link href="/charts">Charts</Link>
-              </header>
-
               <main className="flex flex-col flex-1">{children}</main>
             </div>
           </Providers>
