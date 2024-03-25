@@ -19,18 +19,18 @@ import { sleep } from "@/lib/utils";
 const commands = [
   {
     name: "/chart",
-    icon: <ChartIcon fontSize="large" />,
-    message: "/chart:AAPL,META,GOOG,MSFT:netIncomeRatio",
+    icon: <ChartIcon fontSize="large" className="scale-150" />,
+    message: "/chart:AAPL",
   },
   {
     name: "/financials",
-    icon: <FinancialsIcon fontSize="large" />,
-    message: "/financials:GOOG,MSFT",
+    icon: <FinancialsIcon fontSize="large" className="scale-150" />,
+    message: "/financials:AAPL",
   },
   {
     name: "/stock",
-    icon: <StockIcon fontSize="large" />,
-    message: "/stock:AAPL,META",
+    icon: <StockIcon fontSize="large" className="scale-150" />,
+    message: "/stock:AAPL",
   },
 ];
 
@@ -53,13 +53,13 @@ export function CommandDialog({
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Commands</DialogTitle>
-          <div className="grid grid-cols-4 p-4">
+          <DialogTitle className="mb-2">Commands</DialogTitle>
+          <div className="flex justify-center gap-4">
             {commands.map((command) => (
               <Button
                 key={command.name}
                 variant={"outline"}
-                className="h-20 w-20 flex items-center gap-2"
+                className="h-32 w-32"
                 onClick={async () => {
                   setInputValue(command.message);
                   await sleep(10);

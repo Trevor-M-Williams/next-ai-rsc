@@ -6,6 +6,7 @@ import OpenAI from "openai";
 import { BotCard, BotMessage, Stock, StockSkeleton } from "@/components/stocks";
 import { FinancialStatement, FinancialSkeleton } from "@/components/financials";
 import { Chart } from "@/components/chart";
+import { DynamicChart } from "@/components/dynamic-chart";
 import { spinner } from "@/components/spinner";
 import { MarkdownLatex } from "@/components/markdown-latex";
 
@@ -226,46 +227,43 @@ async function handleCommand(
 
   switch (command) {
     case "/chart": {
-      const field = content.split(":")[2] || "revenue";
+      // const field = content.split(":")[2] || "revenue";
 
-      const chartDataPromises = symbols.map(async (symbol) => {
-        const { balanceSheets, cashFlowStatements, incomeStatements } =
-          await getFinancialData(symbol);
+      // const chartDataPromises = symbols.map(async (symbol) => {
+      //   const { balanceSheets, cashFlowStatements, incomeStatements } =
+      //     await getFinancialData(symbol);
 
-        let fieldType;
-        if (field in balanceSheets[0]) fieldType = "balanceSheets";
-        if (field in cashFlowStatements[0]) fieldType = "cashFlowStatements";
-        if (field in incomeStatements[0]) fieldType = "incomeStatements";
+      //   let fieldType;
+      //   if (field in balanceSheets[0]) fieldType = "balanceSheets";
+      //   if (field in cashFlowStatements[0]) fieldType = "cashFlowStatements";
+      //   if (field in incomeStatements[0]) fieldType = "incomeStatements";
 
-        switch (fieldType) {
-          case "balanceSheets":
-            return {
-              ticker: symbol.toUpperCase(),
-              data: balanceSheets,
-            };
-          case "cashFlowStatements":
-            return {
-              ticker: symbol.toUpperCase(),
-              data: cashFlowStatements,
-            };
-          case "incomeStatements":
-            return {
-              ticker: symbol.toUpperCase(),
-              data: incomeStatements,
-            };
-          default:
-            return { ticker: symbol.toUpperCase(), data: [] };
-        }
-      });
+      //   switch (fieldType) {
+      //     case "balanceSheets":
+      //       return {
+      //         ticker: symbol.toUpperCase(),
+      //         data: balanceSheets,
+      //       };
+      //     case "cashFlowStatements":
+      //       return {
+      //         ticker: symbol.toUpperCase(),
+      //         data: cashFlowStatements,
+      //       };
+      //     case "incomeStatements":
+      //       return {
+      //         ticker: symbol.toUpperCase(),
+      //         data: incomeStatements,
+      //       };
+      //     default:
+      //       return { ticker: symbol.toUpperCase(), data: [] };
+      //   }
+      // });
 
-      const datasets = await Promise.all(chartDataPromises);
+      // const datasets = await Promise.all(chartDataPromises);
 
       reply.done(
         <BotCard>
-          <Chart
-            datasets={datasets}
-            field={field as keyof FinancialStatement}
-          />
+          <DynamicChart />
         </BotCard>
       );
 
@@ -274,7 +272,7 @@ async function handleCommand(
         {
           role: "assistant",
           name: "show_financial_chart",
-          content: `[Plot]`,
+          content: `[Dynamic Chart]`,
         },
       ]);
 
