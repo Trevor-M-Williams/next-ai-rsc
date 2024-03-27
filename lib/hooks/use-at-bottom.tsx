@@ -3,14 +3,18 @@ import * as React from "react";
 export function useAtBottom(offset = 0) {
   const [isAtBottom, setIsAtBottom] = React.useState(false);
 
-  const scrollArea = document.querySelector(
-    "[data-radix-scroll-area-viewport]"
-  ) as HTMLElement;
+  let scrollArea: HTMLElement | null = null;
+
+  React.useEffect(() => {
+    scrollArea = document.querySelector(".scroll-area");
+  }, []);
 
   React.useEffect(() => {
     if (!scrollArea) return;
 
     const handleScroll = () => {
+      if (!scrollArea) return;
+
       const isAtBottom =
         scrollArea.scrollTop + scrollArea.clientHeight >=
         scrollArea.scrollHeight - offset;
@@ -21,6 +25,8 @@ export function useAtBottom(offset = 0) {
     handleScroll();
 
     return () => {
+      if (!scrollArea) return;
+
       scrollArea.removeEventListener("scroll", handleScroll);
     };
   }, [offset, scrollArea]);
