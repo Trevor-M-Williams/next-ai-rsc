@@ -1,10 +1,11 @@
-import { getHistoricalData } from "@/db/actions";
+import { getFinancialData, getHistoricalData } from "@/db/actions";
 
 import { Stock } from "@/components/stocks";
 
 import { Calendar } from "@/components/ui/calendar";
 
 import { cn } from "@/lib/utils";
+import { BarChart } from "@/components/bar-chart";
 
 type CardProps = {
   colSpan: number;
@@ -28,6 +29,7 @@ function Card({ colSpan, rowSpan, children }: CardProps) {
 
 export default async function HomePage() {
   const data = await getHistoricalData("PG");
+  // const financialData = await getFinancialData("PG");
 
   return (
     <div
@@ -44,7 +46,9 @@ export default async function HomePage() {
       <Card colSpan={6} rowSpan={1}>
         <Stock symbol="GEN" name="Gen Goods Inc." data={data} />
       </Card>
-      <Card colSpan={6} rowSpan={1}></Card>
+      <Card colSpan={6} rowSpan={1}>
+        <BarChart />
+      </Card>
       <Card colSpan={1} rowSpan={1}>
         <Calendar
           mode="single"

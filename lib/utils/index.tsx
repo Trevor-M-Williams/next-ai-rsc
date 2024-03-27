@@ -151,3 +151,19 @@ export const runAsyncFnWithoutBlocking = (
 
 export const sleep = (ms: number) =>
   new Promise((resolve) => setTimeout(resolve, ms));
+
+export function formatNumberInMillions(value: number) {
+  if (value === 0) return "0";
+  if (Math.abs(value) < 10000000) return value.toFixed(2);
+  if (!value) return "N/A";
+  const number = Math.round(value / 1000000);
+  const formattedNumber = new Intl.NumberFormat("en-US").format(number);
+  return formattedNumber;
+}
+
+export function formatFieldName(fieldName: string) {
+  if (fieldName === "ebitdaratio") return "Ebitda Ratio";
+  return fieldName
+    .replace(/([A-Z])/g, " $1")
+    .replace(/^./, (str) => str.toUpperCase());
+}

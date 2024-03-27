@@ -3,6 +3,8 @@
 import { Line } from "react-chartjs-2";
 import "chart.js/auto";
 
+import { formatFieldName, formatNumberInMillions } from "@/lib/utils";
+
 export function Chart<T extends FinancialStatement>({
   datasets,
   field,
@@ -47,7 +49,7 @@ export function Chart<T extends FinancialStatement>({
         beginAtZero: true,
         ticks: {
           callback: function (value: any) {
-            return formatNumber(value);
+            return formatNumberInMillions(value);
           },
         },
       },
@@ -65,7 +67,7 @@ export function Chart<T extends FinancialStatement>({
           },
           label: function (context: any) {
             const value = context.parsed.y;
-            return formatNumber(value);
+            return formatNumberInMillions(value);
           },
         },
       },
@@ -88,20 +90,4 @@ export function Chart<T extends FinancialStatement>({
       </div>
     </div>
   );
-}
-
-function formatNumber(value: number) {
-  if (value === 0) return "0";
-  if (Math.abs(value) < 10000000) return value.toFixed(2);
-  if (!value) return "N/A";
-  const number = Math.round(value / 1000000);
-  const formattedNumber = new Intl.NumberFormat("en-US").format(number);
-  return formattedNumber;
-}
-
-function formatFieldName(fieldName: string) {
-  if (fieldName === "ebitdaratio") return "Ebitda Ratio";
-  return fieldName
-    .replace(/([A-Z])/g, " $1")
-    .replace(/^./, (str) => str.toUpperCase());
 }
