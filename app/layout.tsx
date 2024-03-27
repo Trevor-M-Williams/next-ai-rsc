@@ -7,7 +7,8 @@ import "./globals.css";
 
 import { AI } from "./action";
 import { Providers } from "@/components/providers";
-import Link from "next/link";
+
+import Sidebar from "@/components/sidebar";
 
 const meta = {
   title: "AI RSC Demo",
@@ -62,8 +63,9 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <div className="flex flex-col min-h-screen bg-muted/50 dark:bg-background">
-              <main className="flex flex-col flex-1">{children}</main>
+            <div className="flex h-screen bg-muted/50 overflow-hidden dark:bg-background">
+              <Sidebar />
+              <div className="flex-grow overflow-hidden">{children}</div>
             </div>
           </Providers>
         </AI>
