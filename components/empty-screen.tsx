@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { IconArrowRight } from "@/components/ui/icons";
 
-const exampleMessages = [
+const suggestedMessages = [
   {
     heading: "What's Apple trading at?",
     message: "/stock:AAPL",
@@ -15,8 +15,8 @@ const exampleMessages = [
     message: "/chart:aapl,amzn,goog,meta,msft,nvda,tsla:eps",
   },
   {
-    heading: "Compare the profit margin of Apple and Google",
-    message: "Compare the profit margin of Apple and Google",
+    heading: "Compare debt leverage for Apple and Google",
+    message: "Compare debt leverage for Apple and Google",
   },
 ];
 
@@ -30,7 +30,7 @@ export function EmptyScreen({
       <div className="rounded-lg border bg-background p-8 mb-4">
         <p className="leading-normal text-muted-foreground">Quick Start:</p>
         <div className="mt-4 flex flex-col items-start space-y-2 mb-4">
-          {exampleMessages.map((message, index) => (
+          {suggestedMessages.map((message, index) => (
             <Button
               key={index}
               variant="link"
