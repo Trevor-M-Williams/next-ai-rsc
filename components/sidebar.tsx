@@ -32,26 +32,26 @@ export default function Sidebar() {
   );
 
   const links = [
-    { href: "/", label: "Overview", Icon: HomeIcon },
+    { href: "/dashboard", label: "Overview", Icon: HomeIcon },
     {
-      href: "/insights",
+      href: "/dashboard/insights",
       label: "Insights",
       Icon: InsightsIcon,
     },
     {
-      href: "/chat",
+      href: "/dashboard/chat",
       label: "Chat",
       Icon: ChatIcon,
     },
   ];
 
   return (
-    <div className="relative h-full border-r px-4 py-6 flex flex-col justify-between bg-white">
+    <div className=" h-full border-r px-4 py-6 flex flex-col justify-between bg-white">
       <div>
         <div className="mb-4 pb-2 border-b min-h-[3rem] min-w-[11rem]">
           <OrganizationSwitcher
-            afterCreateOrganizationUrl="/"
-            afterSelectOrganizationUrl="/"
+            afterCreateOrganizationUrl="/dashboard"
+            afterSelectOrganizationUrl="/dashboard"
             hidePersonal={true}
           />
         </div>
@@ -59,7 +59,8 @@ export default function Sidebar() {
         <div className="flex flex-col gap-2">
           {links.map(({ href, label, Icon }, index) => {
             const highlight =
-              pathname === href || (pathname.includes(href) && href !== "/");
+              pathname === href ||
+              (pathname.includes(href) && href !== "/dashboard");
 
             return (
               <Link href={href} key={index} className="flex">
@@ -81,7 +82,7 @@ export default function Sidebar() {
       </div>
 
       <div className="space-y-2 border-t pt-4">
-        <Link href="/">
+        <Link href="/dashboard">
           <Button
             tabIndex={-1}
             variant="ghost"

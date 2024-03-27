@@ -8,18 +8,15 @@ import "./globals.css";
 import { AI } from "./action";
 import { Providers } from "@/components/providers";
 
-import Sidebar from "@/components/sidebar";
-
 const meta = {
-  title: "AI RSC Demo",
-  description:
-    "Demo of an interactive financial assistant built using Next.js and Vercel AI SDK.",
+  title: "Director Assist",
+  description: "Director Assist",
 };
 export const metadata: Metadata = {
   ...meta,
   title: {
-    default: "AI RSC Demo",
-    template: `%s - AI RSC Demo`,
+    default: "Director Assist",
+    template: `%s - Director Assist`,
   },
   icons: {
     icon: "/favicon.ico",
@@ -64,8 +61,7 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             <div className="flex h-screen bg-muted/50 overflow-hidden dark:bg-background">
-              <Sidebar />
-              <div className="flex-grow overflow-hidden">{children}</div>
+              {children}
             </div>
           </Providers>
         </AI>
