@@ -46,9 +46,9 @@ export default function Sidebar() {
   ];
 
   return (
-    <div className=" h-full border-r px-2 lg:px-4 py-6 flex flex-col justify-between bg-background">
+    <div className=" h-full border-r px-2 xl:px-4 py-6 flex flex-col justify-between bg-background">
       <div>
-        <div className="mb-4 pb-2 border-b min-h-[3rem] lg:min-w-[11rem]">
+        <div className="mb-4 pb-2 border-b min-h-[3rem] xl:min-w-[11rem]">
           <OrganizationSwitcher
             afterCreateOrganizationUrl="/dashboard"
             afterSelectOrganizationUrl="/dashboard"
@@ -73,7 +73,7 @@ export default function Sidebar() {
                   }`}
                 >
                   {Icon && <Icon />}
-                  <span className="hidden lg:inline">{label}</span>
+                  <span className="hidden xl:inline">{label}</span>
                 </Button>
               </Link>
             );
@@ -91,7 +91,7 @@ export default function Sidebar() {
             }`}
           >
             <SettingsIcon />
-            <span className="hidden lg:inline">Settings</span>
+            <span className="hidden xl:inline">Settings</span>
           </Button>
         </Link>
 
@@ -105,7 +105,7 @@ export default function Sidebar() {
           )}
         >
           <UserButton afterSignOutUrl="/sign-in" />
-          <span className="hidden lg:inline">Account</span>
+          <span className="hidden xl:inline">Account</span>
         </div>
       </div>
     </div>

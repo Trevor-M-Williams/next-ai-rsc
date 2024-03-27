@@ -1,6 +1,9 @@
 import { getHistoricalData } from "@/db/actions";
 
 import { Stock } from "@/components/stocks";
+
+import { Calendar } from "@/components/ui/calendar";
+
 import { cn } from "@/lib/utils";
 
 type CardProps = {
@@ -12,26 +15,26 @@ type CardProps = {
 function Card({ colSpan, rowSpan, children }: CardProps) {
   return (
     <div
-      className={cn("flex items-center bg-background rounded-md shadow-sm")}
+      className={cn(" bg-background rounded-md shadow-sm")}
       style={{
         gridColumn: `span ${colSpan}`,
         gridRow: `span ${rowSpan}`,
       }}
     >
-      <div className="w-full ">{children}</div>
+      {children}
     </div>
   );
 }
 
 export default async function HomePage() {
-  const data = await getHistoricalData("GEN");
+  const data = await getHistoricalData("PG");
 
   return (
     <div
-      className="h-screen grid grid-rows-5 gap-4 p-4"
+      className="h-screen grid gap-4 p-4"
       style={{
-        gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr 1fr 3.25fr",
-        gridTemplateRows: "0.5fr 1.5fr 1fr",
+        gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr 1fr 18rem",
+        gridTemplateRows: "1fr 45vh 35vh",
       }}
     >
       <Card colSpan={2} rowSpan={1}></Card>
@@ -42,7 +45,13 @@ export default async function HomePage() {
         <Stock symbol="GEN" name="Gen Goods Inc." data={data} />
       </Card>
       <Card colSpan={6} rowSpan={1}></Card>
-      <Card colSpan={1} rowSpan={1}></Card>
+      <Card colSpan={1} rowSpan={1}>
+        <Calendar
+          mode="single"
+          selected={new Date()}
+          className="h-full w-full"
+        />
+      </Card>
     </div>
   );
 }
