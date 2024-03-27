@@ -1,5 +1,3 @@
-import type { Metadata } from "next";
-
 import Sidebar from "@/components/sidebar";
 
 export default function DashboardLayout({
