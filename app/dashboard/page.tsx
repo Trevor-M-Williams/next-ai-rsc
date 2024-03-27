@@ -1,7 +1,30 @@
+import { getHistoricalData } from "@/db/actions";
+
+import { Stock } from "@/components/stocks";
 import { cn } from "@/lib/utils";
 
-export default function HomePage() {
-  const cardClass = "bg-white rounded-md shadow-sm";
+type CardProps = {
+  colSpan: number;
+  rowSpan: number;
+  children?: React.ReactNode;
+};
+
+function Card({ colSpan, rowSpan, children }: CardProps) {
+  return (
+    <div
+      className={cn(
+        "bg-white rounded-md shadow-sm",
+        `col-span-${colSpan}`,
+        `row-span-${rowSpan}`
+      )}
+    >
+      {children}
+    </div>
+  );
+}
+
+export default async function HomePage() {
+  const data = await getHistoricalData("GEN");
 
   return (
     <div
@@ -11,24 +34,16 @@ export default function HomePage() {
         gridTemplateRows: "1fr 1fr 1fr 1fr 8vw",
       }}
     >
-      <div className={cn(cardClass, "col-span-2 row-span-1")}></div>
-      <div className={cn(cardClass, "col-span-2 row-span-1")}></div>
-      <div className={cn(cardClass, "col-span-2 row-span-1")}></div>
-      <div className={cn(cardClass, "col-span-1 row-span-3")}></div>
-      <div className={cn(cardClass, "col-span-6 row-span-2")}></div>
-      <div className={cn(cardClass, "col-span-3 row-span-2")}></div>
-      <div className={cn(cardClass, "col-span-3 row-span-2")}></div>
-      <div className={cn(cardClass, "col-span-1 row-span-2")}></div>
+      <Card colSpan={2} rowSpan={1}></Card>
+      <Card colSpan={2} rowSpan={1}></Card>
+      <Card colSpan={2} rowSpan={1}></Card>
+      <Card colSpan={1} rowSpan={3}></Card>
+      <Card colSpan={6} rowSpan={2}>
+        <Stock symbol="GEN" name="Gen Goods Inc." data={data} />
+      </Card>
+      <Card colSpan={3} rowSpan={2}></Card>
+      <Card colSpan={3} rowSpan={2}></Card>
+      <Card colSpan={1} rowSpan={2}></Card>
     </div>
-
-    // <div className="h-screen grid grid-cols-3 grid-rows-5 gap-4 p-4">
-    //   <div className="col-span-1 row-span-1 bg-white"></div>
-    //   <div className="col-span-1 row-span-1 bg-white"></div>
-    //   <div className="col-span-1 row-span-3 bg-white"></div>
-    //   <div className="col-span-2 row-span-2 bg-white"></div>
-    //   <div className="col-span-1 row-span-2 bg-white"></div>
-    //   <div className="col-span-1 row-span-2 bg-white"></div>
-    //   <div className="col-span-1 row-span-2 bg-white"></div>
-    // </div>
   );
 }

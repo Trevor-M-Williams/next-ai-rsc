@@ -73,7 +73,7 @@ function ChartButtons({
 
       {/* underline */}
       <div
-        className="absolute bottom-0 left-0 w-6 h-px bg-white transition-transform duration-300"
+        className="absolute bottom-0 left-0 w-6 h-px bg-black transition-transform duration-300"
         style={{
           transform: `translateX(calc(0.5rem + 2.5 * ${timeframes.indexOf(timeframe)}rem))`,
         }}
@@ -97,12 +97,12 @@ export function Stock({
   const [chartData, setChartData] = useState(data);
 
   return (
-    <div className="relative p-4 text-white border rounded-xl bg-zinc-950 overflow-hidden">
-      <div className="">
+    <div className="h-full bg-white relative p-4 rounded-xl overflow-hidden">
+      <div className="mb-4">
         <div className="flex items-center gap-2">
-          <div className="text-2xl font-semibold">{symbol}</div>
+          <div className="text-xl font-semibold">{symbol}</div>
           {name && (
-            <div className="text-lg">
+            <div className="text-xl">
               {"-"} {name}
             </div>
           )}
@@ -110,9 +110,7 @@ export function Stock({
 
         <div className="flex justify-between">
           <div className="flex items-center gap-2">
-            <div className="text-2xl font-semibold text-white">
-              ${price.toFixed(2)}
-            </div>
+            <div className="text-2xl font-semibold">${price.toFixed(2)}</div>
             <div
               className={cn(
                 "text-xs",
@@ -131,13 +129,11 @@ export function Stock({
         </div>
       </div>
 
-      <div className="mt-4">
-        <StockChart
-          data={chartData}
-          ticker={symbol}
-          percentChange={percentChange}
-        />
-      </div>
+      <StockChart
+        data={chartData}
+        ticker={symbol}
+        percentChange={percentChange}
+      />
     </div>
   );
 }

@@ -37,13 +37,13 @@ export function StockChart({ data, ticker, percentChange }: StockChartProps) {
           autoSkip: true,
         },
         grid: {
-          color: "#ffffff22",
+          color: "#eee",
         },
       },
       y: {
         beginAtZero: false,
         grid: {
-          color: "#ffffff22",
+          color: "#eee",
         },
       },
     },
@@ -65,7 +65,7 @@ export function StockChart({ data, ticker, percentChange }: StockChartProps) {
   };
 
   return (
-    <div className="h-60 w-full">
+    <div className="h-60 max-h-[75%] w-full">
       <Line data={chartData} options={chartOptions} />
     </div>
   );
