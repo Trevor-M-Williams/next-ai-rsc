@@ -16,7 +16,7 @@ import { cn } from "@/lib/utils";
 
 export default function Sidebar() {
   const pathname = usePathname();
-  const buttonClassName = "w-full justify-start text-md flex gap-4";
+  const buttonClassName = "w-full justify-start text-md flex gap-4 h-10";
 
   const HomeIcon = () => (
     <svg
@@ -62,7 +62,7 @@ export default function Sidebar() {
               pathname === href || (pathname.includes(href) && href !== "/");
 
             return (
-              <Link href={href} key={index} className="flex py-1">
+              <Link href={href} key={index} className="flex">
                 <Button
                   tabIndex={-1}
                   key={index}
@@ -81,7 +81,7 @@ export default function Sidebar() {
       </div>
 
       <div className="space-y-2 border-t pt-4">
-        <Link href="/dashboard/settings">
+        <Link href="/">
           <Button
             tabIndex={-1}
             variant="ghost"
