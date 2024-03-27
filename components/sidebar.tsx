@@ -46,7 +46,7 @@ export default function Sidebar() {
   ];
 
   return (
-    <div className=" h-full border-r px-2 lg:px-4 py-6 flex flex-col justify-between bg-white">
+    <div className=" h-full border-r px-2 lg:px-4 py-6 flex flex-col justify-between bg-background">
       <div>
         <div className="mb-4 pb-2 border-b min-h-[3rem] lg:min-w-[11rem]">
           <OrganizationSwitcher

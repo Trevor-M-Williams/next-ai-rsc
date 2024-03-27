@@ -97,7 +97,7 @@ export function Stock({
   const [chartData, setChartData] = useState(data);
 
   return (
-    <div className="h-full bg-white relative p-4 rounded-xl overflow-hidden">
+    <div className="max-h-full h-[50vh] bg-background relative p-4 rounded-md overflow-hidden">
       <div className="mb-4">
         <div className="flex items-center gap-2">
           <div className="text-xl font-semibold">{symbol}</div>

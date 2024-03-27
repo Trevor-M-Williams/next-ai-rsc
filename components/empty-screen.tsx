@@ -27,7 +27,7 @@ export function EmptyScreen({
 }) {
   return (
     <div className="mx-auto max-w-2xl px-4">
-      <div className="rounded-lg border bg-background p-8 mb-4">
+      <div className="rounded bg-background p-8 mb-4">
         <p className="leading-normal text-muted-foreground">Quick Start:</p>
         <div className="mt-4 flex flex-col items-start space-y-2 mb-4">
           {suggestedMessages.map((message, index) => (

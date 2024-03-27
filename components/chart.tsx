@@ -74,7 +74,7 @@ export function Chart<T extends FinancialStatement>({
   };
 
   return (
-    <div className="relative p-4 pt-6 bg-white border rounded-xl overflow-hidden">
+    <div className="relative p-4 pt-6 bg-background border rounded-xl overflow-hidden">
       <div className="absolute top-4 text-lg font-bold">
         {datasets.length > 0 && formatFieldName(field.toString())}
       </div>

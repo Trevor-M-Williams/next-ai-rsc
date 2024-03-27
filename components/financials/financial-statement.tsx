@@ -30,7 +30,7 @@ type DataTableProps = {
 
 function DataTable({ data }: DataTableProps) {
   return (
-    <div className="relative p-4 bg-white rounded-xl">
+    <div className="relative p-4 bg-background rounded-xl">
       <Table>
         <TableHeader className="text-xs">
           <TableRow>
@@ -254,7 +254,7 @@ export function FinancialStatement({
       <Tabs defaultValue="income-statement" className="">
         <div className="absolute right-2">
           <Select defaultValue={years[0]} onValueChange={(val) => setYear(val)}>
-            <SelectTrigger className="w-[100px] bg-white">
+            <SelectTrigger className="w-[100px] bg-background">
               <SelectValue placeholder="Year" />
             </SelectTrigger>
             <SelectContent>
