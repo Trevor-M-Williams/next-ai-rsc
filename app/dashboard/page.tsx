@@ -42,7 +42,7 @@ function Metric({
   return (
     <div
       className={cn(
-        "h-full flex items-center justify-center text-white cursor-pointer gap-4",
+        "h-full flex items-center justify-center text-white cursor-pointer gap-6",
         bg
       )}
     >
