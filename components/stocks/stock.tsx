@@ -86,10 +86,12 @@ export function Stock({
   symbol,
   name,
   data,
+  color,
 }: {
   symbol: string;
   name: string;
   data: StockChartData[];
+  color?: string;
 }) {
   const price = data[data.length - 1]?.price || 0;
 
@@ -97,7 +99,7 @@ export function Stock({
   const [chartData, setChartData] = useState(data);
 
   return (
-    <div className="max-h-full h-[80vh] bg-background relative p-4 rounded-md overflow-hidden">
+    <div className="max-h-full h-[45vh] bg-background relative p-4 rounded-md overflow-hidden">
       <div className="mb-4">
         <div className="flex items-center gap-2">
           <div className="text-xl font-semibold">{symbol}</div>
@@ -133,6 +135,7 @@ export function Stock({
         data={chartData}
         ticker={symbol}
         percentChange={percentChange}
+        color={color}
       />
     </div>
   );

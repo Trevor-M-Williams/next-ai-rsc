@@ -5,11 +5,24 @@ type StockChartProps = {
   data: StockChartData[];
   ticker: string;
   percentChange: number;
+  color?: string;
 };
 
-export function StockChart({ data, ticker, percentChange }: StockChartProps) {
-  const borderColor = percentChange > 0 ? "#20f160" : "#ff4d4f";
-  const backgroundColor = percentChange > 0 ? "#20f16022" : "#ff4d4f22";
+export function StockChart({
+  data,
+  ticker,
+  percentChange,
+  color,
+}: StockChartProps) {
+  let borderColor;
+  let backgroundColor;
+  if (color) {
+    borderColor = color;
+    backgroundColor = `${color}22`;
+  } else {
+    borderColor = percentChange > 0 ? "#20f160" : "#ff4d4f";
+    backgroundColor = percentChange > 0 ? "#20f16022" : "#ff4d4f22";
+  }
 
   const chartData = {
     labels: data.map((item) => item.date),

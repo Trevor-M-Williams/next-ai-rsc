@@ -9,33 +9,33 @@ export function BarChart() {
     incomeStatements: [
       {
         date: "2019-09-30",
-        revenue: 80000000,
-        grossProfit: 30000000,
-        netIncome: 15000000,
+        revenue: 8000000000,
+        grossProfit: 3000000000,
+        netIncome: 1050000000,
       },
       {
         date: "2020-09-30",
-        revenue: 123950000,
-        grossProfit: 59200000,
-        netIncome: 18000000,
+        revenue: 12395000000,
+        grossProfit: 5920000000,
+        netIncome: 1800000000,
       },
       {
         date: "2021-09-30",
-        revenue: 118000000,
-        grossProfit: 52000000,
-        netIncome: 15000000,
+        revenue: 11800000000,
+        grossProfit: 5200000000,
+        netIncome: 1500000000,
       },
       {
         date: "2022-09-30",
-        revenue: 138000000,
-        grossProfit: 69000000,
-        netIncome: 26000000,
+        revenue: 13800000000,
+        grossProfit: 6900000000,
+        netIncome: 2600000000,
       },
       {
         date: "2023-09-30",
-        revenue: 145000000,
-        grossProfit: 75000000,
-        netIncome: 30000000,
+        revenue: 14500000000,
+        grossProfit: 7500000000,
+        netIncome: 3000000000,
       },
     ],
   };
@@ -64,7 +64,7 @@ export function BarChart() {
     },
   ];
 
-  const colors = ["#00bbdd", "#00ddbb", "#00aaff"];
+  const colors = ["#00ccff", "#0099ff", "#0033ff"];
 
   const chartData = {
     labels: datasets[0]?.data.map((item) => item.date.slice(0, 4)) || [],
@@ -72,8 +72,7 @@ export function BarChart() {
       label: dataset.label,
       data: dataset.data.map((item) => item.value),
       borderColor: colors[index],
-      //   backgroundColor: "#00bbbb33",
-      backgroundColor: `${colors[index]}88`,
+      backgroundColor: `${colors[index]}66`,
       fill: true,
       borderWidth: 1,
     })),
@@ -118,8 +117,9 @@ export function BarChart() {
   };
 
   return (
-    <div className="h-full p-4 border">
+    <div className="relative h-full p-4 pb-6">
       <Bar data={chartData} options={chartOptions} />
+      <div className="absolute top-4 left-3 text-xs text-gray-500">(M USD)</div>
     </div>
   );
 }
