@@ -73,3 +73,15 @@
   height: 24px;
   width: 24px;
 }
+
+@media (max-width: 1280px) {
+  .cl-rootBox .cl-organizationPreviewTextContainer {
+    display: none;
+  }
+  .cl-organizationSwitcherTrigger > :not(:first-child) {
+    display: none;
+  }
+  .cl-organizationSwitcherTrigger {
+    padding: 0;
+  }
+}

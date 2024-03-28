@@ -42,15 +42,17 @@ function Metric({
   return (
     <div
       className={cn(
-        "h-full flex items-center justify-center text-white cursor-pointer gap-6",
+        "h-full flex items-center justify-center text-white cursor-pointer gap-4 lg:gap-6",
         bg
       )}
     >
-      <div className="flex items-center justify-center text-7xl">
+      <div className="flex items-center justify-center text-5xl lg:text-6xl xl:text-7xl">
         {value}
         <span className="text-3xl">{unit}</span>
       </div>
-      <div className="w-24 text-lg leading-tight">{title}</div>
+      <div className="w-24 text-base leading-tight lg:text-lg lg:leading-tight">
+        {title}
+      </div>
     </div>
   );
 }
