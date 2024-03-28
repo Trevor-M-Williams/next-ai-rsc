@@ -98,7 +98,9 @@ export function BarChart() {
     plugins: {
       legend: {
         align: "end" as "end",
-        labels: { boxWidth: datasets.length > 5 ? 30 : 40 },
+        labels: {
+          boxWidth: datasets.length > 5 ? 30 : 40,
+        },
       },
       tooltip: {
         enabled: true,

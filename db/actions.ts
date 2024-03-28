@@ -28,6 +28,7 @@ export async function getHistoricalData(symbol: string) {
     });
 
     if (!stockData || !stockData.data) {
+      console.log(`Stock data not found for ${symbol}`);
       const fetchedData = await fetchHistoricalData(symbol);
 
       const stockData = {
@@ -65,6 +66,8 @@ export async function getHistoricalData(symbol: string) {
 
     const updatedAtDate = new Date(updatedAt);
     const currentDate = new Date();
+
+    console.log(updatedAtDate.toDateString(), currentDate.toDateString());
 
     return updatedAtDate.toDateString() !== currentDate.toDateString();
   }

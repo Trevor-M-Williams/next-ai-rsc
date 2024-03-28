@@ -60,7 +60,7 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <div className="fixed inset-0 flex bg-muted overflow-hidden dark:bg-background">
+            <div className="fixed inset-0 flex bg-muted overflow-hidden">
               {children}
             </div>
           </Providers>

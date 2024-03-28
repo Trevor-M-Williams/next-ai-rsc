@@ -60,7 +60,7 @@ function ChartButtons({
   }
 
   return (
-    <div className="relative flex text-gray-500">
+    <div className="relative flex text-muted-foreground">
       {timeframes.map((tf) => (
         <button
           key={tf}
@@ -73,7 +73,7 @@ function ChartButtons({
 
       {/* underline */}
       <div
-        className="absolute bottom-0 left-0 w-6 h-px bg-gray-500 transition-transform duration-300"
+        className="absolute bottom-0 left-0 w-6 h-px bg-muted-foreground transition-transform duration-300"
         style={{
           transform: `translateX(calc(0.5rem + 2.5 * ${timeframes.indexOf(timeframe)}rem))`,
         }}

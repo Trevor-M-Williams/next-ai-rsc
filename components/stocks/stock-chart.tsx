@@ -49,15 +49,10 @@ export function StockChart({
           maxTicksLimit: 6,
           autoSkip: true,
         },
-        grid: {
-          color: "#eee",
-        },
       },
       y: {
         beginAtZero: false,
-        grid: {
-          color: "#eee",
-        },
+        ticks: {},
       },
     },
     plugins: {
