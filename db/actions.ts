@@ -28,7 +28,6 @@ export async function getHistoricalData(symbol: string) {
     });
 
     if (!stockData || !stockData.data) {
-      console.log(`Stock data not found for ${symbol}`);
       const fetchedData = await fetchHistoricalData(symbol);
 
       const stockData = {

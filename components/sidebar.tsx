@@ -9,7 +9,9 @@ import { OrganizationSwitcher } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
 
 import InsightsIcon from "@mui/icons-material/InsightsOutlined";
-import ChatIcon from "@mui/icons-material/NotesOutlined";
+import GovernanceIcon from "@mui/icons-material/AccountBalanceOutlined";
+import ChatIcon from "@mui/icons-material/ChatBubbleOutline";
+import NotesIcon from "@mui/icons-material/NotesOutlined";
 import SettingsIcon from "@mui/icons-material/SettingsOutlined";
 
 import { cn } from "@/lib/utils";
@@ -39,10 +41,16 @@ export default function Sidebar() {
       Icon: InsightsIcon,
     },
     {
+      href: "/dashboard",
+      label: "Governance",
+      Icon: GovernanceIcon,
+    },
+    {
       href: "/dashboard/chat",
       label: "Chat",
       Icon: ChatIcon,
     },
+    { href: "/dashboard", label: "Notes", Icon: NotesIcon },
   ];
 
   return (
@@ -58,9 +66,16 @@ export default function Sidebar() {
 
         <div className="flex flex-col gap-2">
           {links.map(({ href, label, Icon }, index) => {
-            const highlight =
-              pathname === href ||
-              (pathname.includes(href) && href !== "/dashboard");
+            let highlight = false;
+            if (href === "/dashboard") {
+              if (label === "Overview") {
+                highlight = pathname === href;
+              } else {
+                highlight = false;
+              }
+            } else {
+              highlight = pathname === href || pathname.includes(href);
+            }
 
             return (
               <Link href={href} key={index} className="flex">
