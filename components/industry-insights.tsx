@@ -7,7 +7,7 @@ export function IndustryInsights() {
       insight:
         "Increasing consumer demand for sustainable and eco-friendly products is pushing major CPG companies to revamp their product lines and packaging solutions.",
       recommendation:
-        "Companies should intensify efforts in sustainability, from sourcing to packaging, and communicate these initiatives effectively to consumers.",
+        "Intensify efforts in sustainability, from sourcing to packaging, and communicate these initiatives effectively to consumers.",
     },
     {
       category: "E-commerce and Digital Engagement",
