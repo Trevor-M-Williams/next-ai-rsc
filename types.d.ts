@@ -171,3 +171,8 @@ type ChartProps<T extends FinancialStatement> = {
   datasets: ChartDataset<T>[];
   field: keyof T;
 };
+
+type CompanyData = {
+  overview: string;
+  financialOverview: string;
+};

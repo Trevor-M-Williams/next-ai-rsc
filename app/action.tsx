@@ -13,8 +13,8 @@ import { MarkdownLatex } from "@/components/markdown-latex";
 import { runOpenAICompletion } from "@/lib/utils";
 import { z } from "zod";
 
-import { getCompanyName, getHistoricalData } from "@/db/actions";
-import { getFinancialData } from "@/db/actions";
+import { getCompanyName, getHistoricalData } from "@/actions/db";
+import { getFinancialData } from "@/actions/db";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY || "",

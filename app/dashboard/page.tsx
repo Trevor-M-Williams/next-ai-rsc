@@ -1,4 +1,4 @@
-import { getHistoricalData } from "@/db/actions";
+import { getHistoricalData } from "@/actions/db";
 
 import { Stock } from "@/components/stocks";
 
@@ -58,7 +58,7 @@ function Metric({
 }
 
 export default async function HomePage() {
-  const data = await getHistoricalData("PG");
+  const data = await getHistoricalData("WMT");
 
   return (
     <div

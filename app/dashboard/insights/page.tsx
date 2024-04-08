@@ -1,4 +1,4 @@
-import { getHistoricalData } from "@/db/actions";
+import { getHistoricalData } from "@/actions/db";
 
 import { Calendar } from "@/components/ui/calendar";
 
@@ -31,8 +31,6 @@ function Card({ colSpan, rowSpan, children }: CardProps) {
 }
 
 export default async function InsightsPage() {
-  const data = await getHistoricalData("PG");
-
   return (
     <div
       className="h-screen grid gap-4 p-4"

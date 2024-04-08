@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 
-import { getFinancialData } from "@/db/actions";
+import { getFinancialData } from "@/actions/db";
 
 import { Chart } from "@/components/chart";
 
@@ -25,9 +25,8 @@ export function DynamicChart() {
     "MSFT",
     "NVDA",
     "TSLA",
-    "TAP",
-    "STZ",
-    "BUD",
+    "UMBF",
+    "BANF",
   ];
 
   const fields = [

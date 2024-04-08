@@ -43,6 +43,13 @@
       "when": 1710954982309,
       "tag": "0005_grey_rhino",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1712096664571,
+      "tag": "0006_powerful_lionheart",
+      "breakpoints": true
     }
   ]
 }

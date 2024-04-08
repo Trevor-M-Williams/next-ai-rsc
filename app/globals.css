@@ -60,6 +60,16 @@
   }
 }
 
+/* -------------------- Prose -------------------- */
+.prose {
+  color: var(--foreground);
+}
+.prose
+  :where(strong):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
+  color: var(--foreground);
+  font-weight: 700;
+}
+
 /* -------------------- Text Editor -------------------- */
 .ProseMirror {
   padding: 0.5rem 1.5rem !important;

@@ -1,8 +1,45 @@
 "use server";
 
 import { eq } from "drizzle-orm";
-import { db } from ".";
-import { financialStatements, stocks, symbols } from "./schema";
+import { db } from "../db";
+import { companies, financialStatements, stocks, symbols } from "../db/schema";
+
+import OpenAI from "openai";
+
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY || "",
+});
+
+export async function addCompany(name: string) {
+  try {
+    const companyData = await generateCompanyData(name);
+    const data = {
+      name,
+      data: companyData,
+    };
+
+    await db.insert(companies).values(data);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function getCompanyData(name: string) {
+  try {
+    const data = await db.query.companies.findFirst({
+      where: eq(companies.name, name),
+    });
+
+    if (data) {
+      return data.data;
+    }
+
+    return {};
+  } catch (error) {
+    console.error(error);
+    return {};
+  }
+}
 
 export async function getCompanyName(symbol: string) {
   try {
@@ -21,6 +58,16 @@ export async function getCompanyName(symbol: string) {
   }
 }
 
+export async function getCompanies() {
+  try {
+    const data = await db.query.companies.findMany();
+    return data;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+}
+
 export async function getHistoricalData(symbol: string) {
   try {
     const stockData = await db.query.stocks.findFirst({
@@ -31,11 +78,12 @@ export async function getHistoricalData(symbol: string) {
       const fetchedData = await fetchHistoricalData(symbol);
 
       const stockData = {
-        name: symbol,
+        name: symbol.toUpperCase(),
         data: fetchedData,
       };
       await db.insert(stocks).values(stockData);
 
+      console.log("No data");
       console.log(`Stock data fetched for ${symbol} - API`);
       return fetchedData;
     }
@@ -49,6 +97,8 @@ export async function getHistoricalData(symbol: string) {
         .update(stocks)
         .set({ data: fetchedData, updatedAt: new Date() })
         .where(eq(stocks.name, symbol.toUpperCase()));
+
+      console.log("Stale data");
       console.log(`Stock data fetched for ${symbol} - API`);
       return fetchedData;
     }
@@ -91,7 +141,7 @@ export async function getFinancialData(symbol: string) {
       ]);
 
     const data = {
-      name: symbol,
+      name: symbol.toUpperCase(),
       balanceSheets,
       cashFlowStatements,
       incomeStatements,
@@ -121,10 +171,48 @@ export async function insertStockData(symbol: string, data: StockChartData[]) {
 
 // Utilities
 
+async function generateCompanyData(name: string) {
+  // call openai api
+  const response = await openai.chat.completions.create({
+    model: "gpt-3.5-turbo",
+    messages: [
+      {
+        role: "system",
+        content: "You are a financial analyst researching a company.",
+      },
+      {
+        role: "user",
+        content: `
+          You are researching company ${name}
+          Give a brief overview and provide information on the company's recent financial performance.
+          Return the data in JSON format as shown.
+
+          {
+            "overview": string,
+            "financialOverview": string,
+          }
+        `,
+      },
+    ],
+  });
+
+  const data = response.choices[0].message.content;
+  console.log(data);
+  if (!data) {
+    console.error("Failed to generate company data");
+    return {
+      overview: "",
+      financialOverview: "",
+    };
+  }
+  const parsedData = JSON.parse(data);
+  return parsedData as CompanyData;
+}
+
 async function fetchHistoricalData(symbol: string) {
   try {
     const url = `https://financialmodelingprep.com/api/v3/historical-price-full/${symbol}?apikey=${process.env.STOCK_API_KEY}`;
-    const response = await fetch(url);
+    const response = await fetch(url, { cache: "no-store" });
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);

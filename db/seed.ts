@@ -1,15 +1,31 @@
 import { eq } from "drizzle-orm";
 import { db } from ".";
-import { symbols } from "./schema";
+import { symbols, companies } from "./schema";
 
 main();
 
 async function main() {
-  const AAPL = await db.query.symbols.findFirst({
-    where: eq(symbols.symbol, "AAPL"),
-  });
+  seedCompanies();
+}
 
-  console.log(AAPL);
+async function seedCompanies() {
+  try {
+    console.log("Seeding database");
+
+    const name = "ABC Technologies";
+    const data = {
+      overview:
+        "ABC Technologies designs, manufactures, and markets smartphones, personal computers, tablets, wearables, and accessories worldwide.",
+      financialOverview:
+        "ABC Technologies reported revenue of $365.7 billion in 2020, up 5% from the previous year.",
+    };
+
+    await db.insert(companies).values({ name, data });
+    console.log("Seeded database");
+  } catch (error) {
+    console.error(error);
+    throw new Error("Failed to seed database");
+  }
 }
 
 async function seedSymbols() {
