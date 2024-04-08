@@ -41,8 +41,8 @@ export default function Sidebar() {
       Icon: InsightsIcon,
     },
     {
-      href: "/dashboard/companies",
-      label: "Companies",
+      href: "/dashboard",
+      label: "Governance",
       Icon: GovernanceIcon,
     },
     {

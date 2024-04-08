@@ -13,6 +13,7 @@ export default async function CompaniesPage() {
       </div>
       {companies.map(({ name }) => (
         <Link
+          key={name}
           href={`/dashboard/companies/${name.replaceAll(" ", "-")}`}
           className="relative h-80 flex items-center justify-center p-4 bg-background rounded-lg shadow-sm cursor-pointer hover:shadow-md"
         >
