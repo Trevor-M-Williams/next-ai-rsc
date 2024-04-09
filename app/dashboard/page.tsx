@@ -2,32 +2,12 @@ import { getHistoricalData } from "@/actions/db";
 import { getHeadlines } from "@/actions/news";
 
 import { Stock } from "@/components/stocks";
-
 import { Calendar } from "@/components/ui/calendar";
-
-import { cn } from "@/lib/utils";
 import { BarChart } from "@/components/bar-chart";
 import { Articles } from "@/components/articles";
+import { DashboardCard } from "@/components/dashboard-card";
 
-type CardProps = {
-  colSpan: number;
-  rowSpan: number;
-  children?: React.ReactNode;
-};
-
-function Card({ colSpan, rowSpan, children }: CardProps) {
-  return (
-    <div
-      className={cn("bg-background rounded-md shadow-sm overflow-hidden")}
-      style={{
-        gridColumn: `span ${colSpan}`,
-        gridRow: `span ${rowSpan}`,
-      }}
-    >
-      {children}
-    </div>
-  );
-}
+import { cn } from "@/lib/utils";
 
 function Metric({
   title,
@@ -72,36 +52,36 @@ export default async function HomePage() {
         gridTemplateRows: "1fr 45vh 35vh",
       }}
     >
-      <Card colSpan={2} rowSpan={1}>
+      <DashboardCard colSpan={2} rowSpan={1}>
         <Metric title="New Governance Insights" value="3" bg="bg-blue-400" />
-      </Card>
-      <Card colSpan={2} rowSpan={1}>
+      </DashboardCard>
+      <DashboardCard colSpan={2} rowSpan={1}>
         <Metric
           title="Consumer Sentiment Increase"
           value="12"
           unit="%"
           bg="bg-green-400"
         />
-      </Card>
-      <Card colSpan={2} rowSpan={1}>
+      </DashboardCard>
+      <DashboardCard colSpan={2} rowSpan={1}>
         <Metric title="Weekly Media Mentions" value="7" bg="bg-teal-400" />
-      </Card>
-      <Card colSpan={1} rowSpan={2}>
+      </DashboardCard>
+      <DashboardCard colSpan={1} rowSpan={2}>
         <Articles />
-      </Card>
-      <Card colSpan={6} rowSpan={1}>
+      </DashboardCard>
+      <DashboardCard colSpan={6} rowSpan={1}>
         <Stock symbol="GEN" name="Gen Goods Inc." data={data} color="#00aaff" />
-      </Card>
-      <Card colSpan={6} rowSpan={1}>
+      </DashboardCard>
+      <DashboardCard colSpan={6} rowSpan={1}>
         <BarChart />
-      </Card>
-      <Card colSpan={1} rowSpan={1}>
+      </DashboardCard>
+      <DashboardCard colSpan={1} rowSpan={1}>
         <Calendar
           mode="single"
           selected={new Date()}
           className="h-full w-full"
         />
-      </Card>
+      </DashboardCard>
     </div>
   );
 }
