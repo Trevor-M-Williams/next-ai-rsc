@@ -1,4 +1,5 @@
 import { getHistoricalData } from "@/actions/db";
+import { getHeadlines } from "@/actions/news";
 
 import { Stock } from "@/components/stocks";
 
@@ -59,6 +60,9 @@ function Metric({
 
 export default async function HomePage() {
   const data = await getHistoricalData("WMT");
+
+  // const headlines = await getHeadlines("Walmart");
+  // console.log(headlines);
 
   return (
     <div
