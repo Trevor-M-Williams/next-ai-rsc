@@ -8,7 +8,7 @@ import { FinancialStatement, FinancialSkeleton } from "@/components/financials";
 import { Chart } from "@/components/chart";
 import { DynamicChart } from "@/components/dynamic-chart";
 import { spinner } from "@/components/spinner";
-import { MarkdownLatex } from "@/components/markdown-latex";
+import { MarkdownLatex } from "@/components/chat/markdown-latex";
 
 import { runOpenAICompletion } from "@/lib/utils";
 import { z } from "zod";

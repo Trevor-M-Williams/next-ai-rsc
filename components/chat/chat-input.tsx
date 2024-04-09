@@ -1,7 +1,7 @@
 import { ReactNode, useRef, useState } from "react";
 
 import { UserMessage } from "@/components/stocks/message";
-import { CommandDialog } from "@/components/command-dialog";
+import { CommandDialog } from "@/components/chat/command-dialog";
 
 import { Button } from "@/components/ui/button";
 import {

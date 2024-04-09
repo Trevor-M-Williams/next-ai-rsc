@@ -1,4 +1,4 @@
-import { ScrollArea } from "./ui/scroll-area";
+import { ScrollArea } from "../ui/scroll-area";
 
 export function AgendaInsights() {
   const insights = [

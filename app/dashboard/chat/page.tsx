@@ -6,9 +6,9 @@ import { UserMessage } from "@/components/stocks/message";
 
 import { type AI } from "../../action";
 import { ChatScrollAnchor } from "@/lib/hooks/chat-scroll-anchor";
-import { ChatList } from "@/components/chat-list";
-import { EmptyScreen } from "@/components/empty-screen";
-import { ChatInput } from "@/components/chat-input";
+import { ChatList } from "@/components/chat/chat-list";
+import { EmptyScreen } from "@/components/chat/empty-screen";
+import { ChatInput } from "@/components/chat/chat-input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 export default function ChatPage() {
