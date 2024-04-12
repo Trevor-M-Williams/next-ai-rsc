@@ -1,10 +1,10 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
 import { useUIState, useActions } from "ai/rsc";
 import { UserMessage } from "@/components/stocks/message";
 
-import { type AI } from "../../action";
+import { type AI } from "../../../actions/chat";
 import { ChatScrollAnchor } from "@/lib/hooks/chat-scroll-anchor";
 import { ChatList } from "@/components/chat/chat-list";
 import { EmptyScreen } from "@/components/chat/empty-screen";

@@ -176,3 +176,27 @@ type CompanyData = {
   overview: string;
   financialOverview: string;
 };
+
+type PineconeResponse = {
+  matches: PineconeMatch[];
+  namespace: string;
+};
+
+type PineconeMatch = {
+  id: string;
+  score?: number;
+  values: number[];
+  sparseValues?: PineconeSparseValues;
+  metadata?: PineconeMetadata;
+};
+
+type PineconeMetadata = {
+  filename?: string;
+  loc?: string;
+  text?: string;
+};
+
+type PineconeSparseValues = {
+  indices: number[];
+  values: number[];
+};

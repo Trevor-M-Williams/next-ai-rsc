@@ -11,7 +11,7 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/chat-command";
-import { IconArrowElbow, IconPlus } from "@/components/ui/icons";
+import { IconArrowElbow } from "@/components/ui/icons";
 import Textarea from "react-textarea-autosize";
 
 import {

@@ -3,8 +3,8 @@ import { getHeadlines } from "@/actions/news";
 
 import { Stock } from "@/components/stocks";
 import { Calendar } from "@/components/ui/calendar";
-import { BarChart } from "@/components/bar-chart";
-import { Articles } from "@/components/articles";
+import { BarChart } from "@/components/overview/bar-chart";
+import { Articles } from "@/components/overview/articles";
 import { DashboardCard } from "@/components/dashboard-card";
 
 import { cn } from "@/lib/utils";

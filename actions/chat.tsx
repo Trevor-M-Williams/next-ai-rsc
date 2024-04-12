@@ -15,6 +15,7 @@ import { z } from "zod";
 
 import { getCompanyName, getHistoricalData } from "@/actions/db";
 import { getFinancialData } from "@/actions/db";
+import { getPineconeContext } from "./pinecone";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY || "",
@@ -394,6 +395,9 @@ async function handleAIResponse(
   reply: ReturnType<typeof createStreamableUI>,
   aiState: ReturnType<typeof getMutableAIState>
 ) {
+  const { pineconeContext, citations } = await getPineconeContext();
+  // console.log("Pinecone context", pineconeContext);
+
   const completion = runOpenAICompletion(openai, {
     // model: "gpt-4-0125-preview",
     model: "gpt-3.5-turbo",
@@ -408,6 +412,10 @@ async function handleAIResponse(
         content: info.content,
         name: info.name,
       })),
+      {
+        role: "user",
+        content: `Context: ${pineconeContext}`,
+      },
     ],
     functions: [
       {
