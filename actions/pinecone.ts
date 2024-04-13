@@ -11,8 +11,7 @@ const pinecone = new Pinecone({
   apiKey: process.env.PINECONE_API_KEY as string,
 });
 
-export async function getPineconeContext() {
-  const prompt = "What are the key governance trends?";
+export async function getPineconeContext(prompt: string) {
   const pineconeMatches = await queryPinecone(prompt);
 
   if (pineconeMatches.length > 0) {
@@ -25,19 +24,20 @@ export async function getPineconeContext() {
         return fileName + "\n" + text;
       })
       .join("\n\n")
-      .slice(-30000);
+      .slice(-5000);
 
     const regex = /\(File: (.*?)\.txt\)/g;
     const matches = pineconeContext.matchAll(regex);
-    let citations = [];
+    let pineconeCitations = [] as any;
     for (const match of matches) {
-      citations.push(match[1]);
+      if (!pineconeCitations.includes(match[1]))
+        pineconeCitations.push(match[1]);
     }
 
-    return { pineconeContext, citations };
+    return { pineconeContext, pineconeCitations };
   } else {
     console.log("no matches");
-    return { pineconeContext: "", citations: [] };
+    return { pineconeContext: "", pineconeCitations: [] };
   }
 }
 
@@ -49,7 +49,7 @@ async function queryPinecone(query: string) {
 
   const queryEmbedding = response.data[0].embedding;
   const queryRequest = {
-    topK: 30,
+    topK: 10,
     vector: queryEmbedding,
     includeMetadata: true,
     includeValues: true,

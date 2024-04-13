@@ -37,6 +37,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "cmdk": "^1.0.0",
+    "cohere-ai": "^7.9.3",
     "d3-scale": "^4.0.2",
     "date-fns": "^3.6.0",
     "geist": "^1.2.2",

@@ -1,48 +1,14 @@
 import { getHistoricalData } from "@/actions/db";
-import { getHeadlines } from "@/actions/news";
 
 import { Stock } from "@/components/stocks";
 import { Calendar } from "@/components/ui/calendar";
 import { BarChart } from "@/components/overview/bar-chart";
 import { Articles } from "@/components/overview/articles";
+import { Metric } from "@/components/overview/metric";
 import { DashboardCard } from "@/components/dashboard-card";
-
-import { cn } from "@/lib/utils";
-
-function Metric({
-  title,
-  value,
-  unit,
-  bg,
-}: {
-  title: string;
-  value: string;
-  unit?: string;
-  bg: string;
-}) {
-  return (
-    <div
-      className={cn(
-        "h-full flex items-center justify-center text-white cursor-pointer gap-4 lg:gap-6",
-        bg
-      )}
-    >
-      <div className="flex items-center justify-center text-5xl lg:text-6xl xl:text-7xl">
-        {value}
-        <span className="text-3xl">{unit}</span>
-      </div>
-      <div className="w-24 text-base leading-tight lg:text-lg lg:leading-tight">
-        {title}
-      </div>
-    </div>
-  );
-}
 
 export default async function HomePage() {
   const data = await getHistoricalData("WMT");
-
-  // const headlines = await getHeadlines("Walmart");
-  // console.log(headlines);
 
   return (
     <div
