@@ -28,8 +28,14 @@ const systemMessage = `\
   You are an ai assistant for board directors.
   You help them analyze company/industry/economic data.
   Use the chat history and context info to provide relevant responses.
+  If relevant information is not found in the context, call get_search_results to get relevant data from the web.
+  When providing company analysis, call get_search_results to find supporting data.
+  If the user asks about financials specifically, call get_financial_data to get the financial statements for the companies.
 
-  If the user asks for current information, call get_search_results to get relevant data from the web.
+  e.g. "Why is AAPL down this month?" -> get_search_results("AAPL stock news")
+  e.g. "Compare eps for Apple and Google" -> get_financial_data(["AAPL", "GOOG"])
+
+  Today is ${new Date().toDateString()}
 
   Messages inside [] indicate UI elements.
   "[Price of AAPL = 100]" means that an interface of the stock price of AAPL is shown to the user.
@@ -298,7 +304,9 @@ async function handleAIResponse(
         name: "get_search_results",
         description: "Get web search results.",
         parameters: z.object({
-          query: z.string().describe("The user's search query."),
+          query: z
+            .string()
+            .describe("An optimized search query based on the user's input."),
         }),
       },
     ],
@@ -347,11 +355,11 @@ async function handleAIResponse(
           content: financialDataForCompanies
             .map(
               (companyData) => `
-        Financial statements for ${companyData.symbol}:
-        Balance sheets: ${JSON.stringify(companyData.balanceSheets)},
-        Cash flow statements: ${JSON.stringify(companyData.cashFlowStatements)},
-        Income statements: ${JSON.stringify(companyData.incomeStatements)}
-      `
+                Financial statements for ${companyData.symbol}:
+                Balance sheets: ${JSON.stringify(companyData.balanceSheets)},
+                Cash flow statements: ${JSON.stringify(companyData.cashFlowStatements)},
+                Income statements: ${JSON.stringify(companyData.incomeStatements)}
+              `
             )
             .join("\n\n"),
         },
@@ -394,7 +402,7 @@ async function handleAIResponse(
     "get_search_results",
     async ({ query }: { query: string }) => {
       console.log("Function call: Get Search Results", query);
-      const { searchResults, searchCitations } = await getSearchResults();
+      const { searchResults, searchCitations } = await getSearchResults(query);
 
       aiState.update([
         ...aiState.get().filter((info: any) => info.role !== "function"),
@@ -402,9 +410,9 @@ async function handleAIResponse(
           role: "function",
           name: "get_search_results",
           content: `
-        Search results: ${searchResults}
-        Search citations: ${searchCitations}
-      `,
+            Search results: ${searchResults}
+            Search citations: ${searchCitations}
+          `,
         },
       ]);
 
