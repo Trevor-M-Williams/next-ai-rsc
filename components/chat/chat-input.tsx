@@ -12,6 +12,7 @@ import {
   CommandList,
 } from "@/components/ui/chat-command";
 import { IconArrowElbow } from "@/components/ui/icons";
+import { Switch } from "@/components/ui/switch";
 import Textarea from "react-textarea-autosize";
 
 import {
@@ -95,7 +96,7 @@ type ChatInputProps = {
           display: ReactNode;
         }[])
   ) => void;
-  submitUserMessage: (content: string) => Promise<{
+  submitUserMessage: (query: string) => Promise<{
     id: number;
     display: JSX.Element;
   }>;
@@ -182,6 +183,7 @@ export function ChatInput({ setMessages, submitUserMessage }: ChatInputProps) {
               inputRef={inputRef}
             />
           )}
+
           <form
             ref={formRef}
             onSubmit={async (e: any) => {
@@ -193,24 +195,24 @@ export function ChatInput({ setMessages, submitUserMessage }: ChatInputProps) {
                 e.target["message"]?.blur();
               }
 
-              const value = inputValue.trim();
+              const query = inputValue.trim();
               setInputValue("");
               setCommandsOpen(false);
 
-              if (!value) return;
+              if (!query) return;
 
               // Add user message UI
               setMessages((currentMessages) => [
                 ...currentMessages,
                 {
                   id: Date.now(),
-                  display: <UserMessage>{value}</UserMessage>,
+                  display: <UserMessage>{query}</UserMessage>,
                 },
               ]);
 
               try {
                 // Submit and get response message
-                const responseMessage = await submitUserMessage(value);
+                const responseMessage = await submitUserMessage(query);
                 setMessages((currentMessages) => [
                   ...currentMessages,
                   responseMessage,

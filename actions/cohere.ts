@@ -1,5 +1,6 @@
 "use server";
 
+import { getMutableAIState } from "ai/rsc";
 import { CohereClient } from "cohere-ai";
 import OpenAI from "openai";
 
@@ -11,9 +12,9 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY as string,
 });
 
-async function generateQuery(query: string) {
-  // use openAI to craft a google search query from the user's input
+async function generateQuery() {
   try {
+    const aiState = await getMutableAIState();
     const completion = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
       messages: [
@@ -21,22 +22,23 @@ async function generateQuery(query: string) {
           role: "system",
           content: `Generate an optimized search query from the user's input. Be concise! Today is ${new Date().toDateString()}.`,
         },
-        { role: "user", content: query },
+        ...aiState.get(),
       ],
     });
 
-    return completion.choices[0].message.content || query;
+    return completion.choices[0].message.content || "";
   } catch (error) {
     console.error("Error generating search query:", error);
-    return query;
+    return "";
   }
 }
 
-export async function getSearchResults(query: string) {
+export async function getSearchResults() {
   try {
-    const searchQuery = await generateQuery(query);
-    console.log("User query:", query);
+    const searchQuery = await generateQuery();
     console.log("Optimized query:", searchQuery);
+    if (!searchQuery) return { searchResults: "", searchCitations: [] };
+
     const chatStream = await cohere.chatStream({
       message: searchQuery,
       connectors: [{ id: "web-search" }],

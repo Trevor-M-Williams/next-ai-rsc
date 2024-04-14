@@ -29,13 +29,16 @@ const systemMessage = `\
   You help them analyze company/industry/economic data.
   Use the chat history and context info to provide relevant responses.
 
+  If the user asks for current information, call get_search_results to get relevant data from the web.
+
   Messages inside [] indicate UI elements.
   "[Price of AAPL = 100]" means that an interface of the stock price of AAPL is shown to the user.
   "[Financial statements for GOOG]" means that the financial statements for GOOG are shown to the user.
 `;
 
-async function submitUserMessage(content: string) {
+async function submitUserMessage(query: string) {
   "use server";
+  const content = query;
   try {
     const aiState = getMutableAIState<typeof AI>();
     aiState.update([
@@ -256,11 +259,6 @@ async function handleAIResponse(
   const prompt = messages[messages.length - 1].content;
   const { pineconeContext, pineconeCitations } =
     await getPineconeContext(prompt);
-  const { searchResults, searchCitations } = await getSearchResults(prompt);
-
-  // console.log("Search results:", searchResults.slice(0, 500));
-  console.log("Pinecone citations:", pineconeCitations);
-  console.log("Search citations:", searchCitations);
 
   const completion = runOpenAICompletion(openai, {
     // model: "gpt-4-0125-preview",
@@ -281,7 +279,6 @@ async function handleAIResponse(
         name: "context",
         content: `
         Context: ${pineconeContext}
-        Search results: ${searchResults}
         `,
       },
     ],
@@ -295,6 +292,13 @@ async function handleAIResponse(
             .describe(
               "An array of the symbols of the companies. e.g. ['GOOG', 'AAPL', 'MSFT']"
             ),
+        }),
+      },
+      {
+        name: "get_search_results",
+        description: "Get web search results.",
+        parameters: z.object({
+          query: z.string().describe("The user's search query."),
         }),
       },
     ],
@@ -361,6 +365,57 @@ async function handleAIResponse(
             role: "system",
             content:
               "Respond to the user's prompt using the given financial data.",
+          },
+          ...aiState.get().map((info: any) => ({
+            role: info.role,
+            content: info.content,
+            name: info.name,
+          })),
+        ],
+        temperature: 0,
+      });
+
+      nestedCompletion.onTextContent((content: string, isFinal: boolean) => {
+        reply.update(
+          <BotMessage>
+            <MarkdownLatex content={content} />
+          </BotMessage>
+        );
+
+        if (isFinal) {
+          reply.done();
+          aiState.done([...aiState.get(), { role: "assistant", content }]);
+        }
+      });
+    }
+  );
+
+  completion.onFunctionCall(
+    "get_search_results",
+    async ({ query }: { query: string }) => {
+      console.log("Function call: Get Search Results", query);
+      const { searchResults, searchCitations } = await getSearchResults();
+
+      aiState.update([
+        ...aiState.get().filter((info: any) => info.role !== "function"),
+        {
+          role: "function",
+          name: "get_search_results",
+          content: `
+        Search results: ${searchResults}
+        Search citations: ${searchCitations}
+      `,
+        },
+      ]);
+
+      const nestedCompletion = runOpenAICompletion(openai, {
+        model: "gpt-3.5-turbo",
+        stream: true,
+        messages: [
+          {
+            role: "system",
+            content:
+              "Respond to the user's prompt using the given search data.",
           },
           ...aiState.get().map((info: any) => ({
             role: info.role,
