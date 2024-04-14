@@ -267,8 +267,8 @@ async function handleAIResponse(
     await getPineconeContext(prompt);
 
   const completion = runOpenAICompletion(openai, {
-    // model: "gpt-4-0125-preview",
-    model: "gpt-3.5-turbo",
+    model: "gpt-4-turbo",
+    // model: "gpt-3.5-turbo",
     stream: true,
     messages: [
       {
