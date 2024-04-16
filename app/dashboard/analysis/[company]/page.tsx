@@ -20,7 +20,7 @@ import { MarkdownLatex } from "@/components/chat/markdown-latex";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { IndustryFinancials } from "@/components/financials/industry-financials";
 
-export function CompanyAnalysis({
+function CompanyAnalysis({
   companyData,
   stockData,
   financialData,
@@ -66,7 +66,7 @@ export function CompanyAnalysis({
   );
 }
 
-export function IndustryAnalysis({
+function IndustryAnalysis({
   industryData,
   financialData,
   competitorData,

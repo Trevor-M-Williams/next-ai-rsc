@@ -18,7 +18,7 @@ export async function getCompetitors({
 }) {
   try {
     const dbData = await db.query.companies.findFirst({
-      where: eq(companies.name, symbol),
+      where: eq(companies.symbol, symbol),
     });
 
     if (dbData) {
