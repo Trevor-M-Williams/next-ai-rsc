@@ -7,7 +7,6 @@ const openai = new OpenAI({
 });
 
 export async function generateCompanyAnalysis(name: string) {
-  console.time("2.1");
   const prompts = [
     "Give a detailed overview of the company including history, vision, products/services, and market position.",
   ];
@@ -36,7 +35,6 @@ export async function generateCompanyAnalysis(name: string) {
       (response) => response.choices[0].message.content || ""
     );
 
-    console.timeEnd("2.1");
     return data;
   } catch (error) {
     console.error(error);
@@ -45,7 +43,6 @@ export async function generateCompanyAnalysis(name: string) {
 }
 
 export async function generateIndustryAnalysis(name: string) {
-  console.time("2.2");
   const prompts = [
     "Give a detailed overview of their industry including key players and trends",
   ];
@@ -74,7 +71,6 @@ export async function generateIndustryAnalysis(name: string) {
       (response) => response.choices[0].message.content || ""
     );
 
-    console.timeEnd("2.2");
     return data;
   } catch (error) {
     console.error(error);

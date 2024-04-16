@@ -17,11 +17,8 @@ import { getCompetitors } from "./competitors";
 
 export async function addCompany(symbol: string) {
   try {
-    console.time("1");
     const name = await getCompanyName(symbol);
-    console.timeEnd("1");
 
-    console.time("2");
     const promises = [
       generateCompanyAnalysis(name || symbol),
       generateIndustryAnalysis(name || symbol),
@@ -33,7 +30,6 @@ export async function addCompany(symbol: string) {
 
     const [companyData, industryData, competitors] =
       await Promise.all(promises);
-    console.timeEnd("2");
 
     const data = {
       name: name || symbol,
