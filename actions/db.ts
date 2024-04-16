@@ -4,7 +4,7 @@ import { eq } from "drizzle-orm";
 import { db } from "../db";
 import { companies, financialStatements, stocks, symbols } from "../db/schema";
 
-import { generateCompanyData } from "./insights";
+import { generateCompanyAnalysis, generateIndustryAnalysis } from "./insights";
 import {
   fetchBalanceSheets,
   fetchCashFlowStatements,
@@ -14,10 +14,17 @@ import {
 
 export async function addCompany(name: string) {
   try {
-    const companyData = await generateCompanyData(name);
+    const promises = [
+      generateCompanyAnalysis(name),
+      generateIndustryAnalysis(name),
+    ];
+
+    const [companyData, industryData] = await Promise.all(promises);
+
     const data = {
       name,
-      data: companyData,
+      companyData,
+      industryData,
     };
 
     await db.insert(companies).values(data);
@@ -32,11 +39,13 @@ export async function getCompanyData(name: string) {
       where: eq(companies.name, name),
     });
 
-    if (data) {
-      return data.data;
-    }
+    if (data) return data;
 
-    return {};
+    return {
+      name,
+      companyData: [],
+      industryData: [],
+    };
   } catch (error) {
     console.error(error);
     return {};

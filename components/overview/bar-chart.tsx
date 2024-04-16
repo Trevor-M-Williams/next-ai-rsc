@@ -4,64 +4,45 @@ import "chart.js/auto";
 
 import { formatNumberInMillions } from "@/lib/utils";
 
-export function BarChart() {
-  const data = {
-    incomeStatements: [
-      {
-        date: "2019-09-30",
-        revenue: 8000000000,
-        grossProfit: 3000000000,
-        netIncome: 1050000000,
-      },
-      {
-        date: "2020-09-30",
-        revenue: 12395000000,
-        grossProfit: 5920000000,
-        netIncome: 1800000000,
-      },
-      {
-        date: "2021-09-30",
-        revenue: 11800000000,
-        grossProfit: 5200000000,
-        netIncome: 1500000000,
-      },
-      {
-        date: "2022-09-30",
-        revenue: 13800000000,
-        grossProfit: 6900000000,
-        netIncome: 2600000000,
-      },
-      {
-        date: "2023-09-30",
-        revenue: 14500000000,
-        grossProfit: 7500000000,
-        netIncome: 3000000000,
-      },
-    ],
-  };
-
+export function BarChart({ data }: { data: IncomeStatement[] }) {
   const datasets = [
     {
-      data: data.incomeStatements.map((item) => ({
-        date: item.date,
-        value: item.revenue,
-      })),
+      data: data
+        .map((item) => ({
+          date: item.date,
+          value: item.revenue,
+        }))
+        .reverse(),
       label: "Revenue",
     },
     {
-      data: data.incomeStatements.map((item) => ({
-        date: item.date,
-        value: item.grossProfit,
-      })),
-      label: "Gross Profit",
+      data: data
+        .map((item) => ({
+          date: item.date,
+          value: item.grossProfit,
+        }))
+        .reverse(),
+      label: "Gross Income",
     },
+    //operating income
     {
-      data: data.incomeStatements.map((item) => ({
-        date: item.date,
-        value: item.netIncome,
-      })),
-      label: "Net Income",
+      data: data
+        .map((item) => ({
+          date: item.date,
+          value: item.operatingIncome,
+        }))
+        .reverse(),
+      label: "Operating Income",
     },
+    // {
+    //   data: data
+    //     .map((item) => ({
+    //       date: item.date,
+    //       value: item.netIncome,
+    //     }))
+    //     .reverse(),
+    //   label: "Net Income",
+    // },
   ];
 
   const colors = ["#00ccff", "#0099ff", "#0033ff"];

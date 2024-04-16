@@ -16,7 +16,13 @@ import {
 
 import CheckIcon from "@mui/icons-material/Check";
 
-export function DynamicChart() {
+export function DynamicChart({
+  symbols,
+  field,
+}: {
+  symbols: string[];
+  field: string;
+}) {
   const companies = [
     "AAPL",
     "AMZN",
@@ -50,9 +56,9 @@ export function DynamicChart() {
 
   const [datasets, setDatasets] = useState<any[]>([]);
   const [selectedCompanies, setSelectedCompanies] = useState<string[]>([
-    "AAPL",
+    ...symbols,
   ]);
-  const [selectedField, setSelectedField] = useState<string>("revenue");
+  const [selectedField, setSelectedField] = useState<string>(field);
   const [companyCommandsOpen, setCompanyCommandsOpen] = useState(false);
   const [fieldCommandsOpen, setFieldCommandsOpen] = useState(false);
 

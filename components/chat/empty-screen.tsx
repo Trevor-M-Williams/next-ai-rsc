@@ -11,10 +11,6 @@ const suggestedMessages = [
     message: "/financials:GOOG",
   },
   {
-    heading: "Graph eps for the magnificient seven",
-    message: "/chart:aapl,amzn,goog,meta,msft,nvda,tsla:eps",
-  },
-  {
     heading: "Compare debt leverage for Apple and Google",
     message: "Compare debt leverage for Apple and Google",
   },

@@ -107,8 +107,10 @@ async function handleCommand(
   const command = content.split(":")[0] || "";
   const symbols = content.split(":")[1].split(",");
 
-  if (!symbols) {
-    reply.done(<BotMessage>Please provide a company symbol</BotMessage>);
+  if (!symbols.length || !symbols[0]) {
+    reply.done(
+      <BotMessage>A company symbol is required to run a command.</BotMessage>
+    );
 
     aiState.done([
       ...aiState.get().filter((info: any) => info.role !== "function"),
@@ -125,12 +127,49 @@ async function handleCommand(
   }
 
   switch (command) {
+    case "/analyze": {
+      const symbol = symbols[0].toUpperCase();
+      const { balanceSheets, cashFlowStatements, incomeStatements } =
+        await getFinancialData(symbol);
+      const name = await getCompanyName(symbol);
+      const stockData = await getHistoricalData(symbol);
+
+      reply.done(
+        <BotCard>
+          <FinancialStatement
+            name={name || ""}
+            symbol={symbol}
+            balanceSheets={balanceSheets}
+            cashFlowStatements={cashFlowStatements}
+            incomeStatements={incomeStatements}
+          />
+
+          <Stock symbol={symbol} name={name || ""} data={stockData} />
+
+          <DynamicChart symbols={symbols} field="revenue" />
+        </BotCard>
+      );
+
+      aiState.done([
+        ...aiState.get().filter((info: any) => info.role !== "function"),
+        {
+          role: "assistant",
+          name: "analyze_company",
+          content: `[Analyze ${symbol}]`,
+        },
+      ]);
+
+      return {
+        id: Date.now(),
+        display: reply.value,
+      };
+    }
     case "/chart": {
       // TODO: make chart dynamic
 
       reply.done(
         <BotCard>
-          <DynamicChart />
+          <DynamicChart symbols={symbols} field={"revenue"} />
         </BotCard>
       );
 
@@ -411,7 +450,7 @@ async function handleAIResponse(
           name: "get_search_results",
           content: `
             Search results: ${searchResults}
-            Search citations: ${searchCitations}
+            Search citations: {{${searchCitations}}}
           `,
         },
       ]);

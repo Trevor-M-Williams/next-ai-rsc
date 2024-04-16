@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -13,12 +14,17 @@ import { Input } from "./ui/input";
 import { addCompany } from "@/actions/db";
 
 export function NewCompanyDialog() {
+  const router = useRouter();
   const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [companyName, setCompanyName] = useState("");
 
   const handleSubmit = async () => {
-    addCompany(companyName);
+    setLoading(true);
+    await addCompany(companyName);
     setOpen(false);
+    router.push(`/dashboard/analysis/${companyName.replaceAll(" ", "-")}`);
+    setLoading(false);
   };
 
   return (
@@ -35,7 +41,9 @@ export function NewCompanyDialog() {
             placeholder="Enter a company name"
             onChange={(e) => setCompanyName(e.target.value)}
           />
-          <Button onClick={handleSubmit}>Submit</Button>
+          <Button onClick={handleSubmit} disabled={loading}>
+            {loading ? "Initializing..." : "Add"}
+          </Button>
         </div>
       </DialogContent>
     </Dialog>

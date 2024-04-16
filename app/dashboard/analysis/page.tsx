@@ -3,7 +3,7 @@ import AppleIcon from "@mui/icons-material/Apple";
 import { getCompanies } from "@/actions/db";
 import { NewCompanyDialog } from "@/components/new-company-dialog";
 
-export default async function CompaniesPage() {
+export default async function AnalysisPage() {
   const companies = await getCompanies();
 
   return (
@@ -14,7 +14,7 @@ export default async function CompaniesPage() {
       {companies.map(({ name }) => (
         <Link
           key={name}
-          href={`/dashboard/companies/${name.replaceAll(" ", "-")}`}
+          href={`/dashboard/analysis/${name.replaceAll(" ", "-")}`}
           className="relative h-80 flex items-center justify-center p-4 bg-background rounded-lg shadow-sm cursor-pointer hover:shadow-md"
         >
           <div className="absolute top-4 left-4 text-lg font-semibold">

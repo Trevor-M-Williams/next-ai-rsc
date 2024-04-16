@@ -172,10 +172,8 @@ type ChartProps<T extends FinancialStatement> = {
   field: keyof T;
 };
 
-type CompanyData = {
-  overview: string;
-  financialOverview: string;
-};
+type CompanyData = string[];
+type IndustryData = string[];
 
 type PineconeResponse = {
   matches: PineconeMatch[];

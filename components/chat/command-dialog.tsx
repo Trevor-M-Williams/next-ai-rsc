@@ -10,13 +10,19 @@ import {
 } from "@/components/ui/dialog";
 import { IconPlus } from "@/components/ui/icons";
 
+import AnalysisIcon from "@mui/icons-material/QueryStats";
 import ChartIcon from "@mui/icons-material/BarChart";
 import FinancialsIcon from "@mui/icons-material/AttachMoney";
 import StockIcon from "@mui/icons-material/ShowChart";
 
 import { sleep } from "@/lib/utils";
 
-const commands = [
+export const commands = [
+  {
+    name: "/analyze",
+    icon: <AnalysisIcon fontSize="large" className="scale-150" />,
+    message: "/analyze:AAPL,GOOGL,MSFT,META",
+  },
   {
     name: "/chart",
     icon: <ChartIcon fontSize="large" className="scale-150" />,
@@ -54,22 +60,24 @@ export function CommandDialog({
       <DialogContent>
         <DialogHeader>
           <DialogTitle className="mb-2">Commands</DialogTitle>
-          <div className="flex justify-center gap-4">
-            {commands.map((command) => (
-              <Button
-                key={command.name}
-                variant={"outline"}
-                className="h-32 w-32"
-                onClick={async () => {
-                  setInputValue(command.message);
-                  await sleep(10);
-                  formRef.current?.requestSubmit();
-                  setOpen(false);
-                }}
-              >
-                {command.icon}
-              </Button>
-            ))}
+          <div className="flex items-center justify-center">
+            <div className="max-w-fit grid grid-cols-2 place-items-center gap-4">
+              {commands.map((command) => (
+                <Button
+                  key={command.name}
+                  variant={"outline"}
+                  className="h-32 w-32"
+                  onClick={async () => {
+                    setInputValue(command.message);
+                    await sleep(10);
+                    formRef.current?.requestSubmit();
+                    setOpen(false);
+                  }}
+                >
+                  {command.icon}
+                </Button>
+              ))}
+            </div>
           </div>
         </DialogHeader>
       </DialogContent>

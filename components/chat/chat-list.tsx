@@ -9,6 +9,7 @@ export function ChatList({ messages }: { messages: any[] }) {
         const messageChildren = message.display.props.children;
         if (typeof messageChildren === "string") {
           if (
+            messageChildren.startsWith("/analyze:") ||
             messageChildren.startsWith("/chart:") ||
             messageChildren.startsWith("/financials:") ||
             messageChildren.startsWith("/stock:")

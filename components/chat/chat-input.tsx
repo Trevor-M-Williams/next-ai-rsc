@@ -12,7 +12,6 @@ import {
   CommandList,
 } from "@/components/ui/chat-command";
 import { IconArrowElbow } from "@/components/ui/icons";
-import { Switch } from "@/components/ui/switch";
 import Textarea from "react-textarea-autosize";
 
 import {
@@ -22,18 +21,7 @@ import {
 } from "@/components/ui/tooltip";
 
 import { cn, isMobile, sleep } from "@/lib/utils";
-
-const commands = [
-  {
-    name: "/chart",
-  },
-  {
-    name: "/financials",
-  },
-  {
-    name: "/stock",
-  },
-];
+import { commands } from "./command-dialog";
 
 function ChatCommands({
   inputValue,

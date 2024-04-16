@@ -12,6 +12,7 @@ import InsightsIcon from "@mui/icons-material/InsightsOutlined";
 import GovernanceIcon from "@mui/icons-material/AccountBalanceOutlined";
 import ChatIcon from "@mui/icons-material/ChatBubbleOutline";
 import NotesIcon from "@mui/icons-material/NotesOutlined";
+import AnalysisIcon from "@mui/icons-material/QueryStats";
 import SettingsIcon from "@mui/icons-material/SettingsOutlined";
 
 import { cn } from "@/lib/utils";
@@ -40,23 +41,23 @@ export default function Sidebar() {
       label: "Insights",
       Icon: InsightsIcon,
     },
-    {
-      href: "/dashboard",
-      label: "Governance",
-      Icon: GovernanceIcon,
-    },
+    // {
+    //   href: "/dashboard",
+    //   label: "Governance",
+    //   Icon: GovernanceIcon,
+    // },
+    { href: "/dashboard/analysis", label: "Analysis", Icon: AnalysisIcon },
     {
       href: "/dashboard/chat",
       label: "Chat",
       Icon: ChatIcon,
     },
-    { href: "/dashboard", label: "Notes", Icon: NotesIcon },
   ];
 
   return (
-    <div className=" h-full border-r px-2 xl:px-4 py-6 flex flex-col justify-between bg-background">
+    <div className=" h-full border-r px-2 py-6 flex flex-col justify-between bg-background">
       <div>
-        <div className="flex justify-center mb-4 pb-2 border-b min-h-[3rem] xl:min-w-[11rem]">
+        <div className="flex justify-center mb-4 pb-2 border-b min-h-[3rem] ">
           <OrganizationSwitcher
             afterCreateOrganizationUrl="/dashboard"
             afterSelectOrganizationUrl="/dashboard"
@@ -88,7 +89,7 @@ export default function Sidebar() {
                   }`}
                 >
                   {Icon && <Icon />}
-                  <span className="hidden xl:inline">{label}</span>
+                  <span className="hidden ">{label}</span>
                 </Button>
               </Link>
             );
@@ -106,7 +107,7 @@ export default function Sidebar() {
             }`}
           >
             <SettingsIcon />
-            <span className="hidden xl:inline">Settings</span>
+            <span className="hidden ">Settings</span>
           </Button>
         </Link>
 
@@ -120,7 +121,7 @@ export default function Sidebar() {
           )}
         >
           <UserButton afterSignOutUrl="/sign-in" />
-          <span className="hidden xl:inline">Account</span>
+          <span className="hidden ">Account</span>
         </div>
       </div>
     </div>

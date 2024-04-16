@@ -6,40 +6,78 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY as string,
 });
 
-export async function generateCompanyData(name: string) {
-  // call openai api
-  const response = await openai.chat.completions.create({
-    model: "gpt-3.5-turbo",
-    messages: [
-      {
-        role: "system",
-        content: "You are a financial analyst researching a company.",
-      },
-      {
-        role: "user",
-        content: `
-          You are researching company ${name}
-          Give a brief overview and provide information on the company's recent financial performance.
-          Return the data in JSON format as shown.
+export async function generateCompanyAnalysis(name: string) {
+  const prompts = [
+    "Give a brief overview of the company",
+    "Give a brief overview of the company's financials",
+  ];
 
+  try {
+    const promises = prompts.map((prompt) => {
+      return openai.chat.completions.create({
+        model: "gpt-4-turbo",
+        messages: [
           {
-            "overview": string,
-            "financialOverview": string,
-          }
-        `,
-      },
-    ],
-  });
+            role: "system",
+            content: "You are an ai research analyst.",
+          },
+          {
+            role: "user",
+            content: `
+              You are researching ${name}. ${prompt}
+            `,
+          },
+        ],
+      });
+    });
 
-  const data = response.choices[0].message.content;
-  console.log(data);
-  if (!data) {
-    console.error("Failed to generate company data");
-    return {
-      overview: "",
-      financialOverview: "",
-    };
+    const responses = await Promise.all(promises);
+    const data = responses.map(
+      (response) => response.choices[0].message.content || ""
+    );
+    console.log(data);
+
+    return data;
+  } catch (error) {
+    console.error(error);
+    return [];
   }
-  const parsedData = JSON.parse(data);
-  return parsedData as CompanyData;
+}
+
+export async function generateIndustryAnalysis(name: string) {
+  const prompts = [
+    "Give an overview of their industry including key players",
+    "What are the key trends in their industry",
+  ];
+
+  try {
+    const promises = prompts.map((prompt) => {
+      return openai.chat.completions.create({
+        model: "gpt-4-turbo",
+        messages: [
+          {
+            role: "system",
+            content: "You are an ai research analyst.",
+          },
+          {
+            role: "user",
+            content: `
+              You are researching ${name}. ${prompt}
+            `,
+          },
+        ],
+      });
+    });
+
+    const responses = await Promise.all(promises);
+    const data = responses.map(
+      (response) => response.choices[0].message.content || ""
+    );
+    console.log(data);
+
+    return data;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
 }

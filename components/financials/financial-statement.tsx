@@ -18,7 +18,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-import { cn } from "@/lib/utils";
+import { cn, formatNumberInMillions } from "@/lib/utils";
 
 type DataTableProps = {
   data: {
@@ -33,15 +33,15 @@ function DataTable({ data }: DataTableProps) {
     <div className="relative p-4 bg-background rounded-xl">
       <Table>
         <TableHeader className="text-xs">
-          <TableRow>
-            <TableHead className="">2023</TableHead>
+          <TableRow className=" hover:bg-inherit">
+            <TableHead className="">Category</TableHead>
             <TableHead className="w-32 text-right">(M USD)</TableHead>
             <TableHead className="w-32 text-right">Y/Y CHANGE</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {data.map((item, index) => (
-            <TableRow key={index} className="text-base">
+            <TableRow key={index} className="text-base hover:bg-inherit">
               <TableCell className="py-4">{item.title}</TableCell>
               <TableCell className="text-right">{item.value}</TableCell>
               <TableCell
@@ -75,7 +75,7 @@ function BalanceSheet({
   const tableData = [
     {
       title: "Cash & short term investments",
-      value: formatNumber(data.cashAndShortTermInvestments),
+      value: formatNumberInMillions(data.cashAndShortTermInvestments),
       change: calculateChange(
         balanceSheets,
         year,
@@ -84,27 +84,27 @@ function BalanceSheet({
     },
     {
       title: "Total assets",
-      value: formatNumber(data.totalAssets),
+      value: formatNumberInMillions(data.totalAssets),
       change: calculateChange(balanceSheets, year, "totalAssets"),
     },
     {
       title: "Total liabilities",
-      value: formatNumber(data.totalLiabilities),
+      value: formatNumberInMillions(data.totalLiabilities),
       change: calculateChange(balanceSheets, year, "totalLiabilities"),
     },
     {
       title: "Total equity",
-      value: formatNumber(data.totalEquity),
+      value: formatNumberInMillions(data.totalEquity),
       change: calculateChange(balanceSheets, year, "totalEquity"),
     },
     {
       title: "Total current assets",
-      value: formatNumber(data.totalCurrentAssets),
+      value: formatNumberInMillions(data.totalCurrentAssets),
       change: calculateChange(balanceSheets, year, "totalCurrentAssets"),
     },
     {
       title: "Total current liabilities",
-      value: formatNumber(data.totalCurrentLiabilities),
+      value: formatNumberInMillions(data.totalCurrentLiabilities),
       change: calculateChange(balanceSheets, year, "totalCurrentLiabilities"),
     },
   ];
@@ -127,12 +127,12 @@ function CashFlowStatement({
   const tableData = [
     {
       title: "Net income",
-      value: formatNumber(data.netIncome),
+      value: formatNumberInMillions(data.netIncome),
       change: calculateChange(cashFlowStatements, year, "netIncome"),
     },
     {
       title: "Cash from operations",
-      value: formatNumber(data.netCashProvidedByOperatingActivities),
+      value: formatNumberInMillions(data.netCashProvidedByOperatingActivities),
       change: calculateChange(
         cashFlowStatements,
         year,
@@ -141,7 +141,7 @@ function CashFlowStatement({
     },
     {
       title: "Cash from investing",
-      value: formatNumber(data.netCashUsedForInvestingActivites),
+      value: formatNumberInMillions(data.netCashUsedForInvestingActivites),
       change: calculateChange(
         cashFlowStatements,
         year,
@@ -150,7 +150,9 @@ function CashFlowStatement({
     },
     {
       title: "Cash from financing",
-      value: formatNumber(data.netCashUsedProvidedByFinancingActivities),
+      value: formatNumberInMillions(
+        data.netCashUsedProvidedByFinancingActivities
+      ),
       change: calculateChange(
         cashFlowStatements,
         year,
@@ -159,12 +161,12 @@ function CashFlowStatement({
     },
     {
       title: "Net change in cash",
-      value: formatNumber(data.netChangeInCash),
+      value: formatNumberInMillions(data.netChangeInCash),
       change: calculateChange(cashFlowStatements, year, "netChangeInCash"),
     },
     {
       title: "Free cash flow",
-      value: formatNumber(data.freeCashFlow),
+      value: formatNumberInMillions(data.freeCashFlow),
       change: calculateChange(cashFlowStatements, year, "freeCashFlow"),
     },
   ];
@@ -187,32 +189,32 @@ function IncomeStatement({
   const tableData = [
     {
       title: "Revenue",
-      value: formatNumber(data.revenue),
+      value: formatNumberInMillions(data.revenue),
       change: calculateChange(incomeStatements, year, "revenue"),
     },
     {
       title: "Cost of revenue",
-      value: formatNumber(data.costOfRevenue),
+      value: formatNumberInMillions(data.costOfRevenue),
       change: calculateChange(incomeStatements, year, "costOfRevenue"),
     },
     {
       title: "EBITDA",
-      value: formatNumber(data.ebitda),
+      value: formatNumberInMillions(data.ebitda),
       change: calculateChange(incomeStatements, year, "ebitda"),
     },
     {
       title: "Net income",
-      value: formatNumber(data.netIncome),
+      value: formatNumberInMillions(data.netIncome),
       change: calculateChange(incomeStatements, year, "netIncome"),
     },
     {
       title: "Net profit margin",
-      value: (data.netIncomeRatio * 100).toFixed(2),
+      value: formatNumberInMillions(data.netIncomeRatio),
       change: calculateChange(incomeStatements, year, "netIncomeRatio"),
     },
     {
       title: "Earnings per share",
-      value: data.eps.toString(),
+      value: formatNumberInMillions(data.eps),
       change: calculateChange(incomeStatements, year, "eps"),
     },
   ];
@@ -238,7 +240,7 @@ export function FinancialStatement({
   let years = balanceSheets.map((item) => item.date.split("-")[0]);
   years.pop();
 
-  const [year, setYear] = useState(years[0]);
+  const [year, setYear] = useState(years[0]) || "2023";
 
   return (
     <div className="">
@@ -251,7 +253,7 @@ export function FinancialStatement({
         )}
       </div>
 
-      <Tabs defaultValue="income-statement" className="">
+      <Tabs defaultValue="income-statement" className="relative">
         <div className="absolute right-2">
           <Select defaultValue={years[0]} onValueChange={(val) => setYear(val)}>
             <SelectTrigger className="w-[100px] bg-background">
@@ -302,11 +304,4 @@ function calculateChange(data: any, year: string, field: string) {
       Math.abs(previousYear[field])) *
     100;
   return parseFloat(percentChange.toFixed(2)) || 0;
-}
-
-function formatNumber(value: number) {
-  if (!value) return "N/A";
-  const number = Math.round(value / 1000000);
-  const formattedNumber = new Intl.NumberFormat("en-US").format(number);
-  return formattedNumber;
 }
