@@ -7,15 +7,15 @@ const openai = new OpenAI({
 });
 
 export async function generateCompanyAnalysis(name: string) {
+  console.time("2.1");
   const prompts = [
-    "Give a brief overview of the company",
-    "Give a brief overview of the company's financials",
+    "Give a detailed overview of the company including history, vision, products/services, and market position.",
   ];
 
   try {
     const promises = prompts.map((prompt) => {
       return openai.chat.completions.create({
-        model: "gpt-4-turbo",
+        model: "gpt-3.5-turbo",
         messages: [
           {
             role: "system",
@@ -35,8 +35,8 @@ export async function generateCompanyAnalysis(name: string) {
     const data = responses.map(
       (response) => response.choices[0].message.content || ""
     );
-    console.log(data);
 
+    console.timeEnd("2.1");
     return data;
   } catch (error) {
     console.error(error);
@@ -45,15 +45,15 @@ export async function generateCompanyAnalysis(name: string) {
 }
 
 export async function generateIndustryAnalysis(name: string) {
+  console.time("2.2");
   const prompts = [
-    "Give an overview of their industry including key players",
-    "What are the key trends in their industry",
+    "Give a detailed overview of their industry including key players and trends",
   ];
 
   try {
     const promises = prompts.map((prompt) => {
       return openai.chat.completions.create({
-        model: "gpt-4-turbo",
+        model: "gpt-3.5-turbo",
         messages: [
           {
             role: "system",
@@ -73,8 +73,8 @@ export async function generateIndustryAnalysis(name: string) {
     const data = responses.map(
       (response) => response.choices[0].message.content || ""
     );
-    console.log(data);
 
+    console.timeEnd("2.2");
     return data;
   } catch (error) {
     console.error(error);

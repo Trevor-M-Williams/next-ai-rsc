@@ -17,14 +17,13 @@ export function NewCompanyDialog() {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [companyName, setCompanyName] = useState("");
+  const [companySymbol, setCompanySymbol] = useState("");
 
   const handleSubmit = async () => {
     setLoading(true);
-    await addCompany(companyName);
+    await addCompany(companySymbol);
     setOpen(false);
-    router.push(`/dashboard/analysis/${companyName.replaceAll(" ", "-")}`);
-    setLoading(false);
+    router.push(`/dashboard/analysis/${companySymbol.replaceAll(" ", "-")}`);
   };
 
   return (
@@ -39,7 +38,7 @@ export function NewCompanyDialog() {
         <div className="space-y-4">
           <Input
             placeholder="Enter a company name"
-            onChange={(e) => setCompanyName(e.target.value)}
+            onChange={(e) => setCompanySymbol(e.target.value)}
           />
           <Button onClick={handleSubmit} disabled={loading}>
             {loading ? "Initializing..." : "Add"}

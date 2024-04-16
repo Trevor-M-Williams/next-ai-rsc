@@ -8,8 +8,6 @@ export function IndustryChart({
   field: string;
 }) {
   return (
-    <div>
-      <Chart datasets={datasets} field={field as keyof FinancialStatement} />
-    </div>
+    <Chart datasets={datasets} field={field as keyof FinancialStatement} />
   );
 }

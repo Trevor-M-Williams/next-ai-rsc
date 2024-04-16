@@ -105,7 +105,10 @@ async function handleCommand(
   aiState: ReturnType<typeof getMutableAIState>
 ) {
   const command = content.split(":")[0] || "";
-  const symbols = content.split(":")[1].split(",");
+  const symbols = content
+    .split(":")[1]
+    .split(",")
+    .map((symbol) => symbol.trim().toUpperCase());
 
   if (!symbols.length || !symbols[0]) {
     reply.done(
@@ -146,7 +149,9 @@ async function handleCommand(
 
           <Stock symbol={symbol} name={name || ""} data={stockData} />
 
-          <DynamicChart symbols={symbols} field="revenue" />
+          <div className="h-96">
+            <DynamicChart symbols={symbols} field={"revenue"} />
+          </div>
         </BotCard>
       );
 
@@ -169,7 +174,9 @@ async function handleCommand(
 
       reply.done(
         <BotCard>
-          <DynamicChart symbols={symbols} field={"revenue"} />
+          <div className="h-96">
+            <DynamicChart symbols={symbols} field={"revenue"} />
+          </div>
         </BotCard>
       );
 

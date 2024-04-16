@@ -76,17 +76,19 @@ export function Chart<T extends FinancialStatement>({
   };
 
   return (
-    <div className="relative p-4 pt-6 bg-background overflow-hidden">
+    <div className="relative h-full p-4 pt-8 bg-background overflow-hidden">
       <div className="absolute top-4 text-lg font-bold">
         {datasets.length > 0 && formatFieldName(field.toString())}
       </div>
-      <div className="h-[20rem] pt-4">
+
+      <div className="absolute top-12 text-xs text-gray-500">
+        {valuesInMillions && "(M USD)"}
+      </div>
+
+      <div className="h-full pt-4">
         {datasets.length > 0 && (
           <Line data={chartData} options={chartOptions} />
         )}
-      </div>
-      <div className="w-full flex justify-center items-center h-8 pt-2 text-xs text-gray-500">
-        {valuesInMillions && "*Values in M USD"}
       </div>
     </div>
   );

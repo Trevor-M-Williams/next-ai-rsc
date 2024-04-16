@@ -3,8 +3,10 @@ import { serial, text, timestamp, pgTable, jsonb } from "drizzle-orm/pg-core";
 export const companies = pgTable("companies", {
   id: serial("id").primaryKey(),
   name: text("name").notNull(),
-  companyData: jsonb("data").$type<CompanyData>(),
+  symbol: text("symbol").notNull(),
+  companyData: jsonb("company_data").$type<CompanyData>(),
   industryData: jsonb("industry_data").$type<IndustryData>(),
+  competitors: jsonb("competitors").$type<string[]>(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
 

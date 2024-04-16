@@ -1,0 +1,1 @@
+ALTER TABLE "companies" ADD COLUMN "symbol" text NOT NULL;

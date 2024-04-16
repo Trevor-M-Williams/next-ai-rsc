@@ -94,7 +94,7 @@ export function DynamicChart({
   }, [selectedCompanies]);
 
   return (
-    <div>
+    <div className="h-full flex flex-col">
       <div className="relative min-h-10 w-full flex gap-8 mb-2">
         <Command
           onFocus={() => setCompanyCommandsOpen(true)}
@@ -146,10 +146,12 @@ export function DynamicChart({
           </CommandList>
         </Command>
       </div>
-      <Chart
-        datasets={datasets}
-        field={selectedField as keyof FinancialStatement}
-      />
+      <div className="flex-grow">
+        <Chart
+          datasets={datasets}
+          field={selectedField as keyof FinancialStatement}
+        />
+      </div>
     </div>
   );
 }

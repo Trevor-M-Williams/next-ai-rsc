@@ -1,6 +1,3 @@
-"use client";
-import { useState } from "react";
-
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Table,
@@ -164,49 +161,6 @@ function FullBalanceSheet({
   );
 }
 
-type CashFlowStatement = {
-  date: string;
-  symbol: string;
-  reportedCurrency: string;
-  cik: string;
-  fillingDate: string;
-  acceptedDate: string;
-  calendarYear: string;
-  period: string;
-  netIncome: number;
-  depreciationAndAmortization: number;
-  deferredIncomeTax: number;
-  stockBasedCompensation: number;
-  changeInWorkingCapital: number;
-  accountsReceivables: number;
-  inventory: number;
-  accountsPayables: number;
-  otherWorkingCapital: number;
-  otherNonCashItems: number;
-  netCashProvidedByOperatingActivities: number;
-  investmentsInPropertyPlantAndEquipment: number;
-  acquisitionsNet: number;
-  purchasesOfInvestments: number;
-  salesMaturitiesOfInvestments: number;
-  otherInvestingActivites: number;
-  netCashUsedForInvestingActivites: number;
-  debtRepayment: number;
-  commonStockIssued: number;
-  commonStockRepurchased: number;
-  dividendsPaid: number;
-  otherFinancingActivites: number;
-  netCashUsedProvidedByFinancingActivities: number;
-  effectOfForexChangesOnCash: number;
-  netChangeInCash: number;
-  cashAtEndOfPeriod: number;
-  cashAtBeginningOfPeriod: number;
-  operatingCashFlow: number;
-  capitalExpenditure: number;
-  freeCashFlow: number;
-  link: string;
-  finalLink: string;
-};
-
 function FullCashFlowStatement({
   cashFlowStatements,
   years,
@@ -295,7 +249,7 @@ function FullIncomeStatement({
     { key: "revenue", title: "Revenue" },
     { key: "costOfRevenue", title: "Cost of Revenue" },
     { key: "grossProfit", title: "Gross Profit" },
-    { key: "grossProfitRatio", title: "Gross Profit Ratio (%)" },
+    { key: "grossProfitRatio", title: "Gross Profit Ratio" },
     { key: "researchAndDevelopmentExpenses", title: "R&D Expenses" },
     {
       key: "generalAndAdministrativeExpenses",
@@ -316,15 +270,15 @@ function FullIncomeStatement({
       title: "Depreciation & Amortization",
     },
     { key: "ebitda", title: "EBITDA" },
-    { key: "ebitdaratio", title: "EBITDA Ratio (%)" },
+    { key: "ebitdaratio", title: "EBITDA Ratio " },
     { key: "operatingIncome", title: "Operating Income" },
-    { key: "operatingIncomeRatio", title: "Operating Income Ratio (%)" },
+    { key: "operatingIncomeRatio", title: "Operating Income Ratio " },
     { key: "totalOtherIncomeExpensesNet", title: "Other Income/Expenses Net" },
     { key: "incomeBeforeTax", title: "Income Before Tax" },
-    { key: "incomeBeforeTaxRatio", title: "Income Before Tax Ratio (%)" },
+    { key: "incomeBeforeTaxRatio", title: "Income Before Tax Ratio " },
     { key: "incomeTaxExpense", title: "Income Tax Expense" },
     { key: "netIncome", title: "Net Income" },
-    { key: "netIncomeRatio", title: "Net Income Ratio (%)" },
+    { key: "netIncomeRatio", title: "Net Income Ratio " },
     { key: "eps", title: "Earnings Per Share (EPS)" },
     { key: "epsdiluted", title: "Diluted EPS" },
     {
@@ -373,7 +327,10 @@ export function FullFinancialStatement({
   ].sort();
 
   return (
-    <Tabs defaultValue="income-statement">
+    <Tabs defaultValue="income-statement" className="relative">
+      <div className="absolute top-2 right-2 text-sm text-gray-500">
+        *Values in M USD
+      </div>
       <TabsList>
         <TabsTrigger value="income-statement">Income Statement</TabsTrigger>
         <TabsTrigger value="balance-sheet">Balance Sheet</TabsTrigger>

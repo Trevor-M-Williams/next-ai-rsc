@@ -1,24 +1,24 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
+
 import {
   getCompanyData,
-  getCompanyName,
   getFinancialData,
   getHistoricalData,
 } from "@/actions/db";
+import { getCompetitorData } from "@/actions/competitors";
 
 import { AnalysisSidebar } from "@/components/secondary-sidebar";
 
 import { Stock } from "@/components/stocks";
-import { FinancialStatement } from "@/components/financials";
-import { IndustryChart } from "@/components/industry-chart";
-import { BarChart } from "@/components/overview/bar-chart";
-import { DashboardCard } from "@/components/dashboard-card";
 import { FullFinancialStatement } from "@/components/financials/full-financial-statement";
+import { BarChart } from "@/components/overview/bar-chart";
+import { Chart } from "@/components/chart";
+import { DashboardCard } from "@/components/dashboard-card";
 import { MarkdownLatex } from "@/components/chat/markdown-latex";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { getCompetitorData } from "@/actions/competitors";
+import { IndustryFinancials } from "@/components/financials/industry-financials";
 
 export function CompanyAnalysis({
   companyData,
@@ -80,10 +80,16 @@ export function IndustryAnalysis({
   company: string;
 }) {
   const analysisHeadings = ["Industry Overview", "Industry Trends"];
-  const datasets = competitorData.map((data: any) => ({
-    data: data.incomeStatements,
-    ticker: data.symbol,
-  }));
+  const datasets = [
+    {
+      data: financialData?.incomeStatements,
+      ticker: company,
+    },
+    ...competitorData.map((data: any) => ({
+      data: data.incomeStatements,
+      ticker: data.symbol,
+    })),
+  ];
 
   return (
     <div
@@ -107,15 +113,20 @@ export function IndustryAnalysis({
         </ScrollArea>
       </DashboardCard>
       <DashboardCard colSpan={1} rowSpan={1}>
-        <IndustryChart datasets={datasets} field="revenue" />
+        <Chart
+          datasets={datasets}
+          field={"revenue" as keyof FinancialStatement}
+        />
       </DashboardCard>
-      <DashboardCard colSpan={1} rowSpan={1}></DashboardCard>
+      <DashboardCard colSpan={1} rowSpan={1}>
+        <IndustryFinancials />
+      </DashboardCard>
     </div>
   );
 }
 
 export default function CompanyPage() {
-  const { company } = useParams<{ company: string }>();
+  const { company: symbol } = useParams<{ company: string }>();
   const [name, setName] = useState<string>("");
   const [companyData, setCompanyData] = useState<any>();
   const [industryData, setIndustryData] = useState<any>();
@@ -126,22 +137,30 @@ export default function CompanyPage() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const name = (await getCompanyName(company)) || "";
-      const insights = await getCompanyData(company);
-      const competitorsData = await getCompetitorData();
-      const stockData = await getHistoricalData(company);
-      const { balanceSheets, cashFlowStatements, incomeStatements } =
-        await getFinancialData(company);
-      setName(name);
-      setCompanyData(insights.companyData);
-      setIndustryData(insights.industryData);
-      setCompetitorData(competitorsData);
+      const promises = [
+        getCompanyData(symbol),
+        getCompetitorData({ name, symbol }), // bottleneck
+        getHistoricalData(symbol), // bottleneck
+        getFinancialData(symbol),
+      ];
+
+      const [
+        data,
+        competitorData,
+        stockData,
+        { balanceSheets, cashFlowStatements, incomeStatements },
+      ] = await Promise.all(promises);
+
+      setName(data.name || "");
+      setCompanyData(data.companyData);
+      setIndustryData(data.industryData);
+      setCompetitorData(competitorData);
       setStockData(stockData);
       setFinancialData({ balanceSheets, cashFlowStatements, incomeStatements });
     };
 
     fetchData();
-  }, [company]);
+  }, [symbol]);
 
   return (
     <div className="flex h-full">
@@ -155,7 +174,7 @@ export default function CompanyPage() {
             stockData={stockData}
             financialData={financialData}
             name={name}
-            company={company}
+            company={symbol}
           />
         )}
 
@@ -165,7 +184,7 @@ export default function CompanyPage() {
             financialData={financialData}
             competitorData={competitorData}
             name={name}
-            company={company}
+            company={symbol}
           />
         )}
 
@@ -173,7 +192,7 @@ export default function CompanyPage() {
           <div className="p-4 flex-grow">
             {financialData && (
               <FullFinancialStatement
-                symbol={company}
+                symbol={symbol}
                 name={name}
                 balanceSheets={financialData.balanceSheets}
                 cashFlowStatements={financialData.cashFlowStatements}

@@ -1,8 +1,10 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
+
 import { eq } from "drizzle-orm";
-import { db } from "../db";
-import { companies, financialStatements, stocks, symbols } from "../db/schema";
+import { db } from "@/db";
+import { companies, financialStatements, stocks, symbols } from "@/db/schema";
 
 import { generateCompanyAnalysis, generateIndustryAnalysis } from "./insights";
 import {
@@ -11,38 +13,57 @@ import {
   fetchHistoricalData,
   fetchIncomeStatements,
 } from "./fetch";
+import { getCompetitors } from "./competitors";
 
-export async function addCompany(name: string) {
+export async function addCompany(symbol: string) {
   try {
+    console.time("1");
+    const name = await getCompanyName(symbol);
+    console.timeEnd("1");
+
+    console.time("2");
     const promises = [
-      generateCompanyAnalysis(name),
-      generateIndustryAnalysis(name),
+      generateCompanyAnalysis(name || symbol),
+      generateIndustryAnalysis(name || symbol),
+      getCompetitors({
+        name: name || "",
+        symbol,
+      }),
     ];
 
-    const [companyData, industryData] = await Promise.all(promises);
+    const [companyData, industryData, competitors] =
+      await Promise.all(promises);
+    console.timeEnd("2");
 
     const data = {
-      name,
+      name: name || symbol,
+      symbol,
       companyData,
       industryData,
+      competitors,
     };
 
+    console.time("3");
     await db.insert(companies).values(data);
+    revalidatePath("/dashboard/analysis");
+
+    console.timeEnd("3");
   } catch (error) {
     console.error(error);
   }
 }
 
-export async function getCompanyData(name: string) {
+export async function getCompanyData(symbol: string) {
   try {
     const data = await db.query.companies.findFirst({
-      where: eq(companies.name, name),
+      where: eq(companies.symbol, symbol),
     });
 
     if (data) return data;
 
     return {
-      name,
+      name: "",
+      symbol,
       companyData: [],
       industryData: [],
     };
@@ -95,7 +116,6 @@ export async function getHistoricalData(symbol: string) {
       await db.insert(stocks).values(stockData);
 
       console.log("No data");
-      console.log(`Stock data fetched for ${symbol} - API`);
       return fetchedData;
     }
 
@@ -109,12 +129,9 @@ export async function getHistoricalData(symbol: string) {
         .set({ data: fetchedData, updatedAt: new Date() })
         .where(eq(stocks.name, symbol.toUpperCase()));
 
-      console.log("Stale data");
-      console.log(`Stock data fetched for ${symbol} - API`);
       return fetchedData;
     }
 
-    console.log(`Stock data fetched for ${symbol} - DB`);
     return stockData.data;
   } catch (error) {
     console.error(error);
@@ -127,8 +144,6 @@ export async function getHistoricalData(symbol: string) {
     const updatedAtDate = new Date(updatedAt);
     const currentDate = new Date();
 
-    console.log(updatedAtDate.toDateString(), currentDate.toDateString());
-
     return updatedAtDate.toDateString() !== currentDate.toDateString();
   }
 }
@@ -139,10 +154,7 @@ export async function getFinancialData(symbol: string) {
       where: eq(financialStatements.name, symbol.toUpperCase()),
     });
 
-    if (financialData) {
-      console.log(`Financial data fetched for ${symbol} - DB`);
-      return financialData;
-    }
+    if (financialData) return financialData;
 
     const [balanceSheets, cashFlowStatements, incomeStatements] =
       await Promise.all([
@@ -160,23 +172,9 @@ export async function getFinancialData(symbol: string) {
 
     await db.insert(financialStatements).values(data);
 
-    console.log(`Financial data fetched for ${symbol} - API`);
     return { balanceSheets, cashFlowStatements, incomeStatements };
   } catch (error) {
     console.error(error);
     return { balanceSheets: [], cashFlowStatements: [], incomeStatements: [] };
-  }
-}
-
-// this isnt used anywhere atm
-export async function insertStockData(symbol: string, data: StockChartData[]) {
-  try {
-    const stockData = {
-      name: symbol.toUpperCase(),
-      data,
-    };
-    await db.insert(stocks).values(stockData);
-  } catch (error) {
-    console.error(error);
   }
 }
