@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import InsightsIcon from "@mui/icons-material/InsightsOutlined";
 import GovernanceIcon from "@mui/icons-material/AccountBalanceOutlined";
 import AnalysisIcon from "@mui/icons-material/QueryStats";
-import ChatIcon from "@mui/icons-material/ChatBubbleOutline";
+import ChatIcon from "@mui/icons-material/ChatOutlined";
 import FilesIcon from "@mui/icons-material/FolderOutlined";
 import NotesIcon from "@mui/icons-material/NotesOutlined";
 import SettingsIcon from "@mui/icons-material/SettingsOutlined";

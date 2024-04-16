@@ -1,4 +1,4 @@
-import { AnalysisSidebar } from "@/components/secondary-sidebar";
+import { AnalysisSidebar } from "@/components/analysis-sidebar";
 import Sidebar from "@/components/sidebar";
 
 export default function DashboardLayout({

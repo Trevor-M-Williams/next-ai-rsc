@@ -6,7 +6,7 @@ import OpenAI from "openai";
 import { BotCard, BotMessage, Stock, StockSkeleton } from "@/components/stocks";
 import { FinancialStatement, FinancialSkeleton } from "@/components/financials";
 import { DynamicChart } from "@/components/dynamic-chart";
-import { MarkdownLatex } from "@/components/chat/markdown-latex";
+import { MarkdownProse } from "@/components/chat/markdown";
 import { spinner } from "@/components/spinner";
 
 import { runOpenAICompletion } from "@/lib/utils";
@@ -362,7 +362,7 @@ async function handleAIResponse(
   completion.onTextContent((content: string, isFinal: boolean) => {
     reply.update(
       <BotMessage>
-        <MarkdownLatex content={content} />
+        <MarkdownProse content={content} />
       </BotMessage>
     );
 
@@ -432,7 +432,7 @@ async function handleAIResponse(
       nestedCompletion.onTextContent((content: string, isFinal: boolean) => {
         reply.update(
           <BotMessage>
-            <MarkdownLatex content={content} />
+            <MarkdownProse content={content} />
           </BotMessage>
         );
 
@@ -483,7 +483,7 @@ async function handleAIResponse(
       nestedCompletion.onTextContent((content: string, isFinal: boolean) => {
         reply.update(
           <BotMessage>
-            <MarkdownLatex content={content} />
+            <MarkdownProse content={content} />
           </BotMessage>
         );
 

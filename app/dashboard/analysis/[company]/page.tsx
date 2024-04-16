@@ -9,14 +9,14 @@ import {
 } from "@/actions/db";
 import { getCompetitorData } from "@/actions/competitors";
 
-import { AnalysisSidebar } from "@/components/secondary-sidebar";
+import { AnalysisSidebar } from "@/components/analysis-sidebar";
 
 import { Stock } from "@/components/stocks";
 import { FullFinancialStatement } from "@/components/financials/full-financial-statement";
 import { BarChart } from "@/components/overview/bar-chart";
 import { Chart } from "@/components/chart";
 import { DashboardCard } from "@/components/dashboard-card";
-import { MarkdownLatex } from "@/components/chat/markdown-latex";
+import { MarkdownProse } from "@/components/chat/markdown";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { IndustryFinancials } from "@/components/financials/industry-financials";
 
@@ -51,7 +51,7 @@ function CompanyAnalysis({
                 <div className="text-2xl font-semibold mb-2">
                   {analysisHeadings[index]}
                 </div>
-                <MarkdownLatex content={data} />
+                <MarkdownProse content={data} />
               </div>
             ))}
         </ScrollArea>
@@ -107,7 +107,7 @@ function IndustryAnalysis({
                 <div className="text-2xl font-semibold mb-2">
                   {analysisHeadings[index]}
                 </div>
-                <MarkdownLatex content={data} />
+                <MarkdownProse content={data} />
               </div>
             ))}
         </ScrollArea>
