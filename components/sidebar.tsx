@@ -10,9 +10,10 @@ import { Button } from "@/components/ui/button";
 
 import InsightsIcon from "@mui/icons-material/InsightsOutlined";
 import GovernanceIcon from "@mui/icons-material/AccountBalanceOutlined";
-import ChatIcon from "@mui/icons-material/ChatBubbleOutline";
-import NotesIcon from "@mui/icons-material/NotesOutlined";
 import AnalysisIcon from "@mui/icons-material/QueryStats";
+import ChatIcon from "@mui/icons-material/ChatBubbleOutline";
+import FilesIcon from "@mui/icons-material/FolderOutlined";
+import NotesIcon from "@mui/icons-material/NotesOutlined";
 import SettingsIcon from "@mui/icons-material/SettingsOutlined";
 
 import { cn } from "@/lib/utils";
@@ -41,16 +42,21 @@ export default function Sidebar() {
       label: "Insights",
       Icon: InsightsIcon,
     },
-    // {
-    //   href: "/dashboard",
-    //   label: "Governance",
-    //   Icon: GovernanceIcon,
-    // },
+    {
+      href: "/dashboard/governance",
+      label: "Governance",
+      Icon: GovernanceIcon,
+    },
     { href: "/dashboard/analysis", label: "Analysis", Icon: AnalysisIcon },
     {
       href: "/dashboard/chat",
       label: "Chat",
       Icon: ChatIcon,
+    },
+    {
+      href: "/dashboard/files",
+      label: "Files",
+      Icon: FilesIcon,
     },
   ];
 
