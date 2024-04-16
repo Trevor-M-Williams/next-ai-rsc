@@ -39,11 +39,8 @@ export async function addCompany(symbol: string) {
       competitors,
     };
 
-    console.time("3");
     await db.insert(companies).values(data);
     revalidatePath("/dashboard/analysis");
-
-    console.timeEnd("3");
   } catch (error) {
     console.error(error);
   }
