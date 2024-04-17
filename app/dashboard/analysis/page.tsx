@@ -20,8 +20,8 @@ export default async function AnalysisPage() {
                 href={`/dashboard/analysis/${symbol.replaceAll(" ", "-")}`}
                 className="relative flex items-center justify-between p-4 cursor-pointer hover:bg-muted"
               >
-                <div className="text-lg font-semibold">{name}</div>
-                <div>{symbol}</div>
+                <div className="text-xl font-semibold">{name}</div>
+                <div className="text-lg">{symbol}</div>
               </Link>
             ))}
         </div>

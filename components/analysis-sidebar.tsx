@@ -9,7 +9,7 @@ export function AnalysisSidebar({
   activeLink: string;
   setActiveLink: (link: string) => void;
 }) {
-  const links = ["Company", "Industry", "Financials", "News"];
+  const links = ["Company", "Industry", "Financials"];
   const buttonClassName = "w-full justify-start text-base h-8";
 
   return (

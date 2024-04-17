@@ -208,4 +208,10 @@ export const personalFiles = [
     updated: "2024-02-16T23:23:45.468Z",
     size: 1651,
   },
+  {
+    name: "Slide_Deck.pdf",
+    title: "Slide Deck",
+    updated: "2024-02-16T23:23:45.468Z",
+    size: 1651,
+  },
 ];

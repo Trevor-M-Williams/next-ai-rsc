@@ -40,8 +40,8 @@ export default function FilesPage() {
                         href={`/dashboard/files/${file.name}`}
                         className="w-full flex px-4 py-2 border-b items-center justify-between bg-white capitalize cursor-pointer hover:bg-accent"
                       >
-                        <div className="">{file.title}</div>
-                        <div className="text-sm shrink-0">
+                        <div className="text-lg">{file.title}</div>
+                        <div className="shrink-0">
                           {kb > 1000
                             ? (kb / 1000).toFixed(2) + " MB"
                             : Math.floor(kb) + " KB"}
