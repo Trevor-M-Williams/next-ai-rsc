@@ -198,3 +198,10 @@ type PineconeSparseValues = {
   indices: number[];
   values: number[];
 };
+
+type FileMetadata = {
+  name: string;
+  title: string;
+  updated: string;
+  size: number;
+};

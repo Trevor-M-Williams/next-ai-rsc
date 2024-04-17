@@ -261,7 +261,7 @@ Regulation is a cornerstone of effective corporate governance, serving as the fr
 `;
 
 export const riskMarkdown = `
-# Risk Management
+# Risk
 
 ## Overview
 
