@@ -41,7 +41,7 @@ export default function ChatPage() {
   }, [inputRef]);
 
   return (
-    <ScrollArea className="h-screen">
+    <ScrollArea className="h-full">
       <div className="pb-[200px] pt-4 md:pt-10">
         {messages.length ? (
           <>

@@ -10,7 +10,7 @@ import { DashboardCard } from "@/components/dashboard-card";
 export default async function InsightsPlaceholder() {
   return (
     <div
-      className="h-screen grid gap-4 p-4"
+      className="h-full grid gap-4 p-4"
       style={{
         gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr 10rem",
         gridTemplateRows: "1fr 1fr 1fr",

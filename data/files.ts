@@ -204,13 +204,19 @@ export const governanceFiles = allFiles.filter(
 export const personalFiles = [
   {
     name: "#",
-    title: "Meeting Notes 3/30",
+    title: "Meeting Notes 4/17",
+    updated: "2024-02-16T23:23:45.468Z",
+    size: 1651,
+  },
+  {
+    name: "#",
+    title: "Meeting Notes 1/11",
     updated: "2024-02-16T23:23:45.468Z",
     size: 1651,
   },
   {
     name: "Slide_Deck.pdf",
-    title: "Slide Deck",
+    title: "Director Assist",
     updated: "2024-02-16T23:23:45.468Z",
     size: 1651,
   },

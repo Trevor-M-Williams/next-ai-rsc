@@ -13,7 +13,7 @@ export default async function HomePage() {
 
   return (
     <div
-      className="h-screen grid gap-4 p-4"
+      className="h-full grid gap-4 p-4"
       style={{
         gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr 1fr 18rem",
         gridTemplateRows: "1fr 45vh 35vh",

@@ -18,7 +18,7 @@ export async function Metric({
         bg
       )}
     >
-      <div className="flex items-center justify-center text-5xl lg:text-6xl xl:text-7xl">
+      <div className="flex items-center justify-center text-5xl xl:text-6xl 2xl:text-7xl">
         {value}
         <span className="text-3xl">{unit}</span>
       </div>

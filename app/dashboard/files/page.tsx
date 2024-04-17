@@ -33,11 +33,18 @@ export default function FilesPage() {
                 .sort((a, b) => a.title.localeCompare(b.title))
                 .map((file, index) => {
                   const kb = file.size / 1000;
+                  let href = `/dashboard/files/${file.name}`;
+                  if (file.name === "Slide_Deck.pdf") {
+                    href = "https://www.cybertekiq.com/director-iq";
+                  }
 
                   return (
                     <li key={index}>
                       <a
-                        href={`/dashboard/files/${file.name}`}
+                        href={href}
+                        target={
+                          file.name === "Slide_Deck.pdf" ? "_blank" : "_self"
+                        }
                         className="w-full flex px-4 py-2 border-b items-center justify-between bg-white capitalize cursor-pointer hover:bg-accent"
                       >
                         <div className="text-lg">{file.title}</div>

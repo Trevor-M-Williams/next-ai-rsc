@@ -37,7 +37,7 @@ function CompanyAnalysis({
 
   return (
     <div
-      className="h-screen grid gap-4 p-4"
+      className="h-full grid gap-4 p-4"
       style={{
         gridTemplateColumns: "1fr 1fr",
         gridTemplateRows: "1fr 1fr",
@@ -93,7 +93,7 @@ function IndustryAnalysis({
 
   return (
     <div
-      className="h-screen grid gap-4 p-4"
+      className="h-full grid gap-4 p-4"
       style={{
         gridTemplateColumns: "1fr 1fr",
         gridTemplateRows: "1fr 1fr",
