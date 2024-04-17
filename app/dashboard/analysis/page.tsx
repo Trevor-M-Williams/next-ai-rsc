@@ -2,6 +2,8 @@ import Link from "next/link";
 import { getCompanies } from "@/actions/db";
 import { NewCompanyDialog } from "@/components/new-company-dialog";
 
+export const dynamic = "force-dynamic";
+
 export default async function AnalysisPage() {
   const companies = await getCompanies();
 

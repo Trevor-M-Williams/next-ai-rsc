@@ -13,10 +13,10 @@ export default async function HomePage() {
 
   return (
     <div
-      className="h-full grid grid-rows-[7rem_1fr_35vh] gap-4 p-4"
+      className="h-full grid gap-4 p-4"
       style={{
         gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr 1fr 18rem",
-        // gridTemplateRows: "1fr 40vh 35vh",
+        gridTemplateRows: "7rem 1fr 35vh",
       }}
     >
       <DashboardCard colSpan={2} rowSpan={1}>
