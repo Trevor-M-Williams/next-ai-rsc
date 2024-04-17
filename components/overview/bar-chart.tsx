@@ -102,7 +102,9 @@ export function BarChart({ data }: { data: IncomeStatement[] }) {
   return (
     <div className="relative h-full p-4 pb-6">
       <Bar data={chartData} options={chartOptions} />
-      <div className="absolute top-4 left-3 text-xs text-gray-500">(M USD)</div>
+      <div className="hidden xl:block absolute top-4 left-3 text-xs text-gray-500">
+        (M USD)
+      </div>
     </div>
   );
 }

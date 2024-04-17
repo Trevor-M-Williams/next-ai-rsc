@@ -81,7 +81,7 @@ export function Chart<T extends FinancialStatement>({
         {datasets.length > 0 && formatFieldName(field.toString())}
       </div>
 
-      <div className="absolute top-12 text-xs text-gray-500">
+      <div className="hidden xl:block absolute top-12 text-xs text-gray-500">
         {valuesInMillions && "(M USD)"}
       </div>
 
