@@ -2,9 +2,17 @@
 
 import { revalidatePath } from "next/cache";
 
+import { useAuth } from "@clerk/nextjs";
+
 import { eq } from "drizzle-orm";
 import { db } from "@/db";
-import { companies, financialStatements, stocks, symbols } from "@/db/schema";
+import {
+  companies,
+  financialStatements,
+  organizations,
+  stocks,
+  symbols,
+} from "@/db/schema";
 
 import { generateCompanyAnalysis, generateIndustryAnalysis } from "./insights";
 import {
@@ -14,6 +22,18 @@ import {
   fetchIncomeStatements,
 } from "./fetch";
 import { getCompetitors } from "./competitors";
+
+//get organization id
+export async function getOrganizationId() {
+  const { orgId } = useAuth();
+  if (!orgId) return 0;
+
+  const org = await db.query.organizations.findFirst({
+    where: eq(organizations.name, orgId),
+  });
+
+  return org?.id || 0;
+}
 
 export async function addCompany(symbol: string) {
   try {
@@ -37,6 +57,7 @@ export async function addCompany(symbol: string) {
       companyData,
       industryData,
       competitors,
+      organizationId: await getOrganizationId(),
     };
 
     await db.insert(companies).values(data);
@@ -48,8 +69,11 @@ export async function addCompany(symbol: string) {
 
 export async function getCompanyData(symbol: string) {
   try {
+    const organizationId = await getOrganizationId();
     const data = await db.query.companies.findFirst({
-      where: eq(companies.symbol, symbol),
+      where:
+        eq(companies.symbol, symbol) &&
+        eq(companies.organizationId, organizationId),
     });
 
     if (data) return data;

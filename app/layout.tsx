@@ -9,14 +9,14 @@ import { AI } from "../actions/chat";
 import { Providers } from "@/components/providers";
 
 const meta = {
-  title: "Director Assist",
-  description: "Director Assist",
+  title: "Director IQ",
+  description: "Director IQ",
 };
 export const metadata: Metadata = {
   ...meta,
   title: {
-    default: "Director Assist",
-    template: `%s - Director Assist`,
+    default: "Director IQ",
+    template: `%s - Director IQ`,
   },
   icons: {
     icon: "/favicon.ico",

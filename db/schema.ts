@@ -1,4 +1,11 @@
-import { serial, text, timestamp, pgTable, jsonb } from "drizzle-orm/pg-core";
+import {
+  serial,
+  text,
+  timestamp,
+  pgTable,
+  jsonb,
+  integer,
+} from "drizzle-orm/pg-core";
 
 export const companies = pgTable("companies", {
   id: serial("id").primaryKey(),
@@ -8,6 +15,9 @@ export const companies = pgTable("companies", {
   industryData: jsonb("industry_data").$type<IndustryData>(),
   competitors: jsonb("competitors").$type<string[]>(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
+  organizationId: integer("organization_id")
+    .references(() => organizations.id)
+    .notNull(),
 });
 
 export const financialStatements = pgTable("financial_statements", {
@@ -18,6 +28,13 @@ export const financialStatements = pgTable("financial_statements", {
     CashFlowStatement[]
   >(),
   incomeStatements: jsonb("income_statements").$type<IncomeStatement[]>(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+export const organizations = pgTable("organizations", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  symbol: text("symbol").notNull(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
 
