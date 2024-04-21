@@ -73,7 +73,7 @@ export function StockChart({
   };
 
   return (
-    <div className="h-[75%] w-full">
+    <div className="h-[75%] flex-grow w-full">
       <Line data={chartData} options={chartOptions} />
     </div>
   );

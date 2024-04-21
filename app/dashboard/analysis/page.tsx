@@ -5,7 +5,7 @@ import { NewCompanyDialog } from "@/components/new-company-dialog";
 export const dynamic = "force-dynamic";
 
 export default async function AnalysisPage() {
-  const companies = await getCompanies();
+  const companies = await getCompanies(1);
 
   return (
     <div className="h-full w-full p-4 bg-background">

@@ -33,7 +33,9 @@ export async function getCompetitors({
           role: "user",
           content: `
               Return a string array of the top competitors for ${name} (${symbol}).
-              Provide only the stock symbols. (e.g. ["AAPL", "GOOGL"])
+              Provide only the stock symbols. 
+              e.g. "MSFT" -> ["AAPL", "GOOGL", "META"]
+              e.g. "WMT" -> ["TGT", "COST", "AMZN"]
               Note that Facebook is now called Meta Platforms (META).
               The response must be in JSON format as shown:
 

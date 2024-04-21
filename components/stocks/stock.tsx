@@ -98,8 +98,17 @@ export function Stock({
   const [percentChange, setPercentChange] = useState(0);
   const [chartData, setChartData] = useState(data);
 
+  useEffect(() => {
+    const currentDate = moment();
+    const startDate = currentDate.clone().subtract(3, "month");
+    const newChartData = data.filter((item) =>
+      moment(item.date).isSameOrAfter(startDate)
+    );
+    setChartData(newChartData);
+  }, [data]);
+
   return (
-    <div className="max-h-full h-[45vh] bg-background relative p-4 rounded-md overflow-hidden">
+    <div className="h-full flex flex-col bg-background relative p-4 rounded-md overflow-hidden">
       <div className="mb-4">
         <div className="flex items-center gap-2">
           <div className="text-xl font-semibold">{symbol}</div>

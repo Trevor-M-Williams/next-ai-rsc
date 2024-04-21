@@ -1,4 +1,8 @@
-import { getFinancialData, getHistoricalData } from "@/actions/db";
+import {
+  getFinancialData,
+  getHistoricalData,
+  getOrganization,
+} from "@/actions/db";
 
 import { Stock } from "@/components/stocks";
 import { Calendar } from "@/components/ui/calendar";
@@ -8,8 +12,16 @@ import { Metric } from "@/components/overview/metric";
 import { DashboardCard } from "@/components/dashboard-card";
 
 export default async function HomePage() {
-  const data = await getHistoricalData("WMT");
-  const { incomeStatements } = await getFinancialData("WMT");
+  const organization = await getOrganization();
+  if (!organization) return;
+
+  const symbol = organization.symbol;
+
+  const ticker = symbol === "GEN" ? "WMT" : "INTC";
+  const name = symbol === "GEN" ? "GenGoods Inc." : "ABC Technologies";
+
+  const data = await getHistoricalData(ticker);
+  const { incomeStatements } = await getFinancialData(ticker);
 
   return (
     <div
@@ -37,7 +49,7 @@ export default async function HomePage() {
         <Articles />
       </DashboardCard>
       <DashboardCard colSpan={6} rowSpan={1}>
-        <Stock symbol="GEN" name="Gen Goods Inc." data={data} color="#00aaff" />
+        <Stock symbol={symbol} name={name} data={data} color="#00aaff" />
       </DashboardCard>
       <DashboardCard colSpan={6} rowSpan={1}>
         <BarChart data={incomeStatements} />

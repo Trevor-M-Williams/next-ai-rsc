@@ -147,7 +147,9 @@ async function handleCommand(
             incomeStatements={incomeStatements}
           />
 
-          <Stock symbol={symbol} name={name || ""} data={stockData} />
+          <div className="h-96">
+            <Stock symbol={symbol} name={name || ""} data={stockData} />
+          </div>
 
           <div className="h-96">
             <DynamicChart symbols={symbols} field={"revenue"} />
@@ -253,12 +255,14 @@ async function handleCommand(
       reply.done(
         <BotCard>
           {stockData.map((stock) => (
-            <Stock
-              key={stock.symbol}
-              symbol={stock.symbol}
-              name={stock.name || ""}
-              data={stock.data}
-            />
+            <div className="h-96">
+              <Stock
+                key={stock.symbol}
+                symbol={stock.symbol}
+                name={stock.name || ""}
+                data={stock.data}
+              />
+            </div>
           ))}
         </BotCard>
       );

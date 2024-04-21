@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 
-import { useAuth } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs";
 
 import { eq } from "drizzle-orm";
 import { db } from "@/db";
@@ -23,21 +23,24 @@ import {
 } from "./fetch";
 import { getCompetitors } from "./competitors";
 
-//get organization id
-export async function getOrganizationId() {
-  const { orgId } = useAuth();
-  if (!orgId) return 0;
+export async function getOrganization() {
+  const { orgId } = auth();
+  if (!orgId) return null;
 
   const org = await db.query.organizations.findFirst({
     where: eq(organizations.name, orgId),
   });
 
-  return org?.id || 0;
+  return org || null;
 }
 
 export async function addCompany(symbol: string) {
   try {
     const name = await getCompanyName(symbol);
+    const organization = await getOrganization();
+    const organizationId = organization?.id;
+
+    if (!organizationId) return;
 
     const promises = [
       generateCompanyAnalysis(name || symbol),
@@ -57,7 +60,7 @@ export async function addCompany(symbol: string) {
       companyData,
       industryData,
       competitors,
-      organizationId: await getOrganizationId(),
+      organizationId,
     };
 
     await db.insert(companies).values(data);
@@ -69,7 +72,11 @@ export async function addCompany(symbol: string) {
 
 export async function getCompanyData(symbol: string) {
   try {
-    const organizationId = await getOrganizationId();
+    const organization = await getOrganization();
+    const organizationId = organization?.id;
+
+    if (!organizationId) return;
+
     const data = await db.query.companies.findFirst({
       where:
         eq(companies.symbol, symbol) &&
@@ -109,7 +116,14 @@ export async function getCompanyName(symbol: string) {
 
 export async function getCompanies() {
   try {
-    const data = await db.query.companies.findMany();
+    const organization = await getOrganization();
+    const organizationId = organization?.id;
+
+    if (!organizationId) return;
+
+    const data = await db.query.companies.findMany({
+      where: eq(companies.organizationId, organizationId),
+    });
     return data;
   } catch (error) {
     console.error(error);
