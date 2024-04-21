@@ -7,7 +7,7 @@ import Sales from "@/components/insights/sales";
 
 import { DashboardCard } from "@/components/dashboard-card";
 
-export default async function InsightsPlaceholder() {
+export default async function GenInsights() {
   return (
     <div
       className="h-full grid gap-4 p-4"

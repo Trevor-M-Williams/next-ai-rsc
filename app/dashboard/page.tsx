@@ -16,9 +16,14 @@ export default async function HomePage() {
   if (!organization) return;
 
   const symbol = organization.symbol;
+  const orgId = organization.id;
 
   const ticker = symbol === "GEN" ? "WMT" : "INTC";
   const name = symbol === "GEN" ? "GenGoods Inc." : "ABC Technologies";
+  const metrics = [
+    [3, 12, 7],
+    [4, 9, 6],
+  ];
 
   const data = await getHistoricalData(ticker);
   const { incomeStatements } = await getFinancialData(ticker);
@@ -32,18 +37,26 @@ export default async function HomePage() {
       }}
     >
       <DashboardCard colSpan={2} rowSpan={1}>
-        <Metric title="New Governance Insights" value="3" bg="bg-blue-400" />
+        <Metric
+          title="New Industry Insights"
+          value={metrics[orgId - 1][0].toString()}
+          bg="bg-blue-400"
+        />
       </DashboardCard>
       <DashboardCard colSpan={2} rowSpan={1}>
         <Metric
           title="Consumer Sentiment Increase"
-          value="12"
+          value={metrics[orgId - 1][1].toString()}
           unit="%"
           bg="bg-green-400"
         />
       </DashboardCard>
       <DashboardCard colSpan={2} rowSpan={1}>
-        <Metric title="Weekly Media Mentions" value="7" bg="bg-teal-400" />
+        <Metric
+          title="Weekly Media Mentions"
+          value={metrics[orgId - 1][2].toString()}
+          bg="bg-teal-400"
+        />
       </DashboardCard>
       <DashboardCard colSpan={1} rowSpan={2}>
         <Articles />

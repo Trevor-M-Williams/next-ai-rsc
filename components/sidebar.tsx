@@ -66,7 +66,6 @@ export default function Sidebar() {
         <div className="flex justify-center mb-4 pb-2 border-b min-h-[3rem] ">
           <OrganizationSwitcher
             afterCreateOrganizationUrl="/dashboard"
-            afterSelectOrganizationUrl="/dashboard"
             hidePersonal={true}
           />
         </div>
