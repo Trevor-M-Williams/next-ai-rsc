@@ -255,9 +255,8 @@ async function handleCommand(
       reply.done(
         <BotCard>
           {stockData.map((stock) => (
-            <div className="h-96">
+            <div className="h-96" key={stock.symbol}>
               <Stock
-                key={stock.symbol}
                 symbol={stock.symbol}
                 name={stock.name || ""}
                 data={stock.data}

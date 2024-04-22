@@ -42,16 +42,16 @@ export default function Sidebar() {
       label: "Insights",
       Icon: InsightsIcon,
     },
-    {
-      href: "/dashboard/governance",
-      label: "Governance",
-      Icon: GovernanceIcon,
-    },
     { href: "/dashboard/analysis", label: "Analysis", Icon: AnalysisIcon },
     {
       href: "/dashboard/chat",
       label: "Chat",
       Icon: ChatIcon,
+    },
+    {
+      href: "/dashboard/governance",
+      label: "Governance",
+      Icon: GovernanceIcon,
     },
     {
       href: "/dashboard/files",
@@ -61,7 +61,7 @@ export default function Sidebar() {
   ];
 
   return (
-    <div className=" h-full border-r px-2 py-6 flex flex-col justify-between bg-background">
+    <div className="h-full w-16 border-r py-6 flex flex-col items-center justify-between bg-background overflow-hidden">
       <div>
         <div className="flex justify-center mb-4 pb-2 border-b min-h-[3rem] ">
           <OrganizationSwitcher

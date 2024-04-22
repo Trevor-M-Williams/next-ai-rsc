@@ -31,7 +31,7 @@ export function NewCompanyDialog() {
       <DialogTrigger asChild>
         <Button className="">Add</Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="top-40 xl:top-[50%]">
         <DialogHeader>
           <DialogTitle>New Company</DialogTitle>
         </DialogHeader>

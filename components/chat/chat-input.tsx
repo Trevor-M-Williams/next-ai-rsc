@@ -88,9 +88,14 @@ type ChatInputProps = {
     id: number;
     display: JSX.Element;
   }>;
+  chatRef: React.RefObject<HTMLDivElement>;
 };
 
-export function ChatInput({ setMessages, submitUserMessage }: ChatInputProps) {
+export function ChatInput({
+  setMessages,
+  submitUserMessage,
+  chatRef,
+}: ChatInputProps) {
   const [inputValue, setInputValue] = useState("");
   const [commandsOpen, setCommandsOpen] = useState(false);
   const [selectedCommand, setSelectedCommand] = useState<string>(
@@ -159,8 +164,14 @@ export function ChatInput({ setMessages, submitUserMessage }: ChatInputProps) {
   }
 
   return (
-    <div className="absolute z-50 bottom-12 xl:bottom-0 w-full duration-300 ease-in-out animate-in peer-[[data-state=open]]:group-[]:lg:pl-[250px] peer-[[data-state=open]]:group-[]:xl:pl-[300px]">
-      <div className="mx-auto sm:max-w-2xl sm:px-4">
+    <div
+      className="fixed w-full max-w-2xl z-50 bottom-12 xl:bottom-0 peer-[[data-state=open]]:group-[]:lg:pl-[250px] peer-[[data-state=open]]:group-[]:xl:pl-[300px]"
+      style={{
+        left: "50%",
+        transform: "translateX(calc(-50% + 2rem))",
+      }}
+    >
+      <div className="sm:px-4">
         <div className="relative px-4 py-2 space-y-4 border-t shadow-lg bg-background sm:rounded-xl sm:border md:py-4 xl:rounded-t-xl xl:rounded-b-none">
           {commandsOpen && (
             <ChatCommands
@@ -178,9 +189,9 @@ export function ChatInput({ setMessages, submitUserMessage }: ChatInputProps) {
               e.preventDefault();
 
               // Blur focus on mobile
-              const mobileUser = isMobile();
-              if (mobileUser) {
+              if (isMobile()) {
                 e.target["message"]?.blur();
+                chatRef.current?.focus();
               }
 
               const query = inputValue.trim();

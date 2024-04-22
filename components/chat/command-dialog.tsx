@@ -36,7 +36,7 @@ export const commands = [
   {
     name: "/stock",
     icon: <StockIcon fontSize="large" className="scale-150" />,
-    message: "/stock:AAPL",
+    message: "/stock:AAPL,GOOG,META",
   },
 ];
 

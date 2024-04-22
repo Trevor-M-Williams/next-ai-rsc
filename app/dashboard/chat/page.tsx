@@ -14,6 +14,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 export default function ChatPage() {
   const [messages, setMessages] = useUIState<typeof AI>();
   const { submitUserMessage } = useActions<typeof AI>();
+  const chatRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
@@ -41,7 +42,7 @@ export default function ChatPage() {
   }, [inputRef]);
 
   return (
-    <ScrollArea className="h-full">
+    <div ref={chatRef} className=" h-full overflow-auto">
       <div className="pb-[200px] pt-4 md:pt-10">
         {messages.length ? (
           <>
@@ -71,7 +72,8 @@ export default function ChatPage() {
       <ChatInput
         setMessages={setMessages}
         submitUserMessage={submitUserMessage}
+        chatRef={chatRef}
       />
-    </ScrollArea>
+    </div>
   );
 }
