@@ -1,4 +1,4 @@
-import { ReactNode, useRef, useState } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 
 import { UserMessage } from "@/components/stocks/message";
 import { CommandDialog } from "@/components/chat/command-dialog";
@@ -88,14 +88,9 @@ type ChatInputProps = {
     id: number;
     display: JSX.Element;
   }>;
-  chatRef: React.RefObject<HTMLDivElement>;
 };
 
-export function ChatInput({
-  setMessages,
-  submitUserMessage,
-  chatRef,
-}: ChatInputProps) {
+export function ChatInput({ setMessages, submitUserMessage }: ChatInputProps) {
   const [inputValue, setInputValue] = useState("");
   const [commandsOpen, setCommandsOpen] = useState(false);
   const [selectedCommand, setSelectedCommand] = useState<string>(
@@ -163,12 +158,19 @@ export function ChatInput({
     }
   }
 
+  useEffect(() => {
+    if (!inputRef.current) return;
+    inputRef.current.addEventListener("blur", () => {
+      window.scrollTo(0, 0);
+    });
+  }, []);
+
   return (
     <div
-      className="fixed w-full max-w-2xl z-50 bottom-12 xl:bottom-0 peer-[[data-state=open]]:group-[]:lg:pl-[250px] peer-[[data-state=open]]:group-[]:xl:pl-[300px]"
+      className="absolute w-full max-w-2xl z-50 bottom-8 xl:bottom-0 peer-[[data-state=open]]:group-[]:lg:pl-[250px] peer-[[data-state=open]]:group-[]:xl:pl-[300px]"
       style={{
         left: "50%",
-        transform: "translateX(calc(-50% + 2rem))",
+        transform: "translateX(-50%)",
       }}
     >
       <div className="sm:px-4">
@@ -191,7 +193,7 @@ export function ChatInput({
               // Blur focus on mobile
               if (isMobile()) {
                 e.target["message"]?.blur();
-                chatRef.current?.focus();
+                window.scrollTo(0, 0);
               }
 
               const query = inputValue.trim();

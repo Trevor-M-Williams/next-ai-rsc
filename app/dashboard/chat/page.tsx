@@ -1,5 +1,4 @@
 "use client";
-import { useEffect, useRef } from "react";
 
 import { useUIState, useActions } from "ai/rsc";
 import { UserMessage } from "@/components/stocks/message";
@@ -9,40 +8,13 @@ import { ChatScrollAnchor } from "@/lib/hooks/chat-scroll-anchor";
 import { ChatList } from "@/components/chat/chat-list";
 import { EmptyScreen } from "@/components/chat/empty-screen";
 import { ChatInput } from "@/components/chat/chat-input";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 export default function ChatPage() {
   const [messages, setMessages] = useUIState<typeof AI>();
   const { submitUserMessage } = useActions<typeof AI>();
-  const chatRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLTextAreaElement>(null);
-
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "/") {
-        if (
-          e.target &&
-          ["INPUT", "TEXTAREA"].includes((e.target as any).nodeName)
-        ) {
-          return;
-        }
-        e.preventDefault();
-        e.stopPropagation();
-        if (inputRef?.current) {
-          inputRef.current.focus();
-        }
-      }
-    };
-
-    document.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [inputRef]);
 
   return (
-    <div ref={chatRef} className=" h-full overflow-auto">
+    <div className=" h-full overflow-auto">
       <div className="pb-[200px] pt-4 md:pt-10">
         {messages.length ? (
           <>
@@ -72,7 +44,6 @@ export default function ChatPage() {
       <ChatInput
         setMessages={setMessages}
         submitUserMessage={submitUserMessage}
-        chatRef={chatRef}
       />
     </div>
   );
