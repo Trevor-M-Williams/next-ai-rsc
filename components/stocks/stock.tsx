@@ -8,12 +8,15 @@ function ChartButtons({
   chartData,
   setChartData,
   setPercentChange,
+  timeframe,
+  setTimeframe,
 }: {
   chartData: StockChartData[];
   setChartData: (data: StockChartData[]) => void;
   setPercentChange: (percentChange: number) => void;
+  timeframe: string;
+  setTimeframe: (timeframe: string) => void;
 }) {
-  const [timeframe, setTimeframe] = useState("3M");
   const timeframes = ["1M", "3M", "6M", "1Y", "5Y"];
 
   useEffect(() => {
@@ -97,6 +100,7 @@ export function Stock({
 
   const [percentChange, setPercentChange] = useState(0);
   const [chartData, setChartData] = useState(data);
+  const [timeframe, setTimeframe] = useState("3M");
 
   useEffect(() => {
     const currentDate = moment();
@@ -104,7 +108,14 @@ export function Stock({
     const newChartData = data.filter((item) =>
       moment(item.date).isSameOrAfter(startDate)
     );
+    const startPrice = newChartData[0].price;
+    const endPrice = newChartData[newChartData.length - 1].price;
+    const delta = endPrice - startPrice;
+    const newPercentChange = (delta / startPrice) * 100;
+
     setChartData(newChartData);
+    setTimeframe("3M");
+    setPercentChange(newPercentChange);
   }, [data]);
 
   return (
@@ -136,6 +147,8 @@ export function Stock({
             chartData={data}
             setChartData={setChartData}
             setPercentChange={setPercentChange}
+            timeframe={timeframe}
+            setTimeframe={setTimeframe}
           />
         </div>
       </div>

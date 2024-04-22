@@ -10,6 +10,7 @@ import { BarChart } from "@/components/overview/bar-chart";
 import { Articles } from "@/components/overview/articles";
 import { Metric } from "@/components/overview/metric";
 import { DashboardCard } from "@/components/dashboard-card";
+import { Articles2 } from "@/components/overview/articles2";
 
 export default async function HomePage() {
   const organization = await getOrganization();
@@ -18,11 +19,11 @@ export default async function HomePage() {
   const symbol = organization.symbol;
   const orgId = organization.id;
 
-  const ticker = symbol === "GEN" ? "WMT" : "INTC";
+  const ticker = symbol === "GEN" ? "KMB" : "INTC";
   const name = symbol === "GEN" ? "GenGoods Inc." : "ABC Technologies";
   const metrics = [
     [3, 12, 7],
-    [4, 9, 6],
+    [5, 2, 9],
   ];
 
   const data = await getHistoricalData(ticker);
@@ -59,10 +60,10 @@ export default async function HomePage() {
         />
       </DashboardCard>
       <DashboardCard colSpan={1} rowSpan={2}>
-        <Articles />
+        {orgId === 1 ? <Articles /> : <Articles2 />}
       </DashboardCard>
       <DashboardCard colSpan={6} rowSpan={1}>
-        <Stock symbol={symbol} name={name} data={data} color="#00aaff" />
+        <Stock symbol={symbol} name={name} data={data} />
       </DashboardCard>
       <DashboardCard colSpan={6} rowSpan={1}>
         <BarChart data={incomeStatements} />
