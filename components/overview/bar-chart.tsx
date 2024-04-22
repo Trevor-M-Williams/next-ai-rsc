@@ -24,7 +24,6 @@ export function BarChart({ data }: { data: IncomeStatement[] }) {
         .reverse(),
       label: "Gross Income",
     },
-    //operating income
     {
       data: data
         .map((item) => ({
@@ -34,18 +33,9 @@ export function BarChart({ data }: { data: IncomeStatement[] }) {
         .reverse(),
       label: "Operating Income",
     },
-    // {
-    //   data: data
-    //     .map((item) => ({
-    //       date: item.date,
-    //       value: item.netIncome,
-    //     }))
-    //     .reverse(),
-    //   label: "Net Income",
-    // },
   ];
 
-  const colors = ["#00ccff", "#0099ff", "#0033ff"];
+  const colors = ["#0066ff", "#ff2222", "#00cc66"];
 
   const chartData = {
     labels: datasets[0]?.data.map((item) => item.date.slice(0, 4)) || [],
