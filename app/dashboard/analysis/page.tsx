@@ -5,7 +5,7 @@ import { NewCompanyDialog } from "@/components/new-company-dialog";
 export const dynamic = "force-dynamic";
 
 export default async function AnalysisPage() {
-  const companies = await getCompanies(1);
+  const companies = await getCompanies();
 
   return (
     <div className="h-full w-full p-4 bg-background">
@@ -14,18 +14,19 @@ export default async function AnalysisPage() {
           <NewCompanyDialog />
         </div>
         <div className="flex flex-col divide-y">
-          {companies
-            .sort((a, b) => a.name.localeCompare(b.name))
-            .map(({ name, symbol }) => (
-              <Link
-                key={symbol}
-                href={`/dashboard/analysis/${symbol.replaceAll(" ", "-")}`}
-                className="relative flex items-center justify-between p-4 cursor-pointer hover:bg-muted"
-              >
-                <div className="text-xl font-semibold">{name}</div>
-                <div className="text-lg">{symbol}</div>
-              </Link>
-            ))}
+          {companies &&
+            companies
+              .sort((a, b) => a.name.localeCompare(b.name))
+              .map(({ name, symbol }) => (
+                <Link
+                  key={symbol}
+                  href={`/dashboard/analysis/${symbol.replaceAll(" ", "-")}`}
+                  className="relative flex items-center justify-between p-4 cursor-pointer hover:bg-muted"
+                >
+                  <div className="text-xl font-semibold">{name}</div>
+                  <div className="text-lg">{symbol}</div>
+                </Link>
+              ))}
         </div>
       </div>
     </div>
