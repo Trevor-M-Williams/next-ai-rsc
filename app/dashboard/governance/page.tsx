@@ -17,7 +17,7 @@ import {
   strategyMarkdown,
   sustainabilityMarkdown,
   technologyMarkdown,
-} from "@/markdown";
+} from "@/data/markdown";
 
 export default function GovernancePage() {
   const [activeLink, setActiveLink] = useState("Audit");
