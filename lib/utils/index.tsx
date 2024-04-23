@@ -154,9 +154,9 @@ export const sleep = (ms: number) =>
 
 export function formatNumberInMillions(value: number) {
   if (value === 0) return "0";
-  if (Math.abs(value) < 1000000) return value.toFixed(2);
+  if (Math.abs(value) < 1_000_000) return value.toFixed(2);
   if (!value) return "N/A";
-  const number = Math.round(value / 1000000);
+  const number = Math.round(value / 1_000_000);
   const formattedNumber = new Intl.NumberFormat("en-US").format(number);
   return formattedNumber;
 }

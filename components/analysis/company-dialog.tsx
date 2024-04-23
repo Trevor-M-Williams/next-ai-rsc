@@ -13,7 +13,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { addCompany } from "@/actions";
 
-export function NewCompanyDialog() {
+export function CompanyDialog() {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);

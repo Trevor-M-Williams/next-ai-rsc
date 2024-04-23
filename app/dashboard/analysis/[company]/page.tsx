@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 
-import { FinancialStatement } from "@/types";
+import { FinancialStatementType } from "@/types";
 
 import {
   getCompanyData,
@@ -116,7 +116,7 @@ function IndustryAnalysis({
       <DashboardCard colSpan={1} rowSpan={1}>
         <FinancialChart
           datasets={datasets}
-          field={"revenue" as keyof FinancialStatement}
+          field={"revenue" as keyof FinancialStatementType}
         />
       </DashboardCard>
       <DashboardCard colSpan={1} rowSpan={1}>
@@ -197,8 +197,6 @@ export default function CompanyPage() {
           <div className="p-4 flex-grow">
             {financialData && (
               <FullFinancialStatement
-                symbol={symbol}
-                name={name}
                 balanceSheets={financialData.balanceSheets}
                 cashFlowStatements={financialData.cashFlowStatements}
                 incomeStatements={financialData.incomeStatements}

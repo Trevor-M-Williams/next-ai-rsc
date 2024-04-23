@@ -1,7 +1,12 @@
 "use client";
 import { useState } from "react";
 
-import { BalanceSheet, CashFlowStatement, IncomeStatement } from "@/types";
+import {
+  BalanceSheetType,
+  CashFlowStatementType,
+  FinancialStatementType,
+  IncomeStatementType,
+} from "@/types";
 
 import {
   Select,
@@ -26,7 +31,7 @@ type DataTableProps = {
   data: {
     title: string;
     value: string;
-    change: number;
+    change: number | null;
   }[];
 };
 
@@ -49,10 +54,18 @@ function DataTable({ data }: DataTableProps) {
               <TableCell
                 className={cn(
                   "text-right",
-                  item.change > 0 ? "text-green-600" : "text-red-700"
+                  item.change && item.change > 0
+                    ? "text-green-600"
+                    : "text-red-700"
                 )}
               >
-                {item.change > 0 ? "↑" : "↓"} {item.change}%
+                {item.change ? (
+                  <>
+                    {item.change > 0 ? "↑" : "↓"} {item.change}%
+                  </>
+                ) : (
+                  "-"
+                )}
               </TableCell>
             </TableRow>
           ))}
@@ -62,164 +75,35 @@ function DataTable({ data }: DataTableProps) {
   );
 }
 
-function BalanceSheetTab({
-  balanceSheets,
-  year,
-}: {
-  balanceSheets: BalanceSheet[];
+type TabProps = {
+  statements: FinancialStatementType[];
   year: string;
-}) {
-  if (!balanceSheets.length) return null;
+  fields: { title: string; key: string }[];
+};
 
-  const data = balanceSheets.find((item) => item.date.includes(year));
+function FinancialStatementTab({ statements, year, fields }: TabProps) {
+  if (!statements.length) return null;
+
+  const data = statements.find((item) => item.date.includes(year));
   if (!data) return null;
 
-  const tableData = [
-    {
-      title: "Cash & short term investments",
-      value: formatNumberInMillions(data.cashAndShortTermInvestments),
-      change: calculateChange(
-        balanceSheets,
-        year,
-        "cashAndShortTermInvestments"
-      ),
-    },
-    {
-      title: "Total assets",
-      value: formatNumberInMillions(data.totalAssets),
-      change: calculateChange(balanceSheets, year, "totalAssets"),
-    },
-    {
-      title: "Total liabilities",
-      value: formatNumberInMillions(data.totalLiabilities),
-      change: calculateChange(balanceSheets, year, "totalLiabilities"),
-    },
-    {
-      title: "Total equity",
-      value: formatNumberInMillions(data.totalEquity),
-      change: calculateChange(balanceSheets, year, "totalEquity"),
-    },
-    {
-      title: "Total current assets",
-      value: formatNumberInMillions(data.totalCurrentAssets),
-      change: calculateChange(balanceSheets, year, "totalCurrentAssets"),
-    },
-    {
-      title: "Total current liabilities",
-      value: formatNumberInMillions(data.totalCurrentLiabilities),
-      change: calculateChange(balanceSheets, year, "totalCurrentLiabilities"),
-    },
-  ];
+  const tableData = fields.map((field) => {
+    const rawValue = data[field.key as keyof (typeof statements)[0]];
 
-  return <DataTable data={tableData} />;
-}
+    if (!rawValue) {
+      return {
+        title: field.title,
+        value: "-",
+        change: null,
+      };
+    }
 
-function CashFlowStatementTab({
-  cashFlowStatements,
-  year,
-}: {
-  cashFlowStatements: CashFlowStatement[];
-  year: string;
-}) {
-  if (!cashFlowStatements.length) return null;
-
-  const data = cashFlowStatements.find((item) => item.date.includes(year));
-  if (!data) return null;
-
-  const tableData = [
-    {
-      title: "Net income",
-      value: formatNumberInMillions(data.netIncome),
-      change: calculateChange(cashFlowStatements, year, "netIncome"),
-    },
-    {
-      title: "Cash from operations",
-      value: formatNumberInMillions(data.netCashProvidedByOperatingActivities),
-      change: calculateChange(
-        cashFlowStatements,
-        year,
-        "netCashProvidedByOperatingActivities"
-      ),
-    },
-    {
-      title: "Cash from investing",
-      value: formatNumberInMillions(data.netCashUsedForInvestingActivites),
-      change: calculateChange(
-        cashFlowStatements,
-        year,
-        "netCashUsedForInvestingActivites"
-      ),
-    },
-    {
-      title: "Cash from financing",
-      value: formatNumberInMillions(
-        data.netCashUsedProvidedByFinancingActivities
-      ),
-      change: calculateChange(
-        cashFlowStatements,
-        year,
-        "netCashUsedProvidedByFinancingActivities"
-      ),
-    },
-    {
-      title: "Net change in cash",
-      value: formatNumberInMillions(data.netChangeInCash),
-      change: calculateChange(cashFlowStatements, year, "netChangeInCash"),
-    },
-    {
-      title: "Free cash flow",
-      value: formatNumberInMillions(data.freeCashFlow),
-      change: calculateChange(cashFlowStatements, year, "freeCashFlow"),
-    },
-  ];
-
-  return <DataTable data={tableData} />;
-}
-
-function IncomeStatementTab({
-  incomeStatements,
-  year,
-}: {
-  incomeStatements: IncomeStatement[];
-  year: string;
-}) {
-  if (!incomeStatements.length) return null;
-
-  const data = incomeStatements.find((item) => item.date.includes(year));
-  if (!data) return null;
-
-  const tableData = [
-    {
-      title: "Revenue",
-      value: formatNumberInMillions(data.revenue),
-      change: calculateChange(incomeStatements, year, "revenue"),
-    },
-    {
-      title: "Cost of revenue",
-      value: formatNumberInMillions(data.costOfRevenue),
-      change: calculateChange(incomeStatements, year, "costOfRevenue"),
-    },
-    {
-      title: "EBITDA",
-      value: formatNumberInMillions(data.ebitda),
-      change: calculateChange(incomeStatements, year, "ebitda"),
-    },
-    {
-      title: "Net income",
-      value: formatNumberInMillions(data.netIncome),
-      change: calculateChange(incomeStatements, year, "netIncome"),
-    },
-    {
-      title: "Net profit margin",
-      value: formatNumberInMillions(data.netIncomeRatio),
-      change: calculateChange(incomeStatements, year, "netIncomeRatio"),
-    },
-    {
-      title: "Earnings per share",
-      value: formatNumberInMillions(data.eps),
-      change: calculateChange(incomeStatements, year, "eps"),
-    },
-  ];
+    return {
+      title: field.title,
+      value: formatNumberInMillions(parseFloat(rawValue)),
+      change: calculateChange(statements, year, field.key),
+    };
+  });
 
   return <DataTable data={tableData} />;
 }
@@ -227,9 +111,9 @@ function IncomeStatementTab({
 type FinancialStatementProps = {
   symbol: string;
   name: string;
-  balanceSheets: BalanceSheet[];
-  cashFlowStatements: CashFlowStatement[];
-  incomeStatements: IncomeStatement[];
+  balanceSheets: BalanceSheetType[];
+  cashFlowStatements: CashFlowStatementType[];
+  incomeStatements: IncomeStatementType[];
 };
 
 export function FinancialStatement({
@@ -257,7 +141,7 @@ export function FinancialStatement({
 
       <Tabs defaultValue="income-statement" className="relative">
         <div className="absolute right-2">
-          <Select defaultValue={years[0]} onValueChange={(val) => setYear(val)}>
+          <Select defaultValue={year} onValueChange={(val) => setYear(val)}>
             <SelectTrigger className="w-[100px] bg-background">
               <SelectValue placeholder="Year" />
             </SelectTrigger>
@@ -277,15 +161,24 @@ export function FinancialStatement({
           <TabsTrigger value="cash-flow">Cash Flow</TabsTrigger>
         </TabsList>
         <TabsContent value="income-statement">
-          <IncomeStatementTab incomeStatements={incomeStatements} year={year} />
+          <FinancialStatementTab
+            statements={incomeStatements}
+            year={year}
+            fields={incomeStatementFields}
+          />
         </TabsContent>
         <TabsContent value="balance-sheet">
-          <BalanceSheetTab balanceSheets={balanceSheets} year={year} />
+          <FinancialStatementTab
+            statements={balanceSheets}
+            year={year}
+            fields={balanceSheetFields}
+          />
         </TabsContent>
         <TabsContent value="cash-flow">
-          <CashFlowStatementTab
-            cashFlowStatements={cashFlowStatements}
+          <FinancialStatementTab
+            statements={cashFlowStatements}
             year={year}
+            fields={cashFlowFields}
           />
         </TabsContent>
       </Tabs>
@@ -307,3 +200,66 @@ function calculateChange(data: any, year: string, field: string) {
     100;
   return parseFloat(percentChange.toFixed(2)) || 0;
 }
+
+const incomeStatementFields = [
+  { title: "Revenue", key: "revenue" },
+  { title: "Cost of revenue", key: "costOfRevenue" },
+  { title: "EBITDA", key: "ebitda" },
+  { title: "Net Income", key: "netIncome" },
+  { title: "Net Profit Margin", key: "netIncomeRatio" },
+  { title: "Earnins Per Share", key: "eps" },
+];
+
+const balanceSheetFields = [
+  {
+    title: "Cash & short term investments",
+    key: "cashAndShortTermInvestments",
+  },
+  {
+    title: "Total assets",
+    key: "totalAssets",
+  },
+  {
+    title: "Total liabilities",
+    key: "totalLiabilities",
+  },
+  {
+    title: "Total equity",
+    key: "totalEquity",
+  },
+  {
+    title: "Total current assets",
+    key: "totalCurrentAssets",
+  },
+  {
+    title: "Total current liabilities",
+    key: "totalCurrentLiabilities",
+  },
+];
+
+const cashFlowFields = [
+  {
+    title: "Net income",
+    key: "netIncome",
+  },
+  {
+    title: "Cash from operations",
+    key: "netCashProvidedByOperatingActivities",
+  },
+  {
+    title: "Cash from investing",
+    key: "netCashUsedForInvestingActivites",
+  },
+  {
+    title: "Cash from financing",
+    key: "netCashUsedProvidedByFinancingActivities",
+  },
+  {
+    title: "Net change in cash",
+    key: "netChangeInCash",
+  },
+  {
+    title: "Free cash flow",
+    key: "freeCashFlow",
+  },
+];

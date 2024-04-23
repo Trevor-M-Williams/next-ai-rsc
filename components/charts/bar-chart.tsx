@@ -1,11 +1,11 @@
 "use client";
 import { Bar } from "react-chartjs-2";
 import "chart.js/auto";
-import { IncomeStatement } from "@/types";
+import { IncomeStatementType } from "@/types";
 
 import { formatNumberInMillions } from "@/lib/utils";
 
-export function BarChart({ data }: { data: IncomeStatement[] }) {
+export function BarChart({ data }: { data: IncomeStatementType[] }) {
   const datasets = [
     {
       data: data

@@ -1,9 +1,9 @@
 import {
   CompanyData,
   IndustryData,
-  BalanceSheet,
-  CashFlowStatement,
-  IncomeStatement,
+  BalanceSheetType,
+  CashFlowStatementType,
+  IncomeStatementType,
   StockChartData,
 } from "@/types";
 
@@ -32,11 +32,11 @@ export const companies = pgTable("companies", {
 export const financialStatements = pgTable("financial_statements", {
   id: serial("id").primaryKey(),
   name: text("name").notNull(),
-  balanceSheets: jsonb("balance_sheets").$type<BalanceSheet[]>(),
+  balanceSheets: jsonb("balance_sheets").$type<BalanceSheetType[]>(),
   cashFlowStatements: jsonb("cash_flow_statements").$type<
-    CashFlowStatement[]
+    CashFlowStatementType[]
   >(),
-  incomeStatements: jsonb("income_statements").$type<IncomeStatement[]>(),
+  incomeStatements: jsonb("income_statements").$type<IncomeStatementType[]>(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
 

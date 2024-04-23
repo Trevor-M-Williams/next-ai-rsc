@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 
 import { getFinancialData } from "@/actions";
 
-import { FinancialStatement } from "@/types";
+import { FinancialStatementType } from "@/types";
 
 import { FinancialChart } from "@/components/charts/financial-chart";
 import {
@@ -150,7 +150,7 @@ export function DynamicFinancialChart({
       <div className="flex-grow">
         <FinancialChart
           datasets={datasets}
-          field={selectedField as keyof FinancialStatement}
+          field={selectedField as keyof FinancialStatementType}
         />
       </div>
     </div>

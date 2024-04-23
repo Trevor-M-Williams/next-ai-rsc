@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { getCompanies } from "@/actions";
-import { NewCompanyDialog } from "@/components/new-company-dialog";
+import { CompanyDialog } from "@/components/analysis/company-dialog";
 
 export const dynamic = "force-dynamic";
 
@@ -11,7 +11,7 @@ export default async function AnalysisPage() {
     <div className="h-full w-full p-4 bg-background">
       <div className="max-w-3xl mx-auto">
         <div className="flex justify-end mb-4">
-          <NewCompanyDialog />
+          <CompanyDialog />
         </div>
         <div className="flex flex-col divide-y">
           {companies &&

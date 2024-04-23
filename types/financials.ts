@@ -1,19 +1,19 @@
-export type FinancialStatement =
-  | IncomeStatement
-  | CashFlowStatement
-  | BalanceSheet;
+export type FinancialStatementType =
+  | IncomeStatementType
+  | CashFlowStatementType
+  | BalanceSheetType;
 
-export type ChartDataset<T extends FinancialStatement> = {
+export type ChartDataset<T extends FinancialStatementType> = {
   data: T[];
   ticker: string;
 };
 
-export type ChartProps<T extends FinancialStatement> = {
+export type ChartProps<T extends FinancialStatementType> = {
   datasets: ChartDataset<T>[];
   field: keyof T;
 };
 
-export type BalanceSheet = {
+export type BalanceSheetType = {
   date: string;
   symbol: string;
   reportedCurrency: string;
@@ -70,7 +70,7 @@ export type BalanceSheet = {
   finalLink: string;
 };
 
-export type CashFlowStatement = {
+export type CashFlowStatementType = {
   date: string;
   symbol: string;
   reportedCurrency: string;
@@ -113,7 +113,7 @@ export type CashFlowStatement = {
   finalLink: string;
 };
 
-export type IncomeStatement = {
+export type IncomeStatementType = {
   date: string;
   symbol: string;
   reportedCurrency: string;
