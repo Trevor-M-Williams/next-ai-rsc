@@ -50,7 +50,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`fixed inset-0 overflow-hidden font-sans antialiased ${GeistSans.variable} ${GeistMono.variable}`}
+        className={`fixed h-screen w-full overflow-hidden font-sans antialiased ${GeistSans.variable} ${GeistMono.variable}`}
       >
         <Toaster />
         <AI>
