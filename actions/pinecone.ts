@@ -3,6 +3,8 @@
 import OpenAI from "openai";
 import { Pinecone } from "@pinecone-database/pinecone";
 
+import { PineconeMatch } from "@/types";
+
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY as string,
 });

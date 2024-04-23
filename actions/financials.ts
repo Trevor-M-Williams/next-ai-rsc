@@ -1,6 +1,7 @@
 "use server";
 
 import { eq } from "drizzle-orm";
+import { StockAPIData } from "@/types";
 import { db } from "@/db";
 import { financialStatements, stocks } from "@/db/schema";
 

@@ -12,10 +12,13 @@ import { spinner } from "@/components/spinner";
 import { runOpenAICompletion } from "@/lib/utils";
 import { z } from "zod";
 
-import { getCompanyName } from "@/actions/companies";
-import { getHistoricalData, getFinancialData } from "@/actions/financials";
-import { getPineconeContext } from "@/actions/pinecone";
-import { getSearchResults } from "@/actions/cohere";
+import {
+  getCompanyName,
+  getHistoricalData,
+  getFinancialData,
+  getPineconeContext,
+  getSearchResults,
+} from "@/actions";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY || "",

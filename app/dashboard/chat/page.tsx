@@ -3,7 +3,7 @@
 import { useUIState, useActions } from "ai/rsc";
 import { UserMessage } from "@/components/stocks/message";
 
-import { type AI } from "../../../actions/chat";
+import { type AI } from "@/actions/chat";
 import { ChatScrollAnchor } from "@/lib/hooks/chat-scroll-anchor";
 import { ChatList } from "@/components/chat/chat-list";
 import { EmptyScreen } from "@/components/chat/empty-screen";

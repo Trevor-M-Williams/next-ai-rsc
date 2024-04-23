@@ -1,10 +1,11 @@
 "use client";
 import { useEffect, useState } from "react";
 
-import { getFinancialData } from "@/actions/financials";
+import { getFinancialData } from "@/actions";
+
+import { FinancialStatement } from "@/types";
 
 import { FinancialChart } from "@/components/charts/financial-chart";
-
 import {
   Command,
   CommandEmpty,

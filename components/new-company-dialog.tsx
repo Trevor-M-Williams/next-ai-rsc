@@ -11,7 +11,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "./ui/input";
-import { addCompany } from "@/actions/companies";
+import { addCompany } from "@/actions";
 
 export function NewCompanyDialog() {
   const router = useRouter();

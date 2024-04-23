@@ -3,7 +3,7 @@
 import { db } from "@/db";
 import { companies } from "@/db/schema";
 import { eq } from "drizzle-orm";
-import { getFinancialData } from "@/actions/financials";
+import { getFinancialData } from "@/actions";
 
 import OpenAI from "openai";
 

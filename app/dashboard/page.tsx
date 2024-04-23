@@ -1,5 +1,8 @@
-import { getFinancialData, getHistoricalData } from "@/actions/financials";
-import { getOrganization } from "@/actions/auth";
+import {
+  getFinancialData,
+  getHistoricalData,
+  getOrganization,
+} from "@/actions";
 
 import { Stock } from "@/components/stocks";
 import { Calendar } from "@/components/ui/calendar";

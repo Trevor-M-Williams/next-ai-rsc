@@ -2,9 +2,14 @@
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 
-import { getCompanyData } from "@/actions/companies";
-import { getHistoricalData, getFinancialData } from "@/actions/financials";
-import { getCompetitorData } from "@/actions/competitors";
+import { FinancialStatement } from "@/types";
+
+import {
+  getCompanyData,
+  getHistoricalData,
+  getFinancialData,
+  getCompetitorData,
+} from "@/actions";
 
 import { Stock } from "@/components/stocks";
 import { FullFinancialStatement } from "@/components/financials/full-financial-statement";
