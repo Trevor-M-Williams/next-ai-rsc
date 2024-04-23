@@ -5,7 +5,7 @@ import "chart.js/auto";
 
 import { formatFieldName, formatNumberInMillions } from "@/lib/utils";
 
-export function Chart<T extends FinancialStatement>({
+export function FinancialChart<T extends FinancialStatement>({
   datasets,
   field,
 }: ChartProps<T>) {

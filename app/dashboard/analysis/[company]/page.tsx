@@ -11,8 +11,8 @@ import { getCompetitorData } from "@/actions/competitors";
 
 import { Stock } from "@/components/stocks";
 import { FullFinancialStatement } from "@/components/financials/full-financial-statement";
-import { BarChart } from "@/components/overview/bar-chart";
-import { Chart } from "@/components/chart";
+import { BarChart } from "@/components/charts/bar-chart";
+import { FinancialChart } from "@/components/charts/financial-chart";
 import { DashboardCard } from "@/components/dashboard-card";
 import { MarkdownProse } from "@/components/chat/markdown";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -112,7 +112,7 @@ function IndustryAnalysis({
         </ScrollArea>
       </DashboardCard>
       <DashboardCard colSpan={1} rowSpan={1}>
-        <Chart
+        <FinancialChart
           datasets={datasets}
           field={"revenue" as keyof FinancialStatement}
         />

@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 
 import { getFinancialData } from "@/actions/db";
 
-import { Chart } from "@/components/chart";
+import { FinancialChart } from "@/components/charts/financial-chart";
 
 import {
   Command,
@@ -16,7 +16,7 @@ import {
 
 import CheckIcon from "@mui/icons-material/Check";
 
-export function DynamicChart({
+export function DynamicFinancialChart({
   symbols,
   field,
 }: {
@@ -147,7 +147,7 @@ export function DynamicChart({
         </Command>
       </div>
       <div className="flex-grow">
-        <Chart
+        <FinancialChart
           datasets={datasets}
           field={selectedField as keyof FinancialStatement}
         />

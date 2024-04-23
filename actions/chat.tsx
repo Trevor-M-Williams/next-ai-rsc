@@ -5,7 +5,7 @@ import OpenAI from "openai";
 
 import { BotCard, BotMessage, Stock, StockSkeleton } from "@/components/stocks";
 import { FinancialStatement, FinancialSkeleton } from "@/components/financials";
-import { DynamicChart } from "@/components/dynamic-chart";
+import { DynamicFinancialChart } from "@/components/charts/dynamic-financial-chart";
 import { MarkdownProse } from "@/components/chat/markdown";
 import { spinner } from "@/components/spinner";
 
@@ -152,7 +152,7 @@ async function handleCommand(
           </div>
 
           <div className="h-96">
-            <DynamicChart symbols={symbols} field={"revenue"} />
+            <DynamicFinancialChart symbols={symbols} field={"revenue"} />
           </div>
         </BotCard>
       );
@@ -177,7 +177,7 @@ async function handleCommand(
       reply.done(
         <BotCard>
           <div className="h-96">
-            <DynamicChart symbols={symbols} field={"revenue"} />
+            <DynamicFinancialChart symbols={symbols} field={"revenue"} />
           </div>
         </BotCard>
       );

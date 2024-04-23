@@ -6,7 +6,7 @@ import {
 
 import { Stock } from "@/components/stocks";
 import { Calendar } from "@/components/ui/calendar";
-import { BarChart } from "@/components/overview/bar-chart";
+import { BarChart } from "@/components/charts/bar-chart";
 import { Articles } from "@/components/overview/articles";
 import { Metric } from "@/components/overview/metric";
 import { DashboardCard } from "@/components/dashboard-card";
