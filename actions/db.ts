@@ -14,25 +14,14 @@ import {
   symbols,
 } from "@/db/schema";
 
-import { generateCompanyAnalysis, generateIndustryAnalysis } from "./insights";
+import { generateCompanyAnalysis, generateIndustryAnalysis } from "./analysis";
 import {
   fetchBalanceSheets,
   fetchCashFlowStatements,
   fetchHistoricalData,
   fetchIncomeStatements,
-} from "./fetch";
+} from "./financials";
 import { getCompetitors } from "./competitors";
-
-export async function getOrganization() {
-  const { orgId } = auth();
-  if (!orgId) return null;
-
-  const org = await db.query.organizations.findFirst({
-    where: eq(organizations.name, orgId),
-  });
-
-  return org || null;
-}
 
 export async function addCompany(symbol: string) {
   try {
@@ -67,6 +56,23 @@ export async function addCompany(symbol: string) {
     revalidatePath("/dashboard/analysis");
   } catch (error) {
     console.error(error);
+  }
+}
+
+export async function getCompanies() {
+  try {
+    const organization = await getOrganization();
+    const organizationId = organization?.id;
+
+    if (!organizationId) return;
+
+    const data = await db.query.companies.findMany({
+      where: eq(companies.organizationId, organizationId),
+    });
+    return data;
+  } catch (error) {
+    console.error(error);
+    return [];
   }
 }
 
@@ -119,20 +125,34 @@ export async function getCompanyName(symbol: string) {
   }
 }
 
-export async function getCompanies() {
+export async function getFinancialData(symbol: string) {
   try {
-    const organization = await getOrganization();
-    const organizationId = organization?.id;
-
-    if (!organizationId) return;
-
-    const data = await db.query.companies.findMany({
-      where: eq(companies.organizationId, organizationId),
+    const financialData = await db.query.financialStatements.findFirst({
+      where: eq(financialStatements.name, symbol.toUpperCase()),
     });
-    return data;
+
+    if (financialData) return financialData;
+
+    const [balanceSheets, cashFlowStatements, incomeStatements] =
+      await Promise.all([
+        fetchBalanceSheets(symbol),
+        fetchCashFlowStatements(symbol),
+        fetchIncomeStatements(symbol),
+      ]);
+
+    const data = {
+      name: symbol.toUpperCase(),
+      balanceSheets,
+      cashFlowStatements,
+      incomeStatements,
+    };
+
+    await db.insert(financialStatements).values(data);
+
+    return { balanceSheets, cashFlowStatements, incomeStatements };
   } catch (error) {
     console.error(error);
-    return [];
+    return { balanceSheets: [], cashFlowStatements: [], incomeStatements: [] };
   }
 }
 
@@ -184,33 +204,13 @@ export async function getHistoricalData(symbol: string) {
   }
 }
 
-export async function getFinancialData(symbol: string) {
-  try {
-    const financialData = await db.query.financialStatements.findFirst({
-      where: eq(financialStatements.name, symbol.toUpperCase()),
-    });
+export async function getOrganization() {
+  const { orgId } = auth();
+  if (!orgId) return null;
 
-    if (financialData) return financialData;
+  const org = await db.query.organizations.findFirst({
+    where: eq(organizations.name, orgId),
+  });
 
-    const [balanceSheets, cashFlowStatements, incomeStatements] =
-      await Promise.all([
-        fetchBalanceSheets(symbol),
-        fetchCashFlowStatements(symbol),
-        fetchIncomeStatements(symbol),
-      ]);
-
-    const data = {
-      name: symbol.toUpperCase(),
-      balanceSheets,
-      cashFlowStatements,
-      incomeStatements,
-    };
-
-    await db.insert(financialStatements).values(data);
-
-    return { balanceSheets, cashFlowStatements, incomeStatements };
-  } catch (error) {
-    console.error(error);
-    return { balanceSheets: [], cashFlowStatements: [], incomeStatements: [] };
-  }
+  return org || null;
 }
