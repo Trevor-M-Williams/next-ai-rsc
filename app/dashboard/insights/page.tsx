@@ -1,6 +1,6 @@
 import GenInsights from "@/components/insights/gen-insights";
 import ABCInsights from "@/components/insights/abc-insights";
-import { getOrganization } from "@/actions/db";
+import { getOrganization } from "@/actions/auth";
 
 export default async function InsightsPage() {
   const organization = await getOrganization();

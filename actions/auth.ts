@@ -1,3 +1,5 @@
+"use server";
+
 import { auth } from "@clerk/nextjs";
 
 import { eq } from "drizzle-orm";
