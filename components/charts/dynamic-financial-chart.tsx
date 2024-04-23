@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 
-import { getFinancialData } from "@/actions/db";
+import { getFinancialData } from "@/actions/financials";
 
 import { FinancialChart } from "@/components/charts/financial-chart";
 

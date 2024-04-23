@@ -83,7 +83,7 @@ export async function getHistoricalData(symbol: string) {
   }
 }
 
-export async function fetchHistoricalData(symbol: string) {
+async function fetchHistoricalData(symbol: string) {
   try {
     const url = `https://financialmodelingprep.com/api/v3/historical-price-full/${symbol}?apikey=${process.env.STOCK_API_KEY}`;
     const response = await fetch(url, { cache: "no-store" });
@@ -113,21 +113,21 @@ export async function fetchHistoricalData(symbol: string) {
   }
 }
 
-export async function fetchBalanceSheets(symbol: string) {
+async function fetchBalanceSheets(symbol: string) {
   const url = `https://financialmodelingprep.com/api/v3/balance-sheet-statement/${symbol}?period=annual&apikey=${process.env.STOCK_API_KEY}`;
   const response = await fetch(url);
   const data = await response.json();
   return data;
 }
 
-export async function fetchCashFlowStatements(symbol: string) {
+async function fetchCashFlowStatements(symbol: string) {
   const url = `https://financialmodelingprep.com/api/v3/cash-flow-statement/${symbol}?period=annual&apikey=${process.env.STOCK_API_KEY}`;
   const response = await fetch(url);
   const data = await response.json();
   return data;
 }
 
-export async function fetchIncomeStatements(symbol: string) {
+async function fetchIncomeStatements(symbol: string) {
   const url = `https://financialmodelingprep.com/api/v3/income-statement/${symbol}?period=annual&apikey=${process.env.STOCK_API_KEY}`;
   const response = await fetch(url);
   const data = await response.json();

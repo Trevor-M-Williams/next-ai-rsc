@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getCompanies } from "@/actions/db";
+import { getCompanies } from "@/actions/companies";
 import { NewCompanyDialog } from "@/components/new-company-dialog";
 
 export const dynamic = "force-dynamic";
