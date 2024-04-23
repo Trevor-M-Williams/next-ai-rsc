@@ -167,10 +167,10 @@ export function ChatInput({ setMessages, submitUserMessage }: ChatInputProps) {
 
   return (
     <div
-      className="absolute w-full max-w-2xl z-50 bottom-8 xl:bottom-0 peer-[[data-state=open]]:group-[]:lg:pl-[250px] peer-[[data-state=open]]:group-[]:xl:pl-[300px]"
+      className="fixed w-full max-w-2xl z-50 bottom-8 xl:bottom-0 peer-[[data-state=open]]:group-[]:lg:pl-[250px] peer-[[data-state=open]]:group-[]:xl:pl-[300px]"
       style={{
         left: "50%",
-        transform: "translateX(-50%)",
+        transform: "translateX(calc(-50% + 2rem))",
       }}
     >
       <div className="sm:px-4">
