@@ -1,6 +1,5 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
-import { GovernanceSidebar } from "@/components/governance-sidebar";
 import { MarkdownProse } from "@/components/chat/markdown";
 
 import {
@@ -18,11 +17,27 @@ import {
   sustainabilityMarkdown,
   technologyMarkdown,
 } from "@/data/markdown";
+import { Subnav } from "@/components/subnav";
 
 export default function GovernancePage() {
   const [activeLink, setActiveLink] = useState("Audit");
   const [content, setContent] = useState("");
   const scrollRef = useRef<HTMLDivElement | null>(null);
+  const links = [
+    "Audit",
+    "Compensation",
+    "Cybersecurity",
+    "Economics",
+    "Finance",
+    "Innovation",
+    "Legal",
+    "Markets",
+    "Regulation",
+    "Risk",
+    "Strategy",
+    "Sustainability",
+    "Technology",
+  ];
 
   useEffect(() => {
     switch (activeLink) {
@@ -76,7 +91,8 @@ export default function GovernancePage() {
 
   return (
     <div className="flex h-full">
-      <GovernanceSidebar
+      <Subnav
+        links={links}
         activeLink={activeLink}
         setActiveLink={setActiveLink}
       />

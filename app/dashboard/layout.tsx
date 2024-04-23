@@ -1,4 +1,4 @@
-import Sidebar from "@/components/sidebar";
+import Nav from "@/components/nav";
 
 export default function DashboardLayout({
   children,
@@ -7,7 +7,7 @@ export default function DashboardLayout({
 }>) {
   return (
     <div className="flex w-full">
-      <Sidebar />
+      <Nav />
       <div className="flex-grow overflow-y-auto xl:overflow-hidden">
         {children}
       </div>

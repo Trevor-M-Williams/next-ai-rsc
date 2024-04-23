@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { FilesSidebar } from "@/components/files-sidebar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 import { boardFiles, governanceFiles, personalFiles } from "@/data/files";
+import { Subnav } from "@/components/subnav";
 
 export default function FilesPage() {
   const [activeLink, setActiveLink] = useState("Board");
@@ -24,7 +24,11 @@ export default function FilesPage() {
 
   return (
     <div className="flex h-full">
-      <FilesSidebar activeLink={activeLink} setActiveLink={setActiveLink} />
+      <Subnav
+        links={["Board", "Governance", "Personal"]}
+        activeLink={activeLink}
+        setActiveLink={setActiveLink}
+      />
       <div className="flex-grow p-8 bg-background border overflow-y-auto">
         <div className="max-w-5xl mx-auto">
           <ScrollArea>

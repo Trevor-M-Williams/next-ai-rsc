@@ -18,7 +18,7 @@ import SettingsIcon from "@mui/icons-material/SettingsOutlined";
 
 import { cn } from "@/lib/utils";
 
-export default function Sidebar() {
+export default function Nav() {
   const pathname = usePathname();
   const buttonClassName = "w-full justify-start text-md flex gap-4 h-10";
 

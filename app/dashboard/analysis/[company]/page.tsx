@@ -9,8 +9,6 @@ import {
 } from "@/actions/db";
 import { getCompetitorData } from "@/actions/competitors";
 
-import { AnalysisSidebar } from "@/components/analysis-sidebar";
-
 import { Stock } from "@/components/stocks";
 import { FullFinancialStatement } from "@/components/financials/full-financial-statement";
 import { BarChart } from "@/components/overview/bar-chart";
@@ -19,6 +17,7 @@ import { DashboardCard } from "@/components/dashboard-card";
 import { MarkdownProse } from "@/components/chat/markdown";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { IndustryFinancials } from "@/components/financials/industry-financials";
+import { Subnav } from "@/components/subnav";
 
 function CompanyAnalysis({
   companyData,
@@ -164,7 +163,11 @@ export default function CompanyPage() {
 
   return (
     <div className="flex h-full">
-      <AnalysisSidebar activeLink={activeLink} setActiveLink={setActiveLink} />
+      <Subnav
+        links={["Company", "Industry", "Financials"]}
+        activeLink={activeLink}
+        setActiveLink={setActiveLink}
+      />
       <div className="flex-grow flex flex-col">
         {activeLink === "Overview" && <div> Overview </div>}
 
