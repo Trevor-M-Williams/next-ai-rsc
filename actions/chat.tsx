@@ -12,11 +12,8 @@ import { spinner } from "@/components/spinner";
 import { runOpenAICompletion } from "@/lib/utils";
 import { z } from "zod";
 
-import {
-  getCompanyName,
-  getHistoricalData,
-  getFinancialData,
-} from "@/actions/db";
+import { getCompanyName } from "@/actions/companies";
+import { getHistoricalData, getFinancialData } from "@/actions/financials";
 import { getPineconeContext } from "@/actions/pinecone";
 import { getSearchResults } from "@/actions/cohere";
 
