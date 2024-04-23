@@ -1,6 +1,6 @@
 import { ReactNode, useEffect, useRef, useState } from "react";
 
-import { UserMessage } from "@/components/stocks/message";
+import { UserMessage } from "@/components/chat/message";
 import { CommandDialog } from "@/components/chat/command-dialog";
 import { ChatCommands } from "@/components/chat/chat-commands";
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { useUIState, useActions } from "ai/rsc";
-import { UserMessage } from "@/components/stocks/message";
+import { UserMessage } from "@/components/chat/message";
 
 import { type AI } from "@/actions/chat";
 import { ChatScrollAnchor } from "@/lib/hooks/chat-scroll-anchor";

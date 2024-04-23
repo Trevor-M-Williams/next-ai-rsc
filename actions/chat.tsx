@@ -3,7 +3,8 @@ import "server-only";
 import { createAI, createStreamableUI, getMutableAIState } from "ai/rsc";
 import OpenAI from "openai";
 
-import { BotCard, BotMessage, Stock, StockSkeleton } from "@/components/stocks";
+import { BotCard, BotMessage } from "@/components/chat/message";
+import { Stock, StockSkeleton } from "@/components/stocks";
 import { FinancialStatement, FinancialSkeleton } from "@/components/financials";
 import { DynamicFinancialChart } from "@/components/charts/dynamic-financial-chart";
 import { MarkdownProse } from "@/components/chat/markdown";
