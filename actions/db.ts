@@ -78,19 +78,18 @@ export async function getCompanyData(symbol: string) {
     if (!organizationId) return;
 
     const data = await db.query.companies.findFirst({
-      where:
-        eq(companies.symbol, symbol) &&
-        eq(companies.organizationId, organizationId),
+      where: eq(companies.symbol, symbol),
     });
 
-    if (data) return data;
-
-    return {
-      name: "",
-      symbol,
-      companyData: [],
-      industryData: [],
-    };
+    if (!data) {
+      return {
+        name: "",
+        symbol,
+        companyData: [],
+        industryData: [],
+      };
+    }
+    return data;
   } catch (error) {
     console.error(error);
     return {};
