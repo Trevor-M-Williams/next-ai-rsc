@@ -32,7 +32,7 @@ export async function addCompany(symbol: string) {
 
     const data = {
       name: name || symbol,
-      symbol,
+      symbol: symbol.toUpperCase(),
       companyData,
       industryData,
       competitors,

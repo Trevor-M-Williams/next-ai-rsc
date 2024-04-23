@@ -21,9 +21,11 @@ export function NewCompanyDialog() {
 
   const handleSubmit = async () => {
     setLoading(true);
-    await addCompany(companySymbol);
+    await addCompany(companySymbol.toUpperCase());
     setOpen(false);
-    router.push(`/dashboard/analysis/${companySymbol.replaceAll(" ", "-")}`);
+    router.push(
+      `/dashboard/analysis/${companySymbol.toUpperCase().replaceAll(" ", "-")}`
+    );
   };
 
   return (
