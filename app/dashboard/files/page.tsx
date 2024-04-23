@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ScrollArea } from "@/components/ui/scroll-area";
-
 import { boardFiles, governanceFiles, personalFiles } from "@/data/files";
+import { FileMetadata } from "@/types";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Subnav } from "@/components/subnav";
 
 export default function FilesPage() {

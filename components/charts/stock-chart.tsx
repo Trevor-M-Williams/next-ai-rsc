@@ -1,6 +1,8 @@
 import { Line } from "react-chartjs-2";
 import "chart.js/auto";
 
+import { StockChartData } from "@/types";
+
 type StockChartProps = {
   data: StockChartData[];
   ticker: string;

@@ -1,6 +1,7 @@
 "use client";
 import { Bar } from "react-chartjs-2";
 import "chart.js/auto";
+import { IncomeStatement } from "@/types";
 
 import { formatNumberInMillions } from "@/lib/utils";
 

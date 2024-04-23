@@ -1,3 +1,5 @@
+import { BalanceSheet, CashFlowStatement, IncomeStatement } from "@/types";
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Table,

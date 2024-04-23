@@ -1,4 +1,13 @@
 import {
+  CompanyData,
+  IndustryData,
+  BalanceSheet,
+  CashFlowStatement,
+  IncomeStatement,
+  StockChartData,
+} from "@/types";
+
+import {
   serial,
   text,
   timestamp,

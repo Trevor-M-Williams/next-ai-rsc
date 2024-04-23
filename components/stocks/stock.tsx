@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 
-import { StockChart } from "../charts/stock-chart";
+import { StockChartData } from "@/types";
+
+import { StockChart } from "@/components/charts/stock-chart";
 import moment from "moment-timezone";
 import { cn } from "@/lib/utils";
 

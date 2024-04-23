@@ -1,6 +1,8 @@
 "use client";
 import { useState } from "react";
 
+import { BalanceSheet, CashFlowStatement, IncomeStatement } from "@/types";
+
 import {
   Select,
   SelectContent,
@@ -60,7 +62,7 @@ function DataTable({ data }: DataTableProps) {
   );
 }
 
-function BalanceSheet({
+function BalanceSheetTab({
   balanceSheets,
   year,
 }: {
@@ -112,7 +114,7 @@ function BalanceSheet({
   return <DataTable data={tableData} />;
 }
 
-function CashFlowStatement({
+function CashFlowStatementTab({
   cashFlowStatements,
   year,
 }: {
@@ -174,7 +176,7 @@ function CashFlowStatement({
   return <DataTable data={tableData} />;
 }
 
-function IncomeStatement({
+function IncomeStatementTab({
   incomeStatements,
   year,
 }: {
@@ -275,13 +277,13 @@ export function FinancialStatement({
           <TabsTrigger value="cash-flow">Cash Flow</TabsTrigger>
         </TabsList>
         <TabsContent value="income-statement">
-          <IncomeStatement incomeStatements={incomeStatements} year={year} />
+          <IncomeStatementTab incomeStatements={incomeStatements} year={year} />
         </TabsContent>
         <TabsContent value="balance-sheet">
-          <BalanceSheet balanceSheets={balanceSheets} year={year} />
+          <BalanceSheetTab balanceSheets={balanceSheets} year={year} />
         </TabsContent>
         <TabsContent value="cash-flow">
-          <CashFlowStatement
+          <CashFlowStatementTab
             cashFlowStatements={cashFlowStatements}
             year={year}
           />

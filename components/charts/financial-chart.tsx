@@ -3,6 +3,8 @@
 import { Line } from "react-chartjs-2";
 import "chart.js/auto";
 
+import { FinancialStatement, ChartProps } from "@/types";
+
 import { formatFieldName, formatNumberInMillions } from "@/lib/utils";
 
 export function FinancialChart<T extends FinancialStatement>({
