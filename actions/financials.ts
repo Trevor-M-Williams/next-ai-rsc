@@ -8,7 +8,7 @@ import { financialStatements, stocks } from "@/db/schema";
 export async function getFinancialData(symbol: string) {
   try {
     const financialData = await db.query.financialStatements.findFirst({
-      where: eq(financialStatements.name, symbol.toUpperCase()),
+      where: eq(financialStatements.symbol, symbol.toUpperCase()),
     });
 
     if (financialData) return financialData;
@@ -21,7 +21,7 @@ export async function getFinancialData(symbol: string) {
       ]);
 
     const data = {
-      name: symbol.toUpperCase(),
+      symbol: symbol.toUpperCase(),
       balanceSheets,
       cashFlowStatements,
       incomeStatements,
@@ -39,14 +39,14 @@ export async function getFinancialData(symbol: string) {
 export async function getHistoricalData(symbol: string) {
   try {
     const stockData = await db.query.stocks.findFirst({
-      where: eq(stocks.name, symbol.toUpperCase()),
+      where: eq(stocks.symbol, symbol.toUpperCase()),
     });
 
     if (!stockData || !stockData.data) {
       const fetchedData = await fetchHistoricalData(symbol);
 
       const stockData = {
-        name: symbol.toUpperCase(),
+        symbol: symbol.toUpperCase(),
         data: fetchedData,
       };
       await db.insert(stocks).values(stockData);
@@ -63,7 +63,7 @@ export async function getHistoricalData(symbol: string) {
       await db
         .update(stocks)
         .set({ data: fetchedData, updatedAt: new Date() })
-        .where(eq(stocks.name, symbol.toUpperCase()));
+        .where(eq(stocks.symbol, symbol.toUpperCase()));
 
       return fetchedData;
     }

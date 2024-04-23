@@ -31,7 +31,7 @@ export const companies = pgTable("companies", {
 
 export const financialStatements = pgTable("financial_statements", {
   id: serial("id").primaryKey(),
-  name: text("name").notNull(),
+  symbol: text("symbol").notNull(),
   balanceSheets: jsonb("balance_sheets").$type<BalanceSheetType[]>(),
   cashFlowStatements: jsonb("cash_flow_statements").$type<
     CashFlowStatementType[]
@@ -49,7 +49,7 @@ export const organizations = pgTable("organizations", {
 
 export const stocks = pgTable("stocks", {
   id: serial("id").primaryKey(),
-  name: text("name").notNull(),
+  symbol: text("symbol").notNull(),
   data: jsonb("data").$type<StockChartData[]>(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
