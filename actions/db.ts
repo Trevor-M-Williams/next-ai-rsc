@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 
 import { auth } from "@clerk/nextjs";
 
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { db } from "@/db";
 import {
   companies,
@@ -77,11 +77,17 @@ export async function getCompanyData(symbol: string) {
 
     if (!organizationId) return;
 
-    const data = await db.query.companies.findFirst({
-      where: eq(companies.symbol, symbol),
-    });
+    const data = await db
+      .select()
+      .from(companies)
+      .where(
+        and(
+          eq(companies.symbol, symbol.toUpperCase()),
+          eq(companies.organizationId, organizationId)
+        )
+      );
 
-    if (!data) {
+    if (!data[0]) {
       return {
         name: "",
         symbol,
@@ -89,7 +95,7 @@ export async function getCompanyData(symbol: string) {
         industryData: [],
       };
     }
-    return data;
+    return data[0];
   } catch (error) {
     console.error(error);
     return {};

@@ -127,8 +127,6 @@ function IndustryAnalysis({
 
 export default function CompanyPage() {
   const { company: symbol } = useParams<{ company: string }>();
-  console.log(symbol);
-
   const [name, setName] = useState<string>("");
   const [companyData, setCompanyData] = useState<any>();
   const [industryData, setIndustryData] = useState<any>();
@@ -152,8 +150,6 @@ export default function CompanyPage() {
         stockData,
         { balanceSheets, cashFlowStatements, incomeStatements },
       ] = await Promise.all(promises);
-
-      console.log(symbol, data);
 
       setName(data.name || "");
       setCompanyData(data.companyData);
