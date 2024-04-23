@@ -1,25 +1,19 @@
-type StockChartData = {
-  date: string;
-  price: number;
+export type FinancialStatement =
+  | IncomeStatement
+  | CashFlowStatement
+  | BalanceSheet;
+
+export type ChartDataset<T extends FinancialStatement> = {
+  data: T[];
+  ticker: string;
 };
 
-type StockAPIData = {
-  date: string;
-  open: number;
-  high: number;
-  low: number;
-  close: number;
-  adjClose: number;
-  volume: number;
-  unadjustedVolume: number;
-  change: number;
-  changePercent: number;
-  vwap: number;
-  label: string;
-  changeOverTime: number;
+export type ChartProps<T extends FinancialStatement> = {
+  datasets: ChartDataset<T>[];
+  field: keyof T;
 };
 
-type BalanceSheet = {
+export type BalanceSheet = {
   date: string;
   symbol: string;
   reportedCurrency: string;
@@ -76,7 +70,7 @@ type BalanceSheet = {
   finalLink: string;
 };
 
-type CashFlowStatement = {
+export type CashFlowStatement = {
   date: string;
   symbol: string;
   reportedCurrency: string;
@@ -119,7 +113,7 @@ type CashFlowStatement = {
   finalLink: string;
 };
 
-type IncomeStatement = {
+export type IncomeStatement = {
   date: string;
   symbol: string;
   reportedCurrency: string;
@@ -158,50 +152,4 @@ type IncomeStatement = {
   weightedAverageShsOutDil: number;
   link: string;
   finalLink: string;
-};
-
-type FinancialStatement = IncomeStatement | CashFlowStatement | BalanceSheet;
-
-type ChartDataset<T extends FinancialStatement> = {
-  data: T[];
-  ticker: string;
-};
-
-type ChartProps<T extends FinancialStatement> = {
-  datasets: ChartDataset<T>[];
-  field: keyof T;
-};
-
-type CompanyData = string[];
-type IndustryData = string[];
-
-type PineconeResponse = {
-  matches: PineconeMatch[];
-  namespace: string;
-};
-
-type PineconeMatch = {
-  id: string;
-  score?: number;
-  values: number[];
-  sparseValues?: PineconeSparseValues;
-  metadata?: PineconeMetadata;
-};
-
-type PineconeMetadata = {
-  filename?: string;
-  loc?: string;
-  text?: string;
-};
-
-type PineconeSparseValues = {
-  indices: number[];
-  values: number[];
-};
-
-type FileMetadata = {
-  name: string;
-  title: string;
-  updated: string;
-  size: number;
 };
