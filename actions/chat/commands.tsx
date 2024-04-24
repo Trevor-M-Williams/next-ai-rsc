@@ -3,8 +3,8 @@
 import { createStreamableUI, getMutableAIState } from "ai/rsc";
 
 import { BotCard, BotMessage } from "@/components/chat/message";
-import { Stock, StockSkeleton } from "@/components/stocks";
-import { FinancialStatement, FinancialSkeleton } from "@/components/financials";
+import { Stock } from "@/components/stocks";
+import { FinancialStatement } from "@/components/financials";
 import { DynamicFinancialChart } from "@/components/charts/dynamic-financial-chart";
 
 import { getCompanyName, getHistoricalData, getFinancialData } from "@/actions";
